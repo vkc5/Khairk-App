@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var logoImageView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("Firebase current user:", Auth.auth().currentUser as Any)
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {

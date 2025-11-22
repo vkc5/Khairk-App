@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		51848A972ED20342008389FC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A962ED20342008389FC /* FirebaseAnalytics */; };
+		51848A992ED20342008389FC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A982ED20342008389FC /* FirebaseAppCheck */; };
+		51848A9B2ED20342008389FC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A9A2ED20342008389FC /* FirebaseAuth */; };
+		51848A9D2ED20342008389FC /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A9C2ED20342008389FC /* FirebaseFirestore */; };
+		51848A9F2ED20342008389FC /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A9E2ED20342008389FC /* FirebaseMessaging */; };
+		51848AA12ED20342008389FC /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 51848AA02ED20342008389FC /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		51848A582ED1D894008389FC /* Khairk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Khairk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +45,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51848A992ED20342008389FC /* FirebaseAppCheck in Frameworks */,
+				51848A9D2ED20342008389FC /* FirebaseFirestore in Frameworks */,
+				51848A9F2ED20342008389FC /* FirebaseMessaging in Frameworks */,
+				51848A9B2ED20342008389FC /* FirebaseAuth in Frameworks */,
+				51848A972ED20342008389FC /* FirebaseAnalytics in Frameworks */,
+				51848AA12ED20342008389FC /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +93,12 @@
 			);
 			name = Khairk;
 			packageProductDependencies = (
+				51848A962ED20342008389FC /* FirebaseAnalytics */,
+				51848A982ED20342008389FC /* FirebaseAppCheck */,
+				51848A9A2ED20342008389FC /* FirebaseAuth */,
+				51848A9C2ED20342008389FC /* FirebaseFirestore */,
+				51848A9E2ED20342008389FC /* FirebaseMessaging */,
+				51848AA02ED20342008389FC /* FirebaseStorage */,
 			);
 			productName = Khairk;
 			productReference = 51848A582ED1D894008389FC /* Khairk.app */;
@@ -107,6 +128,9 @@
 			);
 			mainGroup = 51848A4F2ED1D894008389FC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 51848A592ED1D894008389FC /* Products */;
 			projectDirPath = "";
@@ -145,6 +169,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J7F756L3TB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Khairk/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -172,6 +197,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J7F756L3TB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Khairk/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -333,6 +359,50 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 12.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		51848A962ED20342008389FC /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		51848A982ED20342008389FC /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		51848A9A2ED20342008389FC /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		51848A9C2ED20342008389FC /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		51848A9E2ED20342008389FC /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		51848AA02ED20342008389FC /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 51848A502ED1D894008389FC /* Project object */;
 }
