@@ -23,7 +23,37 @@
 		51848A6A2ED1D896008389FC /* Exceptions for "Khairk" folder in "Khairk" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Controller/AdminControllers/Broadcast/.gitkeep,
+				Controller/AdminControllers/Dashboard/.gitkeep,
+				Controller/AdminControllers/DonationHistory/.gitkeep,
+				Controller/AdminControllers/Impact/.gitkeep,
+				Controller/AdminControllers/NGOVerification/.gitkeep,
+				Controller/AdminControllers/Notifications/.gitkeep,
+				Controller/AdminControllers/Profile/.gitkeep,
+				Controller/AdminControllers/SystemLogs/.gitkeep,
+				Controller/AdminControllers/UserManagement/.gitkeep,
+				Controller/CollectorControllers/Dashboard/.gitkeep,
+				Controller/CollectorControllers/History/.gitkeep,
+				Controller/CollectorControllers/Impact/.gitkeep,
+				Controller/CollectorControllers/NGOCases/.gitkeep,
+				Controller/CollectorControllers/Notifications/.gitkeep,
+				Controller/CollectorControllers/Pickups/.gitkeep,
+				Controller/CollectorControllers/Profile/.gitkeep,
+				Controller/DonorControllers/Dashboard/.gitkeep,
+				Controller/DonorControllers/DonationCreate/.gitkeep,
+				Controller/DonorControllers/DonationGroups/.gitkeep,
+				Controller/DonorControllers/DonationTracking/.gitkeep,
+				Controller/DonorControllers/Impact/.gitkeep,
+				Controller/DonorControllers/Leaderboard/.gitkeep,
+				Controller/DonorControllers/Map/.gitkeep,
+				Controller/DonorControllers/NGOCases/.gitkeep,
+				Controller/DonorControllers/NGODiscovery/.gitkeep,
+				Controller/DonorControllers/Notifications/.gitkeep,
+				Controller/DonorControllers/Profile/.gitkeep,
+				Controller/DonorControllers/Rewards/.gitkeep,
 				Info.plist,
+				Model/Data/.gitkeep,
+				Model/Services/.gitkeep,
 			);
 			target = 51848A572ED1D894008389FC /* Khairk */;
 		};
@@ -112,7 +142,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					51848A572ED1D894008389FC = {
 						CreatedOnToolsVersion = 16.4;
@@ -276,6 +306,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -332,6 +363,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
