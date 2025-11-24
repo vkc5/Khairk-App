@@ -32,6 +32,7 @@
 				Controller/AdminControllers/Profile/.gitkeep,
 				Controller/AdminControllers/SystemLogs/.gitkeep,
 				Controller/AdminControllers/UserManagement/.gitkeep,
+				Controller/AuthControllers/.gitkeep,
 				Controller/CollectorControllers/Dashboard/.gitkeep,
 				Controller/CollectorControllers/History/.gitkeep,
 				Controller/CollectorControllers/Impact/.gitkeep,
@@ -54,6 +55,7 @@
 				Info.plist,
 				Model/Data/.gitkeep,
 				Model/Services/.gitkeep,
+				View/Auth/.gitkeep,
 			);
 			target = 51848A572ED1D894008389FC /* Khairk */;
 		};
