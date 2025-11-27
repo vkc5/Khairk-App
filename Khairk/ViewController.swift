@@ -33,12 +33,41 @@ class ViewController: UIViewController {
             initialSpringVelocity: 0.8,
             options: .curveEaseOut,
             animations: {
-                // bounce to full size
                 self.logoImageView.transform = .identity
                 self.logoImageView.alpha = 1.0
             },
-            completion: nil
+            completion: { _ in
+                // Small extra delay if you want (optional)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.goToLogin()
+                }
+            }
         )
+
+    }
+    
+    func goToLogin() {
+        let storyboard = UIStoryboard(name: "Auth", bundle: nil)
+        let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginVC")
+
+        // Smooth fade animation
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+
+            UIView.transition(
+                with: window,
+                duration: 0.4,
+                options: .transitionCrossDissolve,
+                animations: {
+                    window.rootViewController = UINavigationController(rootViewController: loginVC)
+                },
+                completion: nil
+            )
+        } else {
+            // Fallback
+            loginVC.modalPresentationStyle = .fullScreen
+            self.present(loginVC, animated: true)
+        }
     }
 
 
