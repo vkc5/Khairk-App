@@ -11,6 +11,7 @@ class AdminBroadcastViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Send Massage (Broadcast)"
 
         // Do any additional setup after loading the view.
     }
