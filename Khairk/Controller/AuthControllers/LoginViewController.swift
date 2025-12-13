@@ -54,6 +54,7 @@ class LoginViewController: UIViewController {
                 switch result {
                 case .success(let user):
                     print("✅ Logged in as \(user.email), role: \(user.role)")
+                    self?.navigateToProfileAsRoot()
                     // NEXT STEP: navigate based on user.role
                 case .failure(let error):
                     self?.showAlert(title: "Login Failed", message: error.localizedDescription)
@@ -81,6 +82,31 @@ class LoginViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    func navigateToProfileAsRoot() {
+        let storyboard = UIStoryboard(name: "DonorProfile", bundle: nil)
+        let loginVC = storyboard.instantiateViewController(withIdentifier: "DonorProfileVC")
+
+        // Smooth fade animation
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+
+            UIView.transition(
+                with: window,
+                duration: 0.4,
+                options: .transitionCrossDissolve,
+                animations: {
+                    window.rootViewController = UINavigationController(rootViewController: loginVC)
+                },
+                completion: nil
+            )
+        } else {
+            // Fallback
+            loginVC.modalPresentationStyle = .fullScreen
+            self.present(loginVC, animated: true)
+        }
+    }
+
 
     /*
     // MARK: - Navigation
