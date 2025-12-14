@@ -172,14 +172,14 @@
                                                                 <rect key="frame" x="25" y="19" width="314" height="22"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="iET-JF-Hgd">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="87.333333333333329" height="22"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="87" height="22"/>
                                                                         <subviews>
                                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="target" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="1xb-vl-mYU">
-                                                                                <rect key="frame" x="0.0" y="0.66666666666666607" width="20" height="20.666666666666671"/>
+                                                                                <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="20.666666666666671"/>
                                                                                 <color key="tintColor" name="Neutral-Black-800"/>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Goals" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mpt-hc-SVq">
-                                                                                <rect key="frame" x="26.000000000000004" y="0.0" width="61.333333333333343" height="22"/>
+                                                                                <rect key="frame" x="25.666666666666661" y="0.0" width="61.333333333333343" height="22"/>
                                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                                                 <color key="textColor" name="Neutral-Black-800"/>
                                                                                 <nil key="highlightedColor"/>
@@ -187,7 +187,7 @@
                                                                         </subviews>
                                                                     </stackView>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="CJS-ui-gCm">
-                                                                        <rect key="frame" x="294.33333333333331" y="3" width="19.666666666666686" height="16.333333333333332"/>
+                                                                        <rect key="frame" x="294" y="3" width="20" height="16.333333333333332"/>
                                                                         <color key="tintColor" name="Greyscale-900"/>
                                                                     </imageView>
                                                                 </subviews>
@@ -1167,9 +1167,12 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZx-UO-IG4">
                                         <rect key="frame" x="104" y="8" width="121.33333333333331" height="146"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="profile 5" translatesAutoresizingMaskIntoConstraints="NO" id="50U-CP-E53">
-                                                <rect key="frame" x="-0.42395130657746449" y="4.0000000000006821" width="120.00000000000023" height="120.00000000003672"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile 5" translatesAutoresizingMaskIntoConstraints="NO" id="50U-CP-E53">
+                                                <rect key="frame" x="-0.33333333333334281" y="4" width="120" height="120"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="120" id="6pd-Ds-xPO"/>
+                                                    <constraint firstAttribute="width" constant="120" id="vKU-ut-7Gi"/>
+                                                </constraints>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="camera.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="N51-cV-SKc">
                                                 <rect key="frame" x="69" y="70.666666666666629" width="50" height="48.666666666666664"/>
@@ -1183,6 +1186,10 @@
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="50U-CP-E53" firstAttribute="top" secondItem="pZx-UO-IG4" secondAttribute="top" constant="4.0000000000006821" id="3xy-bt-5IX"/>
+                                            <constraint firstItem="50U-CP-E53" firstAttribute="leading" secondItem="pZx-UO-IG4" secondAttribute="leading" constant="-0.42395130657746449" id="Zmx-jG-14W"/>
+                                        </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PESONAL INFORMATION" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sbp-p5-ZkL">
                                         <rect key="frame" x="36.333333333333343" y="154" width="256.66666666666663" height="26.333333333333343"/>
@@ -1193,20 +1200,20 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="s5Y-wv-T2v">
                                         <rect key="frame" x="0.66666666666665719" y="200" width="328" height="134"/>
                                         <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mohammad Salah" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Otc-ZX-au8">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="mosalah@gmail.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QJk-zL-03L">
                                                 <rect key="frame" x="0.0" y="0.0" width="328" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="name"/>
+                                                <textInputTraits key="textInputTraits" textContentType="email"/>
                                             </textField>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="mosalah@gmail.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QJk-zL-03L">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mohammad Salah" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Otc-ZX-au8">
                                                 <rect key="frame" x="0.0" y="50" width="328" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                                <textInputTraits key="textInputTraits" textContentType="name"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="33334444" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xga-Ou-JNV">
                                                 <rect key="frame" x="0.0" y="100" width="328" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                                <textInputTraits key="textInputTraits"/>
                                             </textField>
                                         </subviews>
                                         <constraints>
@@ -1238,6 +1245,9 @@
                                     <fontDescription key="titleFontDescription" type="boldSystem" pointSize="16"/>
                                     <color key="baseBackgroundColor" name="MainBrand-500"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="saveTapped:" destination="Sxm-CV-YRq" eventType="touchUpInside" id="ccb-Da-xcb"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="W4S-7f-XQa"/>
@@ -1253,6 +1263,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Edit Profile" id="EPQ-FG-f5p"/>
                     <connections>
+                        <outlet property="avatarImageView" destination="50U-CP-E53" id="KSd-at-lYJ"/>
                         <outlet property="cameraButton" destination="N51-cV-SKc" id="NLV-mR-WYC"/>
                         <outlet property="emailTextField" destination="QJk-zL-03L" id="ueY-7B-2kS"/>
                         <outlet property="nameTextField" destination="Otc-ZX-au8" id="qvJ-I0-CWv"/>

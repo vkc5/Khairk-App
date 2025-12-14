@@ -84,26 +84,22 @@ class LoginViewController: UIViewController {
     }
     
     func navigateToProfileAsRoot() {
-        let storyboard = UIStoryboard(name: "DonorProfile", bundle: nil)
-        let loginVC = storyboard.instantiateViewController(withIdentifier: "DonorProfileVC")
+        let storyboard = UIStoryboard(name: "AdminProfile", bundle: nil)
+        let profileVC = storyboard.instantiateViewController(withIdentifier: "AdminProfileVC")
 
-        // Smooth fade animation
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first {
+        let nav = UINavigationController(rootViewController: profileVC)
+        nav.navigationBar.isHidden = false
 
-            UIView.transition(
-                with: window,
-                duration: 0.4,
-                options: .transitionCrossDissolve,
-                animations: {
-                    window.rootViewController = UINavigationController(rootViewController: loginVC)
-                },
-                completion: nil
-            )
-        } else {
-            // Fallback
-            loginVC.modalPresentationStyle = .fullScreen
-            self.present(loginVC, animated: true)
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = scene.delegate as? SceneDelegate,
+           let window = sceneDelegate.window {
+
+            UIView.transition(with: window,
+                              duration: 0.35,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                window.rootViewController = nav
+            })
         }
     }
 

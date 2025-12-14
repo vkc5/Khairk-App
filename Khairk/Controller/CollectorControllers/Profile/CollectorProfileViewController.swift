@@ -1,15 +1,15 @@
 //
-//  DonorProfileViewController.swift
+//  CollectorProfileViewController.swift
 //  Khairk
 //
-//  Created by vkc5 on 02/12/2025.
+//  Created by vkc5 on 14/12/2025.
 //
 
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-class DonorProfileViewController: UIViewController {
+class CollectorProfileViewController: UIViewController {
     
     @IBOutlet weak var contentContainerView: UIView!
     @IBOutlet weak var imageView: UIImageView!
@@ -32,7 +32,7 @@ class DonorProfileViewController: UIViewController {
         super.viewWillAppear(animated)
 
         navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont.systemFont(ofSize: 22, weight: .semibold), 
+            .font: UIFont.systemFont(ofSize: 22, weight: .semibold),
             .foregroundColor: UIColor.white
         ]
         
@@ -160,6 +160,7 @@ class DonorProfileViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+
 
     /*
     // MARK: - Navigation

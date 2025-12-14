@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CollectorEditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var cameraButton: UIImageView!
@@ -17,6 +17,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var phoneTextField: UITextField!
+    @IBOutlet weak var serviceAreaButton: UIButton!
 
     @IBOutlet weak var saveButton: UIButton!
     
@@ -24,6 +25,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
 
     private var selectedAvatarImage: UIImage?
     private var currentProfileImageUrl: String?
+    private var selectedServiceArea: String?
 
     enum Mode {
         case view
@@ -40,10 +42,27 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         cameraButton.clipsToBounds = true
         setupAvatarUI()
         setupCameraTap()
+        setupServiceAreaDropdown()
         loadCurrentProfile()
         // Do any additional setup after loading the view.
     }
     
+    func setupServiceAreaDropdown() {
+        let areas = ["Manama", "Riffa", "Muharraq", "Isa Town", "Hamad Town"]
+
+        serviceAreaButton.setTitle("Select Service Area", for: .normal)
+        selectedServiceArea = nil
+
+        let actions = areas.map { area in
+            UIAction(title: area) { [weak self] _ in
+                self?.serviceAreaButton.setTitle(area, for: .normal)
+                self?.selectedServiceArea = area
+            }
+        }
+
+        serviceAreaButton.menu = UIMenu(title: "", children: actions)
+        serviceAreaButton.showsMenuAsPrimaryAction = true
+    }
     func setupUI() {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -68,7 +87,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         let isEditing = (newMode == .edit)
 
         // Text fields editable or not
-        [nameTextField, phoneTextField].forEach {
+        [nameTextField, phoneTextField, serviceAreaButton].forEach {
             $0?.isUserInteractionEnabled = isEditing
         }
 
@@ -127,12 +146,20 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                 let name = data["name"] as? String ?? ""
                 let email = data["email"] as? String ?? (Auth.auth().currentUser?.email ?? "")
                 let phone = data["phone"] as? String ?? ""
+                let serviceArea = data["serviceArea"] as? String
                 let imageUrl = data["profileImageUrl"] as? String
 
                 self?.nameTextField.text = name
                 self?.emailTextField.text = email
                 self?.phoneTextField.text = phone
-
+                
+                if let area = serviceArea, !area.isEmpty {
+                    self?.selectedServiceArea = area
+                    self?.serviceAreaButton.setTitle(area, for: .normal)
+                } else {
+                    self?.selectedServiceArea = nil
+                    self?.serviceAreaButton.setTitle("Select Service Area", for: .normal)
+                }
                 // Usually email should not be editable (matches most apps)
                 self?.emailTextField.isUserInteractionEnabled = false
                 self?.emailTextField.textColor = .secondaryLabel
@@ -184,7 +211,10 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
 
         let name = (nameTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let phone = (phoneTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-
+        guard let area = selectedServiceArea, !area.isEmpty else {
+            showAlert(title: "Missing Info", message: "Please select a service area.")
+            return
+        }
         guard !name.isEmpty, !phone.isEmpty else {
             showAlert(title: "Missing Info", message: "Please enter your name and phone number.")
             return
@@ -200,7 +230,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
 
                     switch result {
                     case .success(let url):
-                        self?.updateUser(uid: uid, name: name, phone: phone, profileImageUrl: url)
+                        self?.updateUser(uid: uid, name: name, phone: phone, serviceArea: area, profileImageUrl: url)
 
                     case .failure(let error):
                         self?.showAlert(title: "Upload Failed", message: error.localizedDescription)
@@ -209,14 +239,15 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             }
         } else {
             // No new image -> just update text fields
-            updateUser(uid: uid, name: name, phone: phone, profileImageUrl: currentProfileImageUrl)
+            updateUser(uid: uid, name: name, phone: phone, serviceArea: area, profileImageUrl: currentProfileImageUrl)
         }
     }
 
-    private func updateUser(uid: String, name: String, phone: String, profileImageUrl: String?) {
+    private func updateUser(uid: String, name: String, phone: String, serviceArea: String, profileImageUrl: String?) {
         var updateData: [String: Any] = [
             "name": name,
-            "phone": phone
+            "phone": phone,
+            "serviceArea": serviceArea
         ]
 
         if let profileImageUrl = profileImageUrl {

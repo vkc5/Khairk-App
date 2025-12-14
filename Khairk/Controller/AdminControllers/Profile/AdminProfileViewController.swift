@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-class DonorProfileViewController: UIViewController {
+class AdminProfileViewController: UIViewController {
     
     @IBOutlet weak var contentContainerView: UIView!
     @IBOutlet weak var imageView: UIImageView!
