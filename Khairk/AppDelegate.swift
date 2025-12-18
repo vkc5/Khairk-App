@@ -7,15 +7,32 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseMessaging
+import UserNotifications
+
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        
+        //for notifocation
+        UNUserNotificationCenter.current().delegate = self
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            guard granted else { return }
+            print("Permission granted: \(granted)")
+        }
+        application.registerForRemoteNotifications()
         return true
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        guard let token = fcmToken else { return }
+        print("FCM token: \(token)")
     }
 
     // MARK: UISceneSession Lifecycle
