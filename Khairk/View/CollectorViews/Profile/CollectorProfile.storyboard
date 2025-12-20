@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -271,14 +272,14 @@
                                                                 <rect key="frame" x="24" y="19" width="316" height="20.333333333333329"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="qwf-mu-zrN">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="71.333333333333329" height="20.333333333333332"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="70.666666666666671" height="20.333333333333332"/>
                                                                         <subviews>
                                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphone.and.arrow.right.outward" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7VV-ki-d69">
-                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="20" height="19.666666666666668"/>
+                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="19.333333333333332" height="19.666666666666668"/>
                                                                                 <color key="tintColor" name="Neutral-Black-800"/>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KBv-fC-svW">
-                                                                                <rect key="frame" x="25.000000000000004" y="0.0" width="46.333333333333343" height="20.333333333333332"/>
+                                                                                <rect key="frame" x="24.333333333333332" y="0.0" width="46.333333333333343" height="20.333333333333332"/>
                                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                                                 <color key="textColor" name="Neutral-Black-800"/>
                                                                                 <nil key="highlightedColor"/>
@@ -286,7 +287,7 @@
                                                                         </subviews>
                                                                     </stackView>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="SR0-xp-gPW">
-                                                                        <rect key="frame" x="296.33333333333331" y="3" width="19.666666666666686" height="14.666666666666664"/>
+                                                                        <rect key="frame" x="295.66666666666663" y="3" width="20.333333333333314" height="14.666666666666664"/>
                                                                         <color key="tintColor" name="Greyscale-900"/>
                                                                     </imageView>
                                                                 </subviews>
@@ -598,6 +599,14 @@
                                     <action selector="saveTapped:" destination="PlT-ce-9ap" eventType="touchUpInside" id="hix-AK-eTe"/>
                                 </connections>
                             </button>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8c0-RA-P2y">
+                                <rect key="frame" x="32" y="588" width="329" height="135"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="135" id="gWF-Ve-T68"/>
+                                    <constraint firstAttribute="width" constant="329" id="wyG-W4-D7X"/>
+                                </constraints>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="99m-w2-cjX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -606,8 +615,11 @@
                             <constraint firstItem="p9L-et-o9A" firstAttribute="leading" secondItem="99m-w2-cjX" secondAttribute="leading" constant="32" id="EuJ-QJ-03X"/>
                             <constraint firstItem="Sdu-aV-Hix" firstAttribute="leading" secondItem="99m-w2-cjX" secondAttribute="leading" constant="32.666666666666657" id="IIM-eF-z4Q"/>
                             <constraint firstItem="99m-w2-cjX" firstAttribute="bottom" secondItem="Sdu-aV-Hix" secondAttribute="bottom" constant="1" id="MB3-e8-xGd"/>
+                            <constraint firstItem="8c0-RA-P2y" firstAttribute="leading" secondItem="99m-w2-cjX" secondAttribute="leading" constant="32" id="NgG-91-gK0"/>
                             <constraint firstItem="99m-w2-cjX" firstAttribute="trailing" secondItem="p9L-et-o9A" secondAttribute="trailing" constant="31.670000000000002" id="Oat-ti-kHE"/>
+                            <constraint firstItem="99m-w2-cjX" firstAttribute="trailing" secondItem="8c0-RA-P2y" secondAttribute="trailing" constant="32" id="g9k-Bk-hIO"/>
                             <constraint firstItem="Sdu-aV-Hix" firstAttribute="centerX" secondItem="p9L-et-o9A" secondAttribute="centerX" id="khi-ld-lmj"/>
+                            <constraint firstItem="8c0-RA-P2y" firstAttribute="top" secondItem="p9L-et-o9A" secondAttribute="bottom" constant="8" id="xlS-io-8ow"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Edit Profile" id="wwR-hr-C0p"/>
@@ -615,6 +627,7 @@
                         <outlet property="avatarImageView" destination="wfC-Va-lvN" id="M2F-t7-Wlo"/>
                         <outlet property="cameraButton" destination="SwV-0a-mhO" id="hon-q5-wb4"/>
                         <outlet property="emailTextField" destination="5IT-rT-egg" id="awz-hU-nTq"/>
+                        <outlet property="locationMapView" destination="8c0-RA-P2y" id="jmR-J6-14N"/>
                         <outlet property="nameTextField" destination="SyM-gf-Jgs" id="Oht-g0-X56"/>
                         <outlet property="phoneTextField" destination="vha-nL-Tfu" id="cR3-fA-d8K"/>
                         <outlet property="saveButton" destination="Sdu-aV-Hix" id="zig-NA-kSo"/>
@@ -624,7 +637,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xP7-44-d8t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="q6l-Oh-sM7"/>
             </objects>
-            <point key="canvasLocation" x="2555" y="857"/>
+            <point key="canvasLocation" x="2554.9618320610684" y="856.33802816901414"/>
         </scene>
         <!--PasswordReset-->
         <scene sceneID="nbl-aN-5mm">
@@ -1462,13 +1475,13 @@
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

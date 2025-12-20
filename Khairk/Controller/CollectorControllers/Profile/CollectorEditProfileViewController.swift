@@ -8,8 +8,10 @@
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
+import MapKit
+import CoreLocation
 
-class CollectorEditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CollectorEditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MKMapViewDelegate {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var cameraButton: UIImageView!
@@ -21,12 +23,25 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
 
     @IBOutlet weak var saveButton: UIButton!
     
+    @IBOutlet weak var locationMapView: MKMapView!
+
     private let db = Firestore.firestore()
 
     private var selectedAvatarImage: UIImage?
     private var currentProfileImageUrl: String?
     private var selectedServiceArea: String?
+    
+    private var selectedCoordinate: CLLocationCoordinate2D?
+    private var locationAnnotation: MKPointAnnotation?
+    
+    private func geoPoint(from coord: CLLocationCoordinate2D) -> GeoPoint {
+        GeoPoint(latitude: coord.latitude, longitude: coord.longitude)
+    }
 
+    private func coordinate(from geo: GeoPoint) -> CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: geo.latitude, longitude: geo.longitude)
+    }
+    
     enum Mode {
         case view
         case edit
@@ -42,6 +57,7 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
         cameraButton.clipsToBounds = true
         setupAvatarUI()
         setupCameraTap()
+        setupLocationPickerMap()
         setupServiceAreaDropdown()
         loadCurrentProfile()
         // Do any additional setup after loading the view.
@@ -87,7 +103,7 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
         let isEditing = (newMode == .edit)
 
         // Text fields editable or not
-        [nameTextField, phoneTextField, serviceAreaButton].forEach {
+        [nameTextField, phoneTextField, serviceAreaButton, locationMapView].forEach {
             $0?.isUserInteractionEnabled = isEditing
         }
 
@@ -142,7 +158,15 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
                 }
 
                 let data = snap?.data() ?? [:]
-
+                
+                let geo = data["ngoLocation"] as? GeoPoint
+                if let geo = geo {
+                    let coord = self?.coordinate(from: geo)
+                    if let coord = coord {
+                        self?.setMapPin(coord, title: "NGO Location")
+                    }
+                }
+                
                 let name = data["name"] as? String ?? ""
                 let email = data["email"] as? String ?? (Auth.auth().currentUser?.email ?? "")
                 let phone = data["phone"] as? String ?? ""
@@ -219,7 +243,12 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
             showAlert(title: "Missing Info", message: "Please enter your name and phone number.")
             return
         }
-
+        
+        guard let coord = selectedCoordinate else {
+            showAlert(title: "Missing Location", message: "Please long-press on the map to select your NGO location.")
+            return
+        }
+        
         // If user selected a new image -> upload to Cloudinary first, then update Firestore
         if let newImage = selectedAvatarImage {
             saveButton.isEnabled = false
@@ -230,7 +259,7 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
 
                     switch result {
                     case .success(let url):
-                        self?.updateUser(uid: uid, name: name, phone: phone, serviceArea: area, profileImageUrl: url)
+                        self?.updateUser(uid: uid, name: name, phone: phone, serviceArea: area, ngoCoord: coord, profileImageUrl: url)
 
                     case .failure(let error):
                         self?.showAlert(title: "Upload Failed", message: error.localizedDescription)
@@ -239,15 +268,16 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
             }
         } else {
             // No new image -> just update text fields
-            updateUser(uid: uid, name: name, phone: phone, serviceArea: area, profileImageUrl: currentProfileImageUrl)
+            updateUser(uid: uid, name: name, phone: phone, serviceArea: area, ngoCoord: coord, profileImageUrl: currentProfileImageUrl)
         }
     }
 
-    private func updateUser(uid: String, name: String, phone: String, serviceArea: String, profileImageUrl: String?) {
+    private func updateUser(uid: String, name: String, phone: String, serviceArea: String, ngoCoord: CLLocationCoordinate2D, profileImageUrl: String?) {
         var updateData: [String: Any] = [
             "name": name,
             "phone": phone,
-            "serviceArea": serviceArea
+            "serviceArea": serviceArea,
+            "ngoLocation": geoPoint(from: ngoCoord)
         ]
 
         if let profileImageUrl = profileImageUrl {
@@ -272,6 +302,71 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in completion?() })
         present(alert, animated: true)
+    }
+    
+    private func setupLocationPickerMap() {
+        locationMapView.delegate = self
+
+        // long press to select location
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleMapLongPress(_:)))
+        longPress.minimumPressDuration = 0.6
+        locationMapView.addGestureRecognizer(longPress)
+
+        // optional: start with Bahrain area so it doesn't look empty
+        let bahrainCenter = CLLocationCoordinate2D(latitude: 26.0667, longitude: 50.5577)
+        locationMapView.setRegion(
+            MKCoordinateRegion(center: bahrainCenter, latitudinalMeters: 20000, longitudinalMeters: 20000),
+            animated: false
+        )
+    }
+    
+    @objc private func handleMapLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state != .began { return }
+
+        let point = gesture.location(in: locationMapView)
+        let coordinate = locationMapView.convert(point, toCoordinateFrom: locationMapView)
+
+        selectedCoordinate = coordinate
+
+        // remove old pin
+        if let old = locationAnnotation {
+            locationMapView.removeAnnotation(old)
+        }
+
+        // add new pin
+        let pin = MKPointAnnotation()
+        pin.coordinate = coordinate
+        pin.title = "NGO Location"
+        pin.subtitle = "Selected"
+        locationAnnotation = pin
+        locationMapView.addAnnotation(pin)
+
+        // center a bit closer
+        locationMapView.setRegion(
+            MKCoordinateRegion(center: coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000),
+            animated: true
+        )
+
+        print("✅ Selected NGO location:", coordinate.latitude, coordinate.longitude)
+    }
+    
+    private func setMapPin(_ coord: CLLocationCoordinate2D, title: String) {
+        selectedCoordinate = coord
+
+        if let old = locationAnnotation {
+            locationMapView.removeAnnotation(old)
+        }
+
+        let pin = MKPointAnnotation()
+        pin.coordinate = coord
+        pin.title = title
+        locationAnnotation = pin
+        locationMapView.addAnnotation(pin)
+
+        locationMapView.setRegion(
+            MKCoordinateRegion(center: coord, latitudinalMeters: 2000, longitudinalMeters: 2000),
+            animated: true
+        )
     }
 
     /*

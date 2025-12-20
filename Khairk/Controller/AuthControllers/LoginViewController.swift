@@ -84,8 +84,8 @@ class LoginViewController: UIViewController {
     }
     
     func navigateToProfileAsRoot() {
-        let storyboard = UIStoryboard(name: "AdminProfile", bundle: nil)
-        let profileVC = storyboard.instantiateViewController(withIdentifier: "AdminProfileVC")
+        let storyboard = UIStoryboard(name: "DonorProfile", bundle: nil)
+        let profileVC = storyboard.instantiateViewController(withIdentifier: "DonorProfileVC")
 
         let nav = UINavigationController(rootViewController: profileVC)
         nav.navigationBar.isHidden = false

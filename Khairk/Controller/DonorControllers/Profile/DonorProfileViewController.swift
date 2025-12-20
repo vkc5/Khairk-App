@@ -160,7 +160,22 @@ class DonorProfileViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    @IBAction func myGoalsTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "DonorProfile", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "MyGoalsVC")
 
+        vc.modalPresentationStyle = .pageSheet
+
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [
+                .custom { _ in 200 }   // 👈 height in points
+            ]
+            sheet.prefersGrabberVisible = true
+        }
+
+        present(vc, animated: true)
+    }
     /*
     // MARK: - Navigation
 
