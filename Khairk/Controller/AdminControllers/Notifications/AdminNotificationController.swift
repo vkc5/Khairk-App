@@ -14,12 +14,14 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     struct DataStruct{
         var title:String
         var desc:String
+        var isRead:Bool
+        var date:Date
     }
-    let Data:[DataStruct]=[
-        DataStruct(title: "New Order", desc: "New Order Placed"),
-        DataStruct(title: "2New Order", desc: "New Order Placed"),
-        DataStruct(title: "3New Order", desc: "New Order Placed"),
-        DataStruct(title: "4New Order", desc: "New Order Placed")
+    var Data:[DataStruct]=[
+        DataStruct(title: "New Order", desc: "New Order Placed", isRead: false, date: Date()),
+        DataStruct(title: "2New Order", desc: "New Order Placed", isRead: false, date: Date()),
+        DataStruct(title: "3New Order", desc: "New Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order Placed" ,isRead: true, date: Date()),
+        DataStruct(title: "4New Order", desc: "New Order Placed", isRead: true, date: Date())
     ]
     
     override func viewDidLoad() {
@@ -27,6 +29,11 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         title = "Notifications"
         list.dataSource = self
         list.delegate = self
+        
+        list.rowHeight = UITableView.automaticDimension
+        list.estimatedRowHeight = 100
+
+        
         // Do any additional setup after loading the view.
     }
     
@@ -36,14 +43,56 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let notificationData = Data[indexPath.row]
-        let cell=tableView.dequeueReusableCell(withIdentifier: "cell", for:     indexPath)as! AdminNotificationTableViewCell
-        cell.title?.text=notificationData.title
-        cell.body?.text=notificationData.desc
+        let cell=tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)as! AdminNotificationTableViewCell
+        
+        cell.notificationContainer.layer.cornerRadius = 12
+        cell.notificationContainer.layer.borderWidth = 1
+        
+        if notificationData.isRead{
+            cell.notificationContainer.layer.borderColor = UIColor.systemGray4.cgColor
+        } else {
+            cell.notificationContainer.layer.borderColor = UIColor.mainBrand500.cgColor
+            cell.notificationContainer.backgroundColor = UIColor.mainBrand50
+        }
+        
+        cell.titleLabel?.text=notificationData.title
+        cell.bodyLabel?.text=notificationData.desc
+        cell.dateLabel?.text=notificationData.date.description
+        
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            Data.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+            self.Data.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            completionHandler(true)
+        }
+        let markAsReadAction = UIContextualAction(style: .normal, title: "Mark as Read") { (action, view, completionHandler) in
+            completionHandler(true)
+        }
+        deleteAction.image = UIImage(systemName: "trash")
+        markAsReadAction.image = UIImage(systemName: "checkmark")
+        markAsReadAction.backgroundColor = .systemBlue
+        return UISwipeActionsConfiguration(actions: [deleteAction,markAsReadAction])
+    }
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let markAsReadAction = UIContextualAction(style: .normal, title: "Mark as Read") { (action, view, completionHandler) in
+            completionHandler(true)
+        }
+        markAsReadAction.image = UIImage(systemName: "checkmark")
+        markAsReadAction.backgroundColor = .systemBlue
+        return UISwipeActionsConfiguration(actions: [markAsReadAction])
+    }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
 
