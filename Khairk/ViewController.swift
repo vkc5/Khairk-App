@@ -11,18 +11,20 @@ import FirebaseAuth
 class ViewController: UIViewController {
 
     @IBOutlet weak var logoImageView: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         print("Firebase current user:", Auth.auth().currentUser as Any)
-        // Do any additional setup after loading the view.
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         animateLogoBounce()
     }
 
-    func animateLogoBounce() {
-        // start smaller & invisible
+    private func animateLogoBounce() {
+        // Start smaller & invisible
         logoImageView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
         logoImageView.alpha = 0.0
 
@@ -33,14 +35,24 @@ class ViewController: UIViewController {
             initialSpringVelocity: 0.8,
             options: .curveEaseOut,
             animations: {
-                // bounce to full size
                 self.logoImageView.transform = .identity
                 self.logoImageView.alpha = 1.0
             },
-            completion: nil
+            completion: { _ in
+                // Navigate after animation finishes
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.navigateToMyImpact()
+                }
+            }
         )
     }
 
+    private func navigateToMyImpact() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(
+            withIdentifier: "My_impactViewController"
+        ) as! My_impactViewController
 
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
-
