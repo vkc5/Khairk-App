@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hhU-2f-9eN">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Send Massage-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="AdminBroadcastViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Recipients" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVv-tQ-bzn">
+                                <rect key="frame" x="20" y="172" width="353" height="22"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <color key="textColor" name="MainBrand-500"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="r4x-gJ-9W6">
+                                <rect key="frame" x="20" y="199" width="353" height="32"/>
+                                <segments>
+                                    <segment title="All User"/>
+                                    <segment title="Donor"/>
+                                    <segment title="Collector (NGO)"/>
+                                </segments>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message Details " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zs9-0R-094">
+                                <rect key="frame" x="20" y="255" width="353" height="22"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <color key="textColor" name="MainBrand-500"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wx4-x4-0K1">
+                                <rect key="frame" x="20" y="287" width="353" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzd-gB-8zP">
+                                <rect key="frame" x="20" y="357" width="353" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Message ..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AYg-bt-mXi">
+                                <rect key="frame" x="20" y="383" width="353" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oQg-B9-WvF">
+                                <rect key="frame" x="115.66666666666667" y="437" width="161.66666666666663" height="38.333333333333314"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Send Message" imagePadding="10">
+                                    <imageReference key="image" image="bell.badge.fill" catalog="system" symbolScale="small" variableValue="1"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="sendNotificationBtn:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="r45-9s-fWb"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Title ..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hG9-Zl-lOv">
+                                <rect key="frame" x="20" y="313" width="353" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="q8p-ry-V5Z"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="r4x-gJ-9W6" secondAttribute="trailing" constant="20" id="0Rv-AQ-lET"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="wx4-x4-0K1" secondAttribute="trailing" constant="20" id="0ko-4W-6tB"/>
+                            <constraint firstItem="wx4-x4-0K1" firstAttribute="top" secondItem="zs9-0R-094" secondAttribute="bottom" constant="10" id="4Gl-rH-dUY"/>
+                            <constraint firstItem="AYg-bt-mXi" firstAttribute="top" secondItem="bzd-gB-8zP" secondAttribute="bottom" constant="5" id="4HF-RC-Juf"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="hG9-Zl-lOv" secondAttribute="trailing" constant="20" id="9jl-Iw-sm8"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="rVv-tQ-bzn" secondAttribute="trailing" constant="20" id="ATw-pY-7DA"/>
+                            <constraint firstItem="AYg-bt-mXi" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="Hsb-d8-a3e"/>
+                            <constraint firstItem="zs9-0R-094" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="JLx-uP-ShW"/>
+                            <constraint firstItem="bzd-gB-8zP" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="Kts-Kp-0e1"/>
+                            <constraint firstItem="hG9-Zl-lOv" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="Nhn-Z8-B1V"/>
+                            <constraint firstItem="zs9-0R-094" firstAttribute="top" secondItem="r4x-gJ-9W6" secondAttribute="bottom" constant="25" id="OXv-vc-a2m"/>
+                            <constraint firstItem="wx4-x4-0K1" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="UB9-rH-Ca8"/>
+                            <constraint firstItem="r4x-gJ-9W6" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="UGU-VZ-tfW"/>
+                            <constraint firstItem="rVv-tQ-bzn" firstAttribute="top" secondItem="q8p-ry-V5Z" secondAttribute="top" constant="10" id="ULQ-tg-eWP"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="bzd-gB-8zP" secondAttribute="trailing" constant="20" id="YD3-tM-dEo"/>
+                            <constraint firstItem="oQg-B9-WvF" firstAttribute="top" secondItem="AYg-bt-mXi" secondAttribute="bottom" constant="20" id="dKl-FQ-MY7"/>
+                            <constraint firstItem="hG9-Zl-lOv" firstAttribute="top" secondItem="wx4-x4-0K1" secondAttribute="bottom" constant="5" id="enG-Sk-KHx"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="zs9-0R-094" secondAttribute="trailing" constant="20" id="fgH-mL-Nhs"/>
+                            <constraint firstItem="rVv-tQ-bzn" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="hGe-tz-btM"/>
+                            <constraint firstItem="oQg-B9-WvF" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="pGy-4w-lOm"/>
+                            <constraint firstItem="bzd-gB-8zP" firstAttribute="top" secondItem="hG9-Zl-lOv" secondAttribute="bottom" constant="10" id="pZ7-OL-MOl"/>
+                            <constraint firstItem="r4x-gJ-9W6" firstAttribute="top" secondItem="rVv-tQ-bzn" secondAttribute="bottom" constant="5" id="w2R-VP-Flf"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="AYg-bt-mXi" secondAttribute="trailing" constant="20" id="zJM-e6-OAV"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Send Massage" customizationIdentifier="" id="hBv-aC-Xir"/>
+                    <connections>
+                        <outlet property="messageTextField" destination="AYg-bt-mXi" id="Zos-Xo-uIL"/>
+                        <outlet property="recipientSegment" destination="r4x-gJ-9W6" id="nZn-HE-f4t"/>
+                        <outlet property="titleTextField" destination="hG9-Zl-lOv" id="fIi-Ko-gHl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1896.9465648854962" y="3.5211267605633805"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ulh-Cf-oc0">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hhU-2f-9eN" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ADm-B3-e7y">
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="Lpy-8F-95x"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iue-ee-1on" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="970.2290076335878" y="3.5211267605633805"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" name="MainBrand-500"/>
+    <resources>
+        <image name="bell.badge.fill" catalog="system" width="117" height="128"/>
+        <namedColor name="MainBrand-500">
+            <color red="0.027450980392156862" green="0.46666666666666667" blue="0.20392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

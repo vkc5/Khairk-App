@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -104,23 +105,40 @@
                     </view>
                     <navigationItem key="navigationItem" title="Notifications" leftItemsSupplementBackButton="YES" id="Fh5-hp-jr6">
                         <rightBarButtonItems>
-                            <barButtonItem title="Setting" style="plain" id="v2n-SX-5jD">
-                                <imageReference key="image" image="gearshape" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
-                                    <hierarchicalColors>
-                                        <color name="MainBrand-500"/>
-                                        <color systemColor="secondaryLabelColor"/>
-                                        <color systemColor="tertiaryLabelColor"/>
-                                    </hierarchicalColors>
-                                </imageReference>
+                            <barButtonItem style="plain" id="Pa4-TT-WuI">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" toolTip="go to notifications seting" buttonType="system" lineBreakMode="middleTruncation" id="MHg-nV-LiB">
+                                    <rect key="frame" x="356.33333333333331" y="12" width="20.666666666666686" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal">
+                                        <imageReference key="image" image="gearshape" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
+                                            <hierarchicalColors>
+                                                <color name="MainBrand-500"/>
+                                                <color systemColor="secondaryLabelColor"/>
+                                                <color systemColor="tertiaryLabelColor"/>
+                                            </hierarchicalColors>
+                                        </imageReference>
+                                    </state>
+                                </button>
                             </barButtonItem>
-                            <barButtonItem title="Delete All" id="lS2-bf-qSg">
-                                <imageReference key="image" image="trash.circle" catalog="system" symbolScale="default" renderingMode="hierarchical-single">
-                                    <hierarchicalColors>
-                                        <color systemColor="systemRedColor"/>
-                                        <color systemColor="secondaryLabelColor"/>
-                                        <color systemColor="tertiaryLabelColor"/>
-                                    </hierarchicalColors>
-                                </imageReference>
+                            <barButtonItem style="plain" id="BdB-mB-cNs">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="F4c-Qj-cFB">
+                                    <rect key="frame" x="305.33333333333331" y="5" width="43" height="34.333333333333336"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain">
+                                        <imageReference key="image" image="trash" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
+                                            <hierarchicalColors>
+                                                <color systemColor="systemRedColor"/>
+                                                <color systemColor="secondaryLabelColor"/>
+                                                <color systemColor="tertiaryLabelColor"/>
+                                            </hierarchicalColors>
+                                        </imageReference>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="deleteAllBtn:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="OG5-Ta-kSN"/>
+                                    </connections>
+                                </button>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
@@ -158,7 +176,7 @@
     <resources>
         <image name="clock" catalog="system" width="128" height="123"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
-        <image name="trash.circle" catalog="system" width="128" height="123"/>
+        <image name="trash" catalog="system" width="117" height="128"/>
         <namedColor name="MainBrand-500">
             <color red="0.027450980392156862" green="0.46666666666666667" blue="0.20392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

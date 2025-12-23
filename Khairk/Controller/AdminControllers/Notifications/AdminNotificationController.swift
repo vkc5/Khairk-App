@@ -78,6 +78,25 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     }
 
     
+    @IBAction func deleteAllBtn(_ sender: Any) {
+        let alert = UIAlertController(title: "Delete All", message: "Are you sure you want to delete all notifications?", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+                guard !self.notifications.isEmpty else {
+                    let emptyAlert = UIAlertController(title: "No notifications", message: "There are no notifications to delete.", preferredStyle: .alert)
+                    emptyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(emptyAlert, animated: true, completion: nil)
+                    return
+                }
+                self.notifications.removeAll()
+                self.list.reloadData()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notifications.count
     }
@@ -111,26 +130,64 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let notification = self.notifications[indexPath.row]
+        
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
             self.notifications.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             completionHandler(true)
         }
-        let markAsReadAction = UIContextualAction(style: .normal, title: "Mark as Read") { (action, view, completionHandler) in
-            completionHandler(true)
-        }
         deleteAction.image = UIImage(systemName: "trash")
-        markAsReadAction.image = UIImage(systemName: "checkmark")
-        markAsReadAction.backgroundColor = .systemBlue
-        return UISwipeActionsConfiguration(actions: [deleteAction,markAsReadAction])
+        var actions: [UIContextualAction] = [deleteAction]
+        
+        if !notification.isRead {
+            let markAsReadAction = UIContextualAction(style: .normal, title: "Mark as Read") { (action, view, completionHandler) in
+                let db = Firestore.firestore()
+                let notification = self.notifications[indexPath.row]
+                db.collection("notifications").document(notification.id).updateData([
+                           "isRead": 1
+                       ]) { error in
+                           if let error = error {
+                               print("Failed to mark as read: \(error)")
+                           } else {
+                               self.notifications[indexPath.row].isRead = true
+                               tableView.reloadRows(at: [indexPath], with: .automatic)
+                           }
+                       }
+
+                completionHandler(true)
+            }
+            markAsReadAction.image = UIImage(systemName: "checkmark")
+            markAsReadAction.backgroundColor = .systemBlue
+            actions.append(markAsReadAction)
+        }
+       
+        return UISwipeActionsConfiguration(actions: actions)
     }
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let markAsReadAction = UIContextualAction(style: .normal, title: "Mark as Read") { (action, view, completionHandler) in
-            completionHandler(true)
+        let notification = self.notifications[indexPath.row]
+        if !notification.isRead {
+            let markAsReadAction = UIContextualAction(style: .normal, title: "Mark as Read") { (action, view, completionHandler) in
+                let db = Firestore.firestore()
+                let notification = self.notifications[indexPath.row]
+                db.collection("notifications").document(notification.id).updateData([
+                           "isRead": 1
+                       ]) { error in
+                           if let error = error {
+                               print("Failed to mark as read: \(error)")
+                           } else {
+                               self.notifications[indexPath.row].isRead = true
+                               tableView.reloadRows(at: [indexPath], with: .automatic)
+                           }
+                       }
+
+                completionHandler(true)
+            }
+            markAsReadAction.image = UIImage(systemName: "checkmark")
+            markAsReadAction.backgroundColor = .systemBlue
+            return UISwipeActionsConfiguration(actions: [markAsReadAction])
         }
-        markAsReadAction.image = UIImage(systemName: "checkmark")
-        markAsReadAction.backgroundColor = .systemBlue
-        return UISwipeActionsConfiguration(actions: [markAsReadAction])
+        return nil
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true

@@ -12,7 +12,7 @@ class Notification {
         let id: String
         let title: String
         let body: String
-        let isRead: Bool
+        var isRead: Bool
         let userID: String
         let timestamp: Date
         // Initialize from Firebase dictionary
@@ -36,8 +36,20 @@ class Notification {
         }
     }
 
-    
     func save(title: String, body: String, userId: String){
-        print("new notification")
+        let data: [String: Any] = [
+            "title": title,
+            "body": body,
+            "userId": userId,
+            "isRead": 0,
+            "createdAt": Timestamp(date: Date())
+        ]
+        db.collection("notifications").addDocument(data: data) { error in
+            if let error = error {
+                print("Error adding notification: \(error.localizedDescription)")
+            } else {
+                print("Notification added for userId: \(userId)")
+            }
+        }
     }
 }
