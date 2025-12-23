@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseStorage
+import FirebaseFirestore
 
 class AdminNotificationController: UIViewController , UITableViewDelegate, UITableViewDataSource{
 
@@ -17,32 +19,71 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         var isRead:Bool
         var date:Date
     }
-    var Data:[DataStruct]=[
-        DataStruct(title: "New Order", desc: "New Order Placed", isRead: false, date: Date()),
-        DataStruct(title: "2New Order", desc: "New Order Placed", isRead: false, date: Date()),
-        DataStruct(title: "3New Order", desc: "New Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order PlacedNew Order Placed" ,isRead: true, date: Date()),
-        DataStruct(title: "4New Order", desc: "New Order Placed", isRead: true, date: Date())
-    ]
+    var notifications:[Notification.AppNotification]=[]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Notifications"
-        list.dataSource = self
-        list.delegate = self
         
-        list.rowHeight = UITableView.automaticDimension
-        list.estimatedRowHeight = 100
+        setupTableView()
+        fetchNotifications()
 
         
         // Do any additional setup after loading the view.
     }
     
+    private func setupTableView() {
+        list.dataSource = self
+        list.delegate = self
+        
+        list.rowHeight = UITableView.automaticDimension
+        list.estimatedRowHeight = 100
+    }
+    
+    private func fetchNotifications() {
+        let db = Firestore.firestore()
+        
+        db.collection("notifications").getDocuments { [weak self] querySnapshot, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error getting documents: \(error)")
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                print("No notifications found")
+                return
+            }
+            
+            var fetchedNotifications: [Notification.AppNotification] = []
+            
+            for document in documents {
+                print("Doc ID:", document.documentID, "Data:", document.data())
+                let data = document.data()
+                if let notification = Notification.AppNotification(id: document.documentID, dictionary: data) {
+                    fetchedNotifications.append(notification)
+                }else {
+                    print("Failed to parse notification:", data)
+                }
+            }
+            print("Fetched notifications count:", fetchedNotifications.count)
+            self.notifications = fetchedNotifications
+            
+            // Reload table view on main thread
+            DispatchQueue.main.async {
+                self.list.reloadData()
+            }
+        }
+    }
+
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Data.count
+        return notifications.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let notificationData = Data[indexPath.row]
+        let notificationData = notifications[indexPath.row]
         let cell=tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)as! AdminNotificationTableViewCell
         
         cell.notificationContainer.layer.cornerRadius = 12
@@ -56,22 +97,22 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         }
         
         cell.titleLabel?.text=notificationData.title
-        cell.bodyLabel?.text=notificationData.desc
-        cell.dateLabel?.text=notificationData.date.description
+        cell.bodyLabel?.text=notificationData.body
+        cell.dateLabel?.text=notificationData.timestamp.description
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            Data.remove(at: indexPath.row)
+            notifications.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-            self.Data.remove(at: indexPath.row)
+            self.notifications.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             completionHandler(true)
         }

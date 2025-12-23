@@ -103,15 +103,26 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Notifications" leftItemsSupplementBackButton="YES" id="Fh5-hp-jr6">
-                        <barButtonItem key="rightBarButtonItem" title="Item" style="plain" id="v2n-SX-5jD">
-                            <imageReference key="image" image="gearshape" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
-                                <hierarchicalColors>
-                                    <color name="MainBrand-500"/>
-                                    <color systemColor="secondaryLabelColor"/>
-                                    <color systemColor="tertiaryLabelColor"/>
-                                </hierarchicalColors>
-                            </imageReference>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Setting" style="plain" id="v2n-SX-5jD">
+                                <imageReference key="image" image="gearshape" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
+                                    <hierarchicalColors>
+                                        <color name="MainBrand-500"/>
+                                        <color systemColor="secondaryLabelColor"/>
+                                        <color systemColor="tertiaryLabelColor"/>
+                                    </hierarchicalColors>
+                                </imageReference>
+                            </barButtonItem>
+                            <barButtonItem title="Delete All" id="lS2-bf-qSg">
+                                <imageReference key="image" image="trash.circle" catalog="system" symbolScale="default" renderingMode="hierarchical-single">
+                                    <hierarchicalColors>
+                                        <color systemColor="systemRedColor"/>
+                                        <color systemColor="secondaryLabelColor"/>
+                                        <color systemColor="tertiaryLabelColor"/>
+                                    </hierarchicalColors>
+                                </imageReference>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="list" destination="bB7-0J-Pyg" id="ama-wf-1jW"/>
@@ -147,6 +158,7 @@
     <resources>
         <image name="clock" catalog="system" width="128" height="123"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
+        <image name="trash.circle" catalog="system" width="128" height="123"/>
         <namedColor name="MainBrand-500">
             <color red="0.027450980392156862" green="0.46666666666666667" blue="0.20392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -158,6 +170,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
