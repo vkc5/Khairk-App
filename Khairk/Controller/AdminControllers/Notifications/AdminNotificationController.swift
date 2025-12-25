@@ -59,7 +59,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
             var fetchedNotifications: [Notification.AppNotification] = []
             
             for document in documents {
-                print("Doc ID:", document.documentID, "Data:", document.data())
+                print("ID:", document.documentID, "Data:", document.data())
                 let data = document.data()
                 if let notification = Notification.AppNotification(id: document.documentID, dictionary: data) {
                     fetchedNotifications.append(notification)
@@ -110,6 +110,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         
         if notificationData.isRead{
             cell.notificationContainer.layer.borderColor = UIColor.systemGray4.cgColor
+            cell.notificationContainer.backgroundColor = .clear
         } else {
             cell.notificationContainer.layer.borderColor = UIColor.mainBrand500.cgColor
             cell.notificationContainer.backgroundColor = UIColor.mainBrand50

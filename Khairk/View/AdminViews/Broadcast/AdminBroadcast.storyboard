@@ -50,13 +50,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Message ..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AYg-bt-mXi">
-                                <rect key="frame" x="20" y="383" width="353" height="34"/>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="top" borderStyle="roundedRect" placeholder="Enter Message ..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AYg-bt-mXi">
+                                <rect key="frame" x="20" y="383" width="353" height="252"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="252" id="ptk-S1-dxN"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oQg-B9-WvF">
-                                <rect key="frame" x="115.66666666666667" y="437" width="161.66666666666663" height="38.333333333333314"/>
+                                <rect key="frame" x="20" y="655" width="353" height="38.333333333333371"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Send Message" imagePadding="10">
                                     <imageReference key="image" image="bell.badge.fill" catalog="system" symbolScale="small" variableValue="1"/>
@@ -80,6 +83,7 @@
                             <constraint firstItem="AYg-bt-mXi" firstAttribute="top" secondItem="bzd-gB-8zP" secondAttribute="bottom" constant="5" id="4HF-RC-Juf"/>
                             <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="hG9-Zl-lOv" secondAttribute="trailing" constant="20" id="9jl-Iw-sm8"/>
                             <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="rVv-tQ-bzn" secondAttribute="trailing" constant="20" id="ATw-pY-7DA"/>
+                            <constraint firstItem="oQg-B9-WvF" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="AcX-xU-IyQ"/>
                             <constraint firstItem="AYg-bt-mXi" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="Hsb-d8-a3e"/>
                             <constraint firstItem="zs9-0R-094" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="JLx-uP-ShW"/>
                             <constraint firstItem="bzd-gB-8zP" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="Kts-Kp-0e1"/>
@@ -93,6 +97,7 @@
                             <constraint firstItem="hG9-Zl-lOv" firstAttribute="top" secondItem="wx4-x4-0K1" secondAttribute="bottom" constant="5" id="enG-Sk-KHx"/>
                             <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="zs9-0R-094" secondAttribute="trailing" constant="20" id="fgH-mL-Nhs"/>
                             <constraint firstItem="rVv-tQ-bzn" firstAttribute="leading" secondItem="q8p-ry-V5Z" secondAttribute="leading" constant="20" id="hGe-tz-btM"/>
+                            <constraint firstItem="q8p-ry-V5Z" firstAttribute="trailing" secondItem="oQg-B9-WvF" secondAttribute="trailing" constant="20" id="okd-vP-R3U"/>
                             <constraint firstItem="oQg-B9-WvF" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="pGy-4w-lOm"/>
                             <constraint firstItem="bzd-gB-8zP" firstAttribute="top" secondItem="hG9-Zl-lOv" secondAttribute="bottom" constant="10" id="pZ7-OL-MOl"/>
                             <constraint firstItem="r4x-gJ-9W6" firstAttribute="top" secondItem="rVv-tQ-bzn" secondAttribute="bottom" constant="5" id="w2R-VP-Flf"/>

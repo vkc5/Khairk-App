@@ -37,7 +37,7 @@ class AdminBroadcastViewController: UIViewController {
         }
         
         let alert = UIAlertController(
-            title: "Confirm Notification",message: "Title: \(title)\n\nMessage: \(body)\n\nSend to: \(recipientRole.capitalized)", preferredStyle: .alert)
+            title: "Confirm Notification",message: "Title: \(title)\nMessage: \(body)\nSend to: \(recipientRole.capitalized)", preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
                 let db = Firestore.firestore()
