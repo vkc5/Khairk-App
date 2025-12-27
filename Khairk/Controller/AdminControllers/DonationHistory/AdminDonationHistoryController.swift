@@ -6,15 +6,32 @@
 //
 
 import UIKit
+import FirebaseStorage
+import FirebaseFirestore
 
-class AdminDonationHistoryController: UIViewController {
+class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var filterButton: UIButton!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var donationsList: UITableView!
+    var allDonations: [Donation] = []
+    var filteredDonations: [Donation] = []
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "All Donations"
+        searchBar.delegate = self
         setupFilterMenu()
+        setupTableView()
         // Do any additional setup after loading the view.
+    }
+    
+    private func setupTableView() {
+        donationsList.dataSource = self
+        donationsList.delegate = self
+        donationsList.rowHeight = UITableView.automaticDimension
+        donationsList.estimatedRowHeight = 100
     }
     
     func setupFilterMenu() {
@@ -76,24 +93,38 @@ class AdminDonationHistoryController: UIViewController {
         let clearAction = UIAction(
             title: "Clear Filters",
             image: UIImage(systemName: "xmark.circle"),
-            attributes: [],
-            state: .off
+            attributes: [.destructive]
         ) { [weak self] _ in
-            self?.clearFilters()
+            
         }
-
+        
 
         let mainMenu = UIMenu(
             title: "Filter by",
             identifier: nil,
             options: [.singleSelection],                      // radio style selection
-            children: [expiresMenu, statusMenu]
+            children: [expiresMenu, statusMenu, clearAction]
         )
 
         // Assign to button
         filterButton.menu = mainMenu
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return filteredDonations.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let notificationData = filteredDonations[indexPath.row]
+        let cell=tableView.dequeueReusableCell(withIdentifier: "DonationCell", for: indexPath)as! AdminNotificationTableViewCell
+        
+        cell.notificationContainer.layer.cornerRadius = 12
+        cell.notificationContainer.layer.borderWidth = 1
+        
 
+        return cell
+    }
+    
 
 
     /*
