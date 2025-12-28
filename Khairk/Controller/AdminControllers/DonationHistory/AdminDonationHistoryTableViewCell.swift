@@ -17,10 +17,12 @@ class AdminDonationHistoryTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         expiresSoonTag.text = "Expires Soon"
-        expiresSoonTag.textColor = .white
-        expiresSoonTag.backgroundColor = .systemRed
-        expiresSoonTag.layer.cornerRadius = 8
-        expiresSoonTag.clipsToBounds = true 
+        expiresSoonTag.backgroundColor = UIColor.errorBackgroundRed
+        expiresSoonTag.layer.cornerRadius = 2
+        expiresSoonTag.clipsToBounds = true
+        foodImage.contentMode = .scaleAspectFill
+        foodImage.layer.cornerRadius = 8
+        foodImage.clipsToBounds = true
         // Initialization code
     }
 
@@ -31,3 +33,4 @@ class AdminDonationHistoryTableViewCell: UITableViewCell {
     }
 
 }
+
