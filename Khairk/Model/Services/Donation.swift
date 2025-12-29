@@ -19,6 +19,7 @@ struct Donation {
     let createdAt: Date
     let expiryDate: Date
     let donorId: String
+    let caseId: String
     
     let serviceArea: String?
     let pickupTime: Date?
@@ -34,6 +35,7 @@ struct Donation {
             let status = dictionary["status"] as? String,
             let imageURL = dictionary["imageURL"] as? String,
             let donorId = dictionary["donorId"] as? String,
+            let caseId = dictionary["caseId"] as? String,
             let createdAtTimestamp = dictionary["createdAt"] as? Timestamp,
             let expiryTimestamp = dictionary["expiryDate"] as? Timestamp
         else {
@@ -48,6 +50,7 @@ struct Donation {
         self.status = status
         self.imageURL = imageURL
         self.donorId = donorId
+        self.caseId = caseId
         self.createdAt = createdAtTimestamp.dateValue()
         self.expiryDate = expiryTimestamp.dateValue()
 
