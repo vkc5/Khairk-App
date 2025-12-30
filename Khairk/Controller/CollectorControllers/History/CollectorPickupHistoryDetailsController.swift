@@ -1,15 +1,15 @@
 //
-//  AdminDonationDetailsController.swift
+//  CollectorPickupHistoryDetailsController.swift
 //  Khairk
 //
-//  Created by BP-19-130-16 on 28/12/2025.
+//  Created by BP-36-201-14 on 30/12/2025.
 //
 
 import UIKit
+import FirebaseStorage
 import FirebaseFirestore
-import MapKit
 
-class AdminDonationDetailsController: UIViewController{
+class CollectorPickupHistoryDetailsController: UIViewController {
     var donationID: String?
 
     @IBOutlet weak var foodImage: UIImageView!
@@ -74,15 +74,6 @@ class AdminDonationDetailsController: UIViewController{
         ngoCaseImage.contentMode = .scaleAspectFill
         ngoCaseImage.clipsToBounds = true
         ngoCaseImage.layer.cornerRadius = 5
-        
-        ngoContainer.layer.cornerRadius = 5
-        ngoImage.layer.cornerRadius = 5
-        ngoImage.clipsToBounds = true
-        ngoImage.contentMode = .scaleAspectFill
-        ngoImage.layer.borderWidth = 1
-        ngoImage.layer.borderColor = UIColor.lightGray.cgColor
-
-        
     }
     
     private func fetchDonationDetails() {
@@ -200,43 +191,11 @@ class AdminDonationDetailsController: UIViewController{
                 self.ngoCaseBody.text = body
             }
             
-            fetchNgo(ngoId)
         }
     }
     
-    private func fetchNgo(_ id: String) {
-        let db = Firestore.firestore()
-        
-        db.collection("users").document(id).getDocument { [weak self] querySnapshot, error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("Error getting documents: \(error)")
-                return
-            }
-  
-            guard let snapshot = querySnapshot,
-                  let data = snapshot.data(),
-                  let name = data["name"] as? String,
-                  let phoneNumber = data["phone"] as? String,
-                  let email = data["email"] as? String,
-                  let imageURL = data["profileImageUrl"] as? String
-            else {
-                print("Donation not found or parsing failed")
-                return
-            }
-            
-            
-            // Reload table view on main thread
-            DispatchQueue.main.async {
-                self.ngoImage.loadImage(from: imageURL)
-                self.ngoName.text = name
-                self.ngoEmail.text = email
-                self.ngoPhoneNumber.text = phoneNumber
-               
-            }
-        }
-    }
+    
+
     
 
     /*

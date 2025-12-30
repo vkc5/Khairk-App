@@ -1,55 +1,48 @@
 //
-//  AdminDonationHistoryController.swift
+//  CollectorPickupHistoryController.swift
 //  Khairk
 //
-//  Created by BP-19-130-16 on 25/12/2025.
+//  Created by BP-36-201-14 on 30/12/2025.
 //
 
 import UIKit
 import FirebaseStorage
 import FirebaseFirestore
 
-class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
-
+class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var filterButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var donationsList: UITableView!
-    var allDonations: [Donation] = []
-    var filteredDonations: [Donation] = []
+    @IBOutlet weak var pickupList: UITableView!
+    
+    struct PickupItem {
+        let donation: Donation
+        let ngoCase: NgoCases
+        var donorName: String? = nil
+    }
+
+    var allPickups: [PickupItem] = []
+    var filteredPickups: [PickupItem] = []
     var searchText: String = ""
     var selectedFilter: String? = nil
     
-    var loader: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.hidesWhenStopped = true
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
+    let ngoId = "NZ2aoocAENXChA4GnEYvsCKYjBO2"
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "All Donations"
+        title = "Pickup History"
         searchBar.delegate = self
         setupFilterMenu()
         setupTableView()
-        setupLoader()
         fetchDonations()
         // Do any additional setup after loading the view.
     }
 
-    private func setupLoader() {
-        view.addSubview(loader)
-        NSLayoutConstraint.activate([
-            loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loader.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
 
     
     private func setupTableView() {
-        donationsList.dataSource = self
-        donationsList.delegate = self
+        pickupList.dataSource = self
+        pickupList.delegate = self
     }
     
     func setupFilterMenu() {
@@ -145,6 +138,40 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
     private func fetchDonations() {
         let db = Firestore.firestore()
         
+        db.collection("ngoCases").whereField("ngoID", isEqualTo: ngoId).getDocuments { [weak self] querySnapshot, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error getting documents: \(error)")
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                print("No Cases found")
+                return
+            }
+            
+            var casesById: [String: NgoCases] = [:]
+
+            for document in documents {
+                let data = document.data()
+                print("Document data:", data) 
+                if let ngoCase = NgoCases(id: document.documentID, dictionary: data) {
+                    casesById[ngoCase.id] = ngoCase
+                }else {
+                    print("Failed to parse case:", data)
+                }
+            }
+            
+            self.fetchDonationsForCases(casesById)
+
+        }
+    }
+    
+    private func fetchDonationsForCases(_ casesById: [String: NgoCases]) {
+        let db = Firestore.firestore()
+        let group = DispatchGroup()
+        
         db.collection("donations").getDocuments { [weak self] querySnapshot, error in
             guard let self = self else { return }
             
@@ -158,27 +185,36 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
                 return
             }
             
-            var fetchedDonations: [Donation] = []
+            var items: [PickupItem] = []
             
             for document in documents {
                 print("ID:", document.documentID, "Data:", document.data())
                 let data = document.data()
-                if let donation = Donation(id: document.documentID, dictionary: data) {
-                    fetchedDonations.append(donation)
-                }else {
+                if let donation = Donation(id: document.documentID, dictionary: data), let ngoCase = casesById[donation.caseId] {
+                    var item = PickupItem(donation: donation, ngoCase: ngoCase)
+                    group.enter()
+                    self.fetchUserName(userId: donation.donorId) { name in
+                        item.donorName = name
+                        items.append(item) 
+                        group.leave()
+                    }
+                } else {
                     print("Failed to parse donation:", data)
                 }
             }
-            print("Fetched donation count:", fetchedDonations.count)
-            self.allDonations = fetchedDonations
-            self.filteredDonations = fetchedDonations
             
-            // Reload table view on main thread
+            group.notify(queue: .main) {
+                self.allPickups = items
+                self.filteredPickups = items
+                self.pickupList.reloadData()
+            }
+            
             DispatchQueue.main.async {
-                self.donationsList.reloadData()
+                self.pickupList.reloadData()
             }
         }
     }
+
     
     func fetchUserName(userId: String, completion: @escaping (String) -> Void) {
         let db = Firestore.firestore()
@@ -199,32 +235,32 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
     }
     
     private func applyFilters() {
-        filteredDonations = allDonations.filter { donation in
+        filteredPickups = allPickups.filter { donation in
             var matchesSearch = true
             var matchesFilter = true
             
             if !searchText.isEmpty {
-                matchesSearch = donation.foodName.lowercased().contains(searchText.lowercased()) ||  donation.description.lowercased().contains(searchText.lowercased())
+                matchesSearch = donation.donation.foodName.lowercased().contains(searchText.lowercased()) || donation.donation.description.lowercased().contains(searchText.lowercased()) || donation.ngoCase.title.lowercased().contains(searchText.lowercased()) || donation.ngoCase.description.lowercased().contains(searchText.lowercased())
             }
 
             if let selectedFilter = selectedFilter {
                 switch selectedFilter {
                 case "Expires Soon":
                     let calendar = Calendar.current
-                    if let daysUntilExpiration = calendar.dateComponents([.day], from: Date(), to: donation.expiryDate).day {
+                    if let daysUntilExpiration = calendar.dateComponents([.day], from: Date(), to: donation.donation.expiryDate).day {
                         matchesFilter = daysUntilExpiration <= 2
                     } else {
                         matchesFilter = false
                     }
                 case "Have Time":
                     let calendar = Calendar.current
-                    if let daysUntilExpiration = calendar.dateComponents([.day], from: Date(), to: donation.expiryDate).day {
+                    if let daysUntilExpiration = calendar.dateComponents([.day], from: Date(), to: donation.donation.expiryDate).day {
                         matchesFilter = daysUntilExpiration > 2
                     } else {
                         matchesFilter = false
                     }
                 case "pending", "accepted", "collected":
-                    matchesFilter = donation.status.lowercased() == selectedFilter.lowercased()
+                    matchesFilter = donation.donation.status.lowercased() == selectedFilter.lowercased()
                 default:
                     matchesFilter = true
                 }
@@ -233,32 +269,52 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
             return matchesSearch && matchesFilter
         }
         
-        donationsList.reloadData()
+        pickupList.reloadData()
     }
 
 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredDonations.count
+        return filteredPickups.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let donationsData = filteredDonations[indexPath.row]
-        let cell=tableView.dequeueReusableCell(withIdentifier: "DonationCell", for: indexPath)as! AdminDonationHistoryTableViewCell
+        let donationsData = filteredPickups[indexPath.row]
+        let cell=tableView.dequeueReusableCell(withIdentifier: "PickupCell", for: indexPath)as! CollectorPickupHistoryTableViewCell
         
-        cell.container.layer.cornerRadius = 12
-        cell.container.layer.borderWidth = 0.5
+        cell.pickupContainer.layer.cornerRadius = 12
+        cell.pickupContainer.layer.borderWidth = 0.5
+        cell.pickupContainer.layer.borderColor = UIColor.lightGray.cgColor
+        cell.pickupContainer.layer.masksToBounds = true
+        cell.foodImage.contentMode = .scaleAspectFill
+        cell.foodImage.clipsToBounds = true
+        cell.ngoCaseContainer.layer.cornerRadius = 12
+        cell.ngoCaseImage.layer.cornerRadius = 5
+        cell.ngoCaseImage.contentMode = .scaleAspectFill
+        cell.ngoCaseImage.clipsToBounds = true
         
-        cell.foodName?.text = donationsData.foodName
-        fetchUserName(userId: donationsData.donorId) { name in
-            DispatchQueue.main.async {
-                cell.userName.text = name
-            }
+        cell.foodImage.loadImage(from: donationsData.donation.imageURL)
+        cell.FoodName.text = donationsData.donation.foodName
+        cell.foodBody.text = donationsData.donation.description
+        cell.userName.text = donationsData.donorName
+        cell.ngoCaseTitle.text = donationsData.ngoCase.title
+    
+        cell.ngoCaseImage.loadImage(from: donationsData.ngoCase.imageUrl)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_BH")
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        if let startDate = donationsData.ngoCase.startDate, let endDate = donationsData.ngoCase.endDate{
+            let startDateString = dateFormatter.string(from: startDate)
+            let endDateString = dateFormatter.string(from: endDate)
+            cell.ngoCaseDate.text = "From \(startDateString)"
+            cell.ngoCaseDateEnd.text = "To \(endDateString)"
         }
-        cell.status?.text = donationsData.status
-        cell.foodImage.loadImage(from: donationsData.imageURL)
+
+        
         let calendar = Calendar.current
-        if let daysUntilExpiration = calendar.dateComponents([.day], from: Date(), to: donationsData.expiryDate).day {
+        if let daysUntilExpiration = calendar.dateComponents([.day], from: Date(), to: donationsData.donation.expiryDate).day {
             cell.expiresSoonTag.isHidden = daysUntilExpiration > 2
         } else {
             cell.expiresSoonTag.isHidden = true
@@ -268,25 +324,27 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let selectedDonation = filteredDonations[indexPath.row]
-        performSegue(withIdentifier: "ShowDonationDetails", sender: selectedDonation.id)
+        let selectedDonation = filteredPickups[indexPath.row]
+        performSegue(withIdentifier: "ShowPickupDetails", sender: selectedDonation.donation.id)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // 1. Check the segue identifier to ensure it's the correct transition
-        if segue.identifier == "ShowDonationDetails" {
+        if segue.identifier == "ShowPickupDetails" {
             // 2. Check the destination view controller type
-            if let destinationVC = segue.destination as? AdminDonationDetailsController {
+            if let destinationVC = segue.destination as? CollectorPickupHistoryDetailsController {
                 // 3. Check if the sender is the expected data type (the donation ID)
                 if let donationID = sender as? String { // Use the correct type for your ID (e.g., String, UUID, Int)
                     // 4. Pass the data to a property in the destination view controller
                     destinationVC.donationID = donationID
-                    segue.destination.navigationItem.title = "Donation Details"
+                    segue.destination.navigationItem.title = "Pickup Details"
                 }
             }
         }
     }
 
+
+    
 
     /*
     // MARK: - Navigation
