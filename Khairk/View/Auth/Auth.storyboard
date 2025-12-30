@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -434,10 +434,10 @@ Privacy Policy.</string>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Create a secure password" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="k0F-Hh-oHy">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Create a secure password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yPk-8v-Suc">
                                                 <rect key="frame" x="0.0" y="281.99999999999994" width="329" height="34"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="name"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -476,7 +476,7 @@ Privacy Policy.</string>
                     <connections>
                         <outlet property="emailTextField" destination="0Do-Xf-kk0" id="tjw-Jj-Y91"/>
                         <outlet property="nameTextField" destination="nFV-FR-uZs" id="wpw-5O-dXM"/>
-                        <outlet property="passwordTextField" destination="k0F-Hh-oHy" id="EOC-EZ-61D"/>
+                        <outlet property="passwordTextField" destination="yPk-8v-Suc" id="6uR-wS-cB7"/>
                         <outlet property="phoneTextField" destination="nzS-FG-ind" id="B35-3r-odW"/>
                     </connections>
                 </viewController>
@@ -593,10 +593,10 @@ Privacy Policy.</string>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Create a secure password" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="7OZ-oH-Olt">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Create a secure password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Rtl-O4-TzA">
                                                 <rect key="frame" x="0.0" y="281.99999999999994" width="329" height="34"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="name"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -635,7 +635,7 @@ Privacy Policy.</string>
                     <connections>
                         <outlet property="emailTextField" destination="EDx-tk-ntS" id="lmt-ya-P5l"/>
                         <outlet property="ngoNameTextField" destination="6XX-1z-bfq" id="0Dy-Za-GMf"/>
-                        <outlet property="passwordTextField" destination="7OZ-oH-Olt" id="q34-9a-AV8"/>
+                        <outlet property="passwordTextField" destination="Rtl-O4-TzA" id="TGD-bV-jIn"/>
                         <outlet property="phoneTextField" destination="LF7-ij-8OF" id="vQf-SS-26x"/>
                     </connections>
                 </viewController>
