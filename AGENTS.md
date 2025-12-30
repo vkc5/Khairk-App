@@ -84,6 +84,21 @@ Prefer to keep new code in the existing structure rather than introducing a new 
 
 ---
 
+## Feature Notes
+
+### NGO Case Creation & Management (Donor)
+
+- Storyboard: `Khairk/View/DonorViews/NGOCases/DonorNGOCases.storyboard`
+- Controllers: `Khairk/Controller/DonorControllers/NGOCases/MyCasesViewController.swift`, `Khairk/Controller/DonorControllers/NGOCases/CaseDetailsViewController.swift`, `Khairk/Controller/DonorControllers/NGOCases/CreateCaseViewController.swift`
+- Model/service: `Khairk/Controller/DonorControllers/NGOCases/NgoCase.swift`, `Khairk/Controller/DonorControllers/NGOCases/CaseService.swift`
+- Firestore path: `ngos/{uid}/cases`
+- Stored fields: `title`, `foodType`, `goal`, `collected`, `startDate`, `endDate`, `description`, `imageURL`, `status`, `createdAt`
+- Flow: My Cases list -> Case Details; My Cases list -> New Case; delete and success use standard iOS alerts
+- UI target: match the "NGO Case Creation & Management" export exactly
+
+---
+
+
 ## Swift / UIKit Code Style Guidelines
 
 ### Imports
