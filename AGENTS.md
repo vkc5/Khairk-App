@@ -106,6 +106,14 @@ Prefer to keep new code in the existing structure rather than introducing a new 
 - Flow: My Active Pickups -> Pickup Details; Requests -> Donation Details; approve/reject + mark collected use standard iOS alerts
 - UI target: match the "Pickup Management & Collection Tracking" export exactly
 
+### Admin Log Export (CSV for Excel)
+
+- Files: `Khairk/Controller/AdminControllers/SystemLogs/SystemLog.swift`, `Khairk/Controller/AdminControllers/SystemLogs/LogsExportService.swift`, `Khairk/Controller/AdminControllers/SystemLogs/LogsExportPopupViewController.swift`, `Khairk/Controller/AdminControllers/SystemLogs/LogsExportPresenter.swift`
+- Usage: call `LogsExportPresenter.presentExportPopup(from:logs:)` from the admin system logs export icon
+- Output: CSV file saved to temp with share sheet; label it as Excel export
+- Suggested collection: `system_logs` with fields `timestamp`, `userName`, `userRole`, `type`, `action`, `description`, `severity`, `metadata`
+- UI: blur background popup with confirm, success, and failure states
+
 ---
 
 
