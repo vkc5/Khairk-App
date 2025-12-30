@@ -37,10 +37,40 @@ class ViewController: UIViewController {
                 self.logoImageView.transform = .identity
                 self.logoImageView.alpha = 1.0
             },
-            completion: nil
-        )
+            completion: { _ in
+                        self.goToLogin()   // ⭐ move to dashboard
+                    }        )
+    }
+    func goToLogin() {
+                let storyboard = UIStoryboard(name: "DonorNGODiscovery", bundle: nil)
+                let loginVC = storyboard.instantiateViewController(withIdentifier: "NGOFinderViewController")
+
+                // Smooth fade animation
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+
+                    UIView.transition(
+                        with: window,
+                        duration: 0.4,
+                        options: .transitionCrossDissolve,
+                        animations: {
+                            window.rootViewController = UINavigationController(rootViewController: loginVC)
+                        },
+                        completion: nil
+                    )
+                } else {
+                    // Fallback
+                    loginVC.modalPresentationStyle = .fullScreen
+                    self.present(loginVC, animated: true)
+                }
+            }
     }
 
 
-}
+    
+    
+
+
+
+
 
