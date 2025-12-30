@@ -9,25 +9,25 @@ import UIKit
 import FirebaseAuth
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var logoImageView: UIImageView!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         print("Firebase current user:", Auth.auth().currentUser as Any)
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         animateLogoBounce()
     }
-
+    
     private func animateLogoBounce() {
         // Start smaller & invisible
         logoImageView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
         logoImageView.alpha = 0.0
-
+        
         UIView.animate(
             withDuration: 0.9,
             delay: 0.1,
@@ -41,18 +41,35 @@ class ViewController: UIViewController {
             completion: { _ in
                 // Navigate after animation finishes
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.navigateToMyImpact()
+                    self.goToLogin()
                 }
             }
         )
     }
-
-    private func navigateToMyImpact() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(
-            withIdentifier: "My_impactViewController"
-        ) as! My_impactViewController
-
-        navigationController?.pushViewController(vc, animated: true)
+    //DonorNGOCases FoodDonationViewController
+    //DonorImpact newViewController
+    //DonorRewards testgameViewController
+    func goToLogin() {
+        let storyboard = UIStoryboard(name: "DonorRewards", bundle: nil)
+        let loginVC = storyboard.instantiateViewController(withIdentifier: "testgameViewController")
+        
+        // Smooth fade animation
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            
+            UIView.transition(
+                with: window,
+                duration: 0.4,
+                options: .transitionCrossDissolve,
+                animations: {
+                    window.rootViewController = UINavigationController(rootViewController: loginVC)
+                },
+                completion: nil
+            )
+        } else {
+            // Fallback
+            loginVC.modalPresentationStyle = .fullScreen
+            self.present(loginVC, animated: true)
+        }
     }
 }
