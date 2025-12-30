@@ -96,6 +96,16 @@ Prefer to keep new code in the existing structure rather than introducing a new 
 - Flow: My Cases list -> Case Details; My Cases list -> New Case; delete and success use standard iOS alerts
 - UI target: match the "NGO Case Creation & Management" export exactly
 
+### NGO Pickup Management & Collection Tracking
+
+- Storyboard: `Khairk/View/NGOViews/Pickups/NGOPickups.storyboard`
+- Controllers: `Khairk/Controller/NGOControllers/Pickups/NGOActivePickupsViewController.swift`, `Khairk/Controller/NGOControllers/Pickups/NGOPickupDetailsViewController.swift`, `Khairk/Controller/NGOControllers/Pickups/NGOAcceptsDonationViewController.swift`, `Khairk/Controller/NGOControllers/Pickups/NGODonationDetailsViewController.swift`
+- Model/service: `Khairk/Controller/NGOControllers/Pickups/Donation.swift`, `Khairk/Controller/NGOControllers/Pickups/DonationService.swift`, `Khairk/Controller/NGOControllers/Pickups/NGOContext.swift`
+- Firestore path: `donations` (filtered by `ngoId`)
+- Stored fields: `ngoId`, `caseId`, `donorName`, `donorEmail`, `donorPhone`, `foodType`, `foodName`, `quantity`, `expiryDate`, `description`, `pickupMethod`, `status`, `pickupStatus`, `caseTitle`, `caseDescription`, `caseTarget`, `caseCollected`, `createdAt`
+- Flow: My Active Pickups -> Pickup Details; Requests -> Donation Details; approve/reject + mark collected use standard iOS alerts
+- UI target: match the "Pickup Management & Collection Tracking" export exactly
+
 ---
 
 
