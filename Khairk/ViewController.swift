@@ -45,18 +45,17 @@ class ViewController: UIViewController {
                 }
             }
         )
+
     }
-    //DonorNGOCases FoodDonationViewController
-    //DonorImpact newViewController
-    //DonorRewards testgameViewController
+    
     func goToLogin() {
-        let storyboard = UIStoryboard(name: "DonorRewards", bundle: nil)
-        let loginVC = storyboard.instantiateViewController(withIdentifier: "testgameViewController")
-        
+        let storyboard = UIStoryboard(name: "Auth", bundle: nil)
+        let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginVC")
+
         // Smooth fade animation
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let window = windowScene.windows.first {
-            
+
             UIView.transition(
                 with: window,
                 duration: 0.4,
@@ -72,4 +71,5 @@ class ViewController: UIViewController {
             self.present(loginVC, animated: true)
         }
     }
+
 }
