@@ -3,7 +3,7 @@ import FirebaseFirestore
 
 final class NGOAcceptsDonationViewController: UIViewController {
 
-    private let service = DonationService()
+    private let service = DonationService.shared
     private var listener: ListenerRegistration?
     private var items: [Donation] = []
     private var filteredItems: [Donation] = []
@@ -141,9 +141,12 @@ final class NGOAcceptsDonationViewController: UIViewController {
             if query.isEmpty {
                 return true
             }
+            let foodType = item.foodType?.lowercased() ?? ""
+            let donorName = item.donorName?.lowercased() ?? ""
+
             return item.foodName.lowercased().contains(query)
-                || item.foodType.lowercased().contains(query)
-                || item.donorName.lowercased().contains(query)
+                || foodType.contains(query)
+                || donorName.contains(query)
         }
 
         emptyLabel.isHidden = !filteredItems.isEmpty

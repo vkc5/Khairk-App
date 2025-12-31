@@ -5,7 +5,7 @@ final class NGODonationDetailsViewController: UIViewController {
 
     var donationId: String = ""
 
-    private let service = DonationService()
+    private let service = DonationService.shared
     private var listener: ListenerRegistration?
     private var currentDonation: Donation?
 
@@ -208,48 +208,72 @@ final class NGODonationDetailsViewController: UIViewController {
     }
 
     private func render(_ donation: Donation) {
-        let foodTitle = donation.foodName.isEmpty ? donation.foodType : donation.foodName
+
+        // ---- Title ----
+        let foodTitle: String = {
+            if !donation.foodName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return donation.foodName
+            }
+            // fallback for collector data if foodName is empty
+            return donation.foodType ?? "Food"
+        }()
+
         titleLabel.text = foodTitle
 
+        // ---- Expiry formatting ----
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        let expiryText = donation.expiryDate.map { formatter.string(from: $0) } ?? "N/A"
+        let expiryText = formatter.string(from: donation.expiryDate)
 
-        if let expiryDate = donation.expiryDate {
-            let days = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day ?? 0
-            if days <= 2 {
-                bannerView.isHidden = false
-                bannerLabel.text = "Expires Soon\nFood expires in \(max(days, 0)) days - \(expiryText)"
-            } else {
-                bannerView.isHidden = true
-            }
+        // ---- Expiry banner logic ----
+        let expiryDate = donation.expiryDate
+        let days = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day ?? 0
+
+        if days <= 2 {
+            bannerView.isHidden = false
+            bannerLabel.text = "Expires Soon\nFood expires in \(max(days, 0)) days - \(expiryText)"
         } else {
             bannerView.isHidden = true
         }
 
-        foodDetailsLabel.text = """
-        Food Name: \(foodTitle)
-        Quantity: \(donation.quantity)
-        Expiry Date: \(expiryText)
-        Description: \(donation.details.isEmpty ? "N/A" : donation.details)
-        How to receive: \(donation.pickupMethod)
-        """
+        // ---- Details block ----
+        let pickupText = donation.pickupMethod ?? "N/A"
 
-        donorNameLabel.text = donation.donorName
+        let descriptionText: String = {
+            let trimmed = donation.description.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? "N/A" : trimmed
+        }()
+
+        foodDetailsLabel.text = """
+    Food Name: \(foodTitle)
+    Quantity: \(donation.quantity)
+    Expiry Date: \(expiryText)
+    Description: \(descriptionText)
+    How to receive: \(pickupText)
+    """
+
+        // ---- Donor info ----
+        donorNameLabel.text = donation.donorName ?? "Unknown"
+
         var donorInfo = ""
-        if !donation.donorEmail.isEmpty {
-            donorInfo += "Email: \(donation.donorEmail)\n"
+
+        if let email = donation.donorEmail, !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            donorInfo += "Email: \(email)\n"
         }
-        if !donation.donorPhone.isEmpty {
-            donorInfo += "Phone: \(donation.donorPhone)\n"
+
+        if let phone = donation.donorPhone, !phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            donorInfo += "Phone: \(phone)\n"
         }
+
         donorInfoLabel.text = donorInfo.isEmpty ? "Contact info not provided" : donorInfo
 
+        // ---- Buttons visibility (keep your logic) ----
         let decided = donation.status != "pending"
         approveButton.isHidden = decided
         rejectButton.isHidden = decided
         actionStack.isHidden = decided
     }
+
 
     @objc private func approveTapped() {
         guard let donation = currentDonation else { return }

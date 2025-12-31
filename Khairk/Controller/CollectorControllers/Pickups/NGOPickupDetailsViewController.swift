@@ -5,7 +5,7 @@ final class NGOPickupDetailsViewController: UIViewController {
 
     var donationId: String = ""
 
-    private let service = DonationService()
+    private let service = DonationService.shared
     private var listener: ListenerRegistration?
 
     private let scrollView = UIScrollView()
@@ -221,61 +221,88 @@ final class NGOPickupDetailsViewController: UIViewController {
     }
 
     private func render(_ donation: Donation) {
-        let foodTitle = donation.foodName.isEmpty ? donation.foodType : donation.foodName
+
+        // Title
+        let foodTitle: String = {
+            if !donation.foodName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return donation.foodName
+            }
+            return donation.foodType ?? "Food"
+        }()
         titleLabel.text = foodTitle
 
+        // Date formatting
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        let expiryText = donation.expiryDate.map { formatter.string(from: $0) } ?? "N/A"
 
+        // expiryDate is Date (NOT optional)
+        let expiryText = formatter.string(from: donation.expiryDate)
+
+        // Description (was "details" before)
+        let desc = donation.description.trimmingCharacters(in: .whitespacesAndNewlines)
+        let descText = desc.isEmpty ? "N/A" : desc
+
+        // Pickup method is optional now
+        let pickupText = donation.pickupMethod ?? "N/A"
+
+        // Details label
         foodDetailsLabel.text = """
         Food Name: \(foodTitle)
         Quantity: \(donation.quantity)
         Expiry Date: \(expiryText)
-        Description: \(donation.details.isEmpty ? "N/A" : donation.details)
-        How to receive: \(donation.pickupMethod)
+        Description: \(descText)
+        How to receive: \(pickupText)
         """
 
-        donorNameLabel.text = donation.donorName
+        // Donor info (optional now)
+        donorNameLabel.text = donation.donorName ?? "Unknown"
+
         var donorInfo = ""
-        if !donation.donorEmail.isEmpty {
-            donorInfo += "Email: \(donation.donorEmail)\n"
+        if let email = donation.donorEmail, !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            donorInfo += "Email: \(email)\n"
         }
-        if !donation.donorPhone.isEmpty {
-            donorInfo += "Phone: \(donation.donorPhone)\n"
+        if let phone = donation.donorPhone, !phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            donorInfo += "Phone: \(phone)\n"
         }
         donorInfoLabel.text = donorInfo.isEmpty ? "Contact info not provided" : donorInfo
 
-        if !donation.caseTitle.isEmpty {
-            caseTitleLabel.text = donation.caseTitle
+        // Case title (optional now)
+        if let caseTitle = donation.caseTitle, !caseTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            caseTitleLabel.text = caseTitle
         } else {
             caseTitleLabel.text = "Case ID: \(donation.caseId)"
         }
 
-        let caseDescription = donation.caseDescription.isEmpty ? "No description" : donation.caseDescription
-        if donation.caseTarget > 0 {
-            caseDetailsLabel.text = """
-            \(caseDescription)
+        // Case description/target/collected (optional now)
+        let caseDescText: String = {
+            let cd = (donation.caseDescription ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            return cd.isEmpty ? "No description" : cd
+        }()
 
-            Collected: \(donation.caseCollected)
-            Target: \(donation.caseTarget)
+        let target = donation.caseTarget ?? 0
+        let collected = donation.caseCollected ?? 0
+
+        if target > 0 {
+            caseDetailsLabel.text = """
+            \(caseDescText)
+
+            Collected: \(collected)
+            Target: \(target)
             """
         } else {
-            caseDetailsLabel.text = caseDescription
+            caseDetailsLabel.text = caseDescText
         }
 
-        if let expiryDate = donation.expiryDate {
-            let days = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day ?? 0
-            if days <= 2 {
-                bannerView.isHidden = false
-                bannerLabel.text = "Expires Soon\nFood expires in \(max(days, 0)) days - \(expiryText)"
-            } else {
-                bannerView.isHidden = true
-            }
+        // Expiry banner (expiryDate is Date, so no if-let)
+        let days = Calendar.current.dateComponents([.day], from: Date(), to: donation.expiryDate).day ?? 0
+        if days <= 2 {
+            bannerView.isHidden = false
+            bannerLabel.text = "Expires Soon\nFood expires in \(max(days, 0)) days - \(expiryText)"
         } else {
             bannerView.isHidden = true
         }
     }
+
 
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
