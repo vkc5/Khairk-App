@@ -244,7 +244,7 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let donationsData = filteredDonations[indexPath.row]
-        let cell=tableView.dequeueReusableCell(withIdentifier: "DonationCell", for: indexPath)as! AdminDonationHistoryTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DonationCell", for: indexPath)as! AdminDonationHistoryTableViewCell
         
         cell.container.layer.cornerRadius = 12
         cell.container.layer.borderWidth = 0.5

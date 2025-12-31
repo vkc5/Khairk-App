@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
 
-        let storyboard = UIStoryboard(name: "CollectorPickupHistory", bundle: nil)
+        let storyboard = UIStoryboard(name: "AdminNGOVerification", bundle: nil)
+//        let storyboard = UIStoryboard(name: "CollectorPickupHistory", bundle: nil)
 //        let storyboard = UIStoryboard(name: "AdminDonationHistory", bundle: nil)
 //        let storyboard = UIStoryboard(name: "AdminBroadcast", bundle: nil)
 //        let storyboard = UIStoryboard(name: "AdminNotifications", bundle: nil)

@@ -48,7 +48,7 @@ class Notification {
             if let error = error {
                 print("Error adding notification: \(error.localizedDescription)")
             } else {
-                print("Notification added for userId: \(userId)")
+                print("Notification added for userId: \(userId)") 
             }
         }
     }
