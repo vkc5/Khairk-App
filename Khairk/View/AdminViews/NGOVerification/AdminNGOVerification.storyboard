@@ -330,16 +330,16 @@
                                                             </label>
                                                         </subviews>
                                                     </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="vgb-Mq-V17">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="vgb-Mq-V17">
                                                         <rect key="frame" x="0.0" y="77.333333333333371" width="363" height="21.666666666666671"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iCD-X2-cAC">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iCD-X2-cAC">
                                                                 <rect key="frame" x="0.0" y="0.0" width="47" height="21.666666666666668"/>
                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="Pickup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfO-fz-g9K">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Pickup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfO-fz-g9K">
                                                                 <rect key="frame" x="49" y="0.0" width="314" height="21.666666666666668"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -347,22 +347,25 @@
                                                             </label>
                                                         </subviews>
                                                     </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-0B-kA0">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-0B-kA0">
                                                         <rect key="frame" x="0.0" y="104" width="363" height="20.333333333333329"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Phone Number:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hID-fS-746">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hID-fS-746">
                                                                 <rect key="frame" x="0.0" y="0.0" width="121.66666666666667" height="20.333333333333332"/>
                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="Pickup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IC0-2G-fVf">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Pickup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IC0-2G-fVf">
                                                                 <rect key="frame" x="123.66666666666664" y="0.0" width="239.33333333333337" height="20.333333333333332"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstItem="hID-fS-746" firstAttribute="baseline" secondItem="IC0-2G-fVf" secondAttribute="firstBaseline" id="a45-e7-rM2"/>
+                                                        </constraints>
                                                     </stackView>
                                                 </subviews>
                                                 <constraints>
@@ -567,6 +570,9 @@
                                                 <buttonConfiguration key="configuration" style="filled" title="Approve">
                                                     <color key="baseBackgroundColor" name="Pressed-800"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="approveBtnClick:" destination="9JU-xm-7lU" eventType="touchUpInside" id="wng-G7-yFw"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pga-LC-fc4">
                                                 <rect key="frame" x="186.66666666666663" y="0.0" width="176.33333333333337" height="38.333333333333336"/>
@@ -575,7 +581,7 @@
                                                     <color key="baseBackgroundColor" name="ErrorTextRed"/>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <segue destination="muR-7b-Gyu" kind="presentation" id="rbH-c2-bTw"/>
+                                                    <action selector="rejectBtnClick:" destination="9JU-xm-7lU" eventType="touchUpInside" id="Icz-7f-f33"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -625,20 +631,63 @@
             </objects>
             <point key="canvasLocation" x="739.69465648854964" y="-4.2253521126760569"/>
         </scene>
-        <!--View Controller-->
+        <!--Reject NGO Account-->
         <scene sceneID="2CV-t3-Y7H">
             <objects>
-                <viewController id="muR-7b-Gyu" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdminNGOVerificationRejectController" id="muR-7b-Gyu" customClass="AdminNGOVerificationRejectController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yhl-8t-Sid">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="pow-k4-fOD">
+                                <rect key="frame" x="15" y="162" width="363" height="572"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="hoj-VF-iD2">
+                                        <rect key="frame" x="0.0" y="0.0" width="363" height="0.0"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <string key="text">Please provide a reason fo rejecting this NGO's registration. The reason will be shared with the organization to help them understand the decision or make corrections.</string>
+                                        <color key="textColor" systemColor="labelColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="top" borderStyle="roundedRect" placeholder="Enter rejection reason here ..." textAlignment="natural" minimumFontSize="17" clearButtonMode="unlessEditing" translatesAutoresizingMaskIntoConstraints="NO" id="0uD-ei-4AS">
+                                        <rect key="frame" x="0.0" y="10" width="363" height="532.66666666666663"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="532.66999999999996" id="LbO-NL-RAZ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" spellCheckingType="yes" keyboardType="alphabet" returnKeyType="done"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aew-cc-A8V">
+                                        <rect key="frame" x="0.0" y="552.66666666666663" width="363" height="19.333333333333371"/>
+                                        <color key="tintColor" name="MainBrand-500"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Submit Rejection"/>
+                                        <connections>
+                                            <action selector="submit:" destination="muR-7b-Gyu" eventType="touchUpInside" id="P8a-eT-BBG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="T1b-qM-Iki"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="pow-k4-fOD" firstAttribute="leading" secondItem="T1b-qM-Iki" secondAttribute="leading" constant="15" id="BdQ-gs-KED"/>
+                            <constraint firstItem="pow-k4-fOD" firstAttribute="top" secondItem="T1b-qM-Iki" secondAttribute="top" id="VjM-0X-6tq"/>
+                            <constraint firstItem="T1b-qM-Iki" firstAttribute="bottom" secondItem="pow-k4-fOD" secondAttribute="bottom" constant="50" id="mVJ-dz-nAP"/>
+                            <constraint firstItem="T1b-qM-Iki" firstAttribute="trailing" secondItem="pow-k4-fOD" secondAttribute="trailing" constant="15" id="svs-qp-ZLS"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Reject NGO Account" id="6bt-Px-nmg"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="reason" destination="0uD-ei-4AS" id="80d-BU-5Fm"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zeW-PG-Gii" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1384" y="696"/>
+            <point key="canvasLocation" x="1382.4427480916031" y="695.77464788732402"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="x4R-zN-kbZ">
@@ -681,6 +730,9 @@
         <namedColor name="Pressed-800">
             <color red="0.019607843137254902" green="0.38039215686274508" blue="0.16470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

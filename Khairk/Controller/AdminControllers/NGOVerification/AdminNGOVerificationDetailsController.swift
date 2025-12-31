@@ -181,7 +181,52 @@ class AdminNGOVerificationDetailsController: UIViewController {
             task.resume()
     }
     
+    @IBAction func rejectBtnClick(_ sender: Any) {
+        guard let ngoID = ngoID else {
+                print("NGO ID is nil at reject click")
+                return
+            }
+
+            guard let vc = storyboard?.instantiateViewController(
+                withIdentifier: "AdminNGOVerificationRejectController"
+            ) as? AdminNGOVerificationRejectController else {
+                fatalError("Storyboard ID not set for AdminNGOVerificationRejectController")
+            }
+
+            vc.ngoID = ngoID
+            vc.modalPresentationStyle = .formSheet   // or .fullScreen
+            present(vc, animated: true)
+    }
+    @IBAction func approveBtnClick(_ sender: Any) {
+        guard let ngoID = ngoID else {
+            print("ngo ID is nil")
+            return
+        }
+        let db = Firestore.firestore()
+        db.collection("users").document(ngoID).updateData([
+            "applicationStatus": "approved",
+        ]) { error in
+            if let error = error {
+                print("Failed: \(error)")
+            } else {
+            }
+        }
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // 1. Check the segue identifier to ensure it's the correct transition
+        if segue.identifier == "ShowNGOReject" {
+            // 2. Check the destination view controller type
+            if let userVC = segue.destination as? AdminNGOVerificationRejectController {
+                // 3. Check if the sender is the expected data type (the donation ID)
+                if let ngoID = sender as? String { // Use the correct type for your ID (e.g., String, UUID, Int)
+                    // 4. Pass the data to a property in the destination view controller
+                    userVC.ngoID = ngoID
+                    segue.destination.navigationItem.title = "NGO Details"
+                }
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 
