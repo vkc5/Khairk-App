@@ -47,7 +47,7 @@
 				Controller/DonorControllers/Impact/.gitkeep,
 				Controller/DonorControllers/Leaderboard/.gitkeep,
 				Controller/DonorControllers/Map/.gitkeep,
-
+				Controller/DonorControllers/NGOCases/.gitkeep,
 				Controller/DonorControllers/NGODiscovery/.gitkeep,
 				Controller/DonorControllers/Notifications/.gitkeep,
 				Controller/DonorControllers/Profile/.gitkeep,
