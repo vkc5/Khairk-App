@@ -28,15 +28,15 @@ final class UsersService {
             let users: [AppUser] = snapshot?.documents.compactMap { doc in
                 let data = doc.data()
 
-                guard let user = AppUser(uid: doc.documentID, data: data) else {
+                guard let user = AppUser(id: doc.documentID, data: data) else {
                     return nil
                 }
 
                 // Exclude current user
-                if user.uid == currentUID { return nil }
+                if user.id == currentUID { return nil }
 
-                // ✅ لو تبين بس donors فعّلي هذا السطر:
-                if user.role != "donor" { return nil }
+                // Optional filter
+                if user.role != .donor { return nil }
 
                 return user
             } ?? []

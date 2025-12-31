@@ -59,8 +59,8 @@ final class AddGroupStep3ViewController: UIViewController {
             let docs = snapshot?.documents ?? []
             self.allUsers = docs.compactMap { doc in
                 let data = doc.data()
-                guard let user = AppUser(uid: doc.documentID, data: data) else { return nil }
-                return (user.uid == currentUID) ? nil : user
+                guard let user = AppUser(id: doc.documentID, data: data) else { return nil }
+                return (user.id == currentUID) ? nil : user
             }
 
             DispatchQueue.main.async { completion?() }
@@ -90,16 +90,20 @@ final class AddGroupStep3ViewController: UIViewController {
                                       preferredStyle: .actionSheet)
 
         for user in allUsers {
-            let title = selectedMembers.contains(user) ? "✓ \(user.name)" : user.name
+            let isSelected = selectedMembers.contains(where: { $0.id == user.id })
+            let title = isSelected ? "✓ \(user.name)" : user.name
 
             let action = UIAlertAction(title: title, style: .default) { [weak self] _ in
                 guard let self = self else { return }
 
-                if self.selectedMembers.contains(user) {
-                    self.selectedMembers.removeAll { $0 == user }
+                let isSelected = self.selectedMembers.contains(where: { $0.id == user.id })
+
+                if isSelected {
+                    self.selectedMembers.removeAll { $0.id == user.id }
                 } else {
                     self.selectedMembers.append(user)
                 }
+
 
                 self.tableView.reloadData()
                 self.presentMembersSheet(from: sourceButton) // optional (shows ✓)
@@ -141,8 +145,9 @@ final class AddGroupStep3ViewController: UIViewController {
 
 
         let membersArray: [[String: String]] = selectedMembers.map {
-            ["uid": $0.uid, "name": $0.name, "email": $0.email]
+            ["uid": $0.id, "name": $0.name, "email": $0.email]
         }
+
 
         let data: [String: Any] = [
             "ownerId": ownerId,

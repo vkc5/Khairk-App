@@ -16,7 +16,7 @@ final class MembersPickerViewController: UIViewController {
     private var users: [AppUser] = []
 
     // Multi-select storage
-    private var selectedSet = Set<AppUser>()
+    private var selectedUsers: [AppUser] = []
 
     // Callback يرجّع المختارين للشاشة اللي قبل
     var onDone: (([AppUser]) -> Void)?
@@ -53,7 +53,7 @@ final class MembersPickerViewController: UIViewController {
     }
 
     @IBAction func doneTapped(_ sender: Any) {
-        onDone?(Array(selectedSet))
+        onDone?(selectedUsers)
         dismiss(animated: true)
     }
 }
@@ -73,20 +73,23 @@ extension MembersPickerViewController: UITableViewDataSource, UITableViewDelegat
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
         cell.selectionStyle = .none
-        cell.accessoryType = selectedSet.contains(user) ? .checkmark : .none
+        let isSelected = selectedUsers.contains(where: { $0.id == user.id })
+        cell.accessoryType = isSelected ? .checkmark : .none
 
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        selectedSet.insert(user)
+        if !selectedUsers.contains(where: { $0.id == user.id }) {
+            selectedUsers.append(user)
+        }
         tableView.reloadRows(at: [indexPath], with: .none)
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        selectedSet.remove(user)
+        selectedUsers.removeAll { $0.id == user.id }
         tableView.reloadRows(at: [indexPath], with: .none)
     }
 }
