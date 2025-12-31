@@ -86,11 +86,11 @@ Prefer to keep new code in the existing structure rather than introducing a new 
 
 ## Feature Notes
 
-### NGO Case Creation & Management (Donor)
+### NGO Case Creation & Management (Collector)
 
-- Storyboard: `Khairk/View/DonorViews/NGOCases/DonorNGOCases.storyboard`
-- Controllers: `Khairk/Controller/DonorControllers/NGOCases/MyCasesViewController.swift`, `Khairk/Controller/DonorControllers/NGOCases/CaseDetailsViewController.swift`, `Khairk/Controller/DonorControllers/NGOCases/CreateCaseViewController.swift`
-- Model/service: `Khairk/Controller/DonorControllers/NGOCases/NgoCase.swift`, `Khairk/Controller/DonorControllers/NGOCases/CaseService.swift`
+- Storyboard: `Khairk/View/CollectorViews/NGOCases/NGOCasesManagement.storyboard`
+- Controllers: `Khairk/Controller/CollectorControllers/NGOCases/MyCasesViewController.swift`, `Khairk/Controller/CollectorControllers/NGOCases/CaseDetailsViewController.swift`, `Khairk/Controller/CollectorControllers/NGOCases/CreateCaseViewController.swift`
+- Model/service: `Khairk/Controller/CollectorControllers/NGOCases/NgoCase.swift`, `Khairk/Controller/CollectorControllers/NGOCases/CaseService.swift`
 - Firestore path: `ngos/{uid}/cases`
 - Stored fields: `title`, `foodType`, `goal`, `collected`, `startDate`, `endDate`, `description`, `imageURL`, `status`, `createdAt`
 - Flow: My Cases list -> Case Details; My Cases list -> New Case; delete and success use standard iOS alerts
@@ -98,9 +98,9 @@ Prefer to keep new code in the existing structure rather than introducing a new 
 
 ### NGO Pickup Management & Collection Tracking
 
-- Storyboard: `Khairk/View/NGOViews/Pickups/NGOPickups.storyboard`
-- Controllers: `Khairk/Controller/NGOControllers/Pickups/NGOActivePickupsViewController.swift`, `Khairk/Controller/NGOControllers/Pickups/NGOPickupDetailsViewController.swift`, `Khairk/Controller/NGOControllers/Pickups/NGOAcceptsDonationViewController.swift`, `Khairk/Controller/NGOControllers/Pickups/NGODonationDetailsViewController.swift`
-- Model/service: `Khairk/Controller/NGOControllers/Pickups/Donation.swift`, `Khairk/Controller/NGOControllers/Pickups/DonationService.swift`, `Khairk/Controller/NGOControllers/Pickups/NGOContext.swift`
+- Storyboard: `Khairk/View/CollectorViews/Pickups/PickupManagement.storyboard`
+- Controllers: `Khairk/Controller/CollectorControllers/Pickups/NGOActivePickupsViewController.swift`, `Khairk/Controller/CollectorControllers/Pickups/NGOPickupDetailsViewController.swift`, `Khairk/Controller/CollectorControllers/Pickups/NGOAcceptsDonationViewController.swift`, `Khairk/Controller/CollectorControllers/Pickups/NGODonationDetailsViewController.swift`
+- Model/service: `Khairk/Controller/CollectorControllers/Pickups/Donation.swift`, `Khairk/Controller/CollectorControllers/Pickups/DonationService.swift`, `Khairk/Controller/CollectorControllers/Pickups/NGOContext.swift`
 - Firestore path: `donations` (filtered by `ngoId`)
 - Stored fields: `ngoId`, `caseId`, `donorName`, `donorEmail`, `donorPhone`, `foodType`, `foodName`, `quantity`, `expiryDate`, `description`, `pickupMethod`, `status`, `pickupStatus`, `caseTitle`, `caseDescription`, `caseTarget`, `caseCollected`, `createdAt`
 - Flow: My Active Pickups -> Pickup Details; Requests -> Donation Details; approve/reject + mark collected use standard iOS alerts
