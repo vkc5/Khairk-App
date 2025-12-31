@@ -1,25 +1,32 @@
 //
-//  AddGroupStep1ViewController 2.swift
+//  AddGroupStep1ViewController.swift
 //  Khairk
 //
 //  Created by FM on 16/12/2025.
 //
 
-
 import UIKit
+
+private var draft: DonationGroupDraft {
+    get { DonationGroupDraftStore.shared.draft }
+    set { DonationGroupDraftStore.shared.draft = newValue }
+}
+
 
 final class AddGroupStep1ViewController: UIViewController {
 
-    // MARK: - Outlets (connect from storyboard)
+    // MARK: - Outlets
     @IBOutlet private weak var groupNameTextField: UITextField!
-    @IBOutlet private weak var descriptionTextField: UITextField!   // or UITextView if you used it
+    @IBOutlet private weak var descriptionTextField: UITextField!
     @IBOutlet private weak var nextButton: UIButton!
 
-    // MARK: - State
-    /// Draft shared across steps.
-    var draft = DonationGroupDraft()
+    // MARK: - State (shared draft)
+    private var draft: DonationGroupDraft {
+        get { DonationGroupDraftStore.shared.draft }
+        set { DonationGroupDraftStore.shared.draft = newValue }
+    }
 
-    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -27,13 +34,9 @@ final class AddGroupStep1ViewController: UIViewController {
         refreshNextButtonState()
     }
 
-    // MARK: - UI Setup
     private func setupUI() {
-        // Basic button styling (match your app)
-        nextButton.layer.cornerRadius = 14
-        nextButton.clipsToBounds = true
 
-        // If you want Next disabled at first:
+        nextButton.clipsToBounds = true
         nextButton.isEnabled = false
         nextButton.alpha = 0.6
     }
@@ -45,17 +48,14 @@ final class AddGroupStep1ViewController: UIViewController {
         groupNameTextField.placeholder = "Enter your group name"
         descriptionTextField.placeholder = "Enter your description (optional)"
 
-        // Update draft while typing
         groupNameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         descriptionTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
 
-    // MARK: - Actions
     @IBAction private func nextTapped(_ sender: UIButton) {
-        // 1) Save latest values into draft
+        // Save latest values into the draft
         saveDraftFromUI()
 
-        // 2) Validate required fields
         let name = draft.groupName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else {
             showAlert(title: "Missing Group Name",
@@ -63,7 +63,7 @@ final class AddGroupStep1ViewController: UIViewController {
             return
         }
 
-        // 3) Navigate to Step 2
+        // Go to Step 2 (Storyboard segue identifier must be: ShowStep2)
         performSegue(withIdentifier: "ShowStep2", sender: self)
     }
 
@@ -71,7 +71,6 @@ final class AddGroupStep1ViewController: UIViewController {
         view.endEditing(true)
     }
 
-    // MARK: - Helpers
     @objc private func textDidChange() {
         saveDraftFromUI()
         refreshNextButtonState()
@@ -85,7 +84,6 @@ final class AddGroupStep1ViewController: UIViewController {
     private func refreshNextButtonState() {
         let name = (groupNameTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let enabled = !name.isEmpty
-
         nextButton.isEnabled = enabled
         nextButton.alpha = enabled ? 1.0 : 0.6
     }
@@ -95,20 +93,9 @@ final class AddGroupStep1ViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-
-    // MARK: - Navigation (pass draft to Step 2)
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowStep2" {
-            // Replace with your Step2 controller name
-            let vc = segue.destination as? AddGroupStep2ViewController
-            vc?.draft = draft
-        }
-    }
 }
 
-// MARK: - UITextFieldDelegate
 extension AddGroupStep1ViewController: UITextFieldDelegate {
-
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField === groupNameTextField {
             descriptionTextField.becomeFirstResponder()
