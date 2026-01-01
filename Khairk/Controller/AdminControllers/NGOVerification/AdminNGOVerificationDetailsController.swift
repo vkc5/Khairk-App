@@ -203,14 +203,33 @@ class AdminNGOVerificationDetailsController: UIViewController {
             return
         }
         let db = Firestore.firestore()
-        db.collection("users").document(ngoID).updateData([
-            "applicationStatus": "approved",
-        ]) { error in
-            if let error = error {
-                print("Failed: \(error)")
-            } else {
-            }
-        }
+        let name = self.ngoName.text ?? "NGO"
+        let alert = UIAlertController(
+            title: "Approve NGO",message: "Are you sure you want to approve \(name)? This will give them full access to the Khairk.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+                if let id = self.ngoID {
+                    db.collection("users").document(ngoID).updateData([
+                        "applicationStatus": "approved",
+                    ]) { error in
+                        if let error = error {
+                            print("Failed: \(error)")
+                        } else {
+                            let notification = Notification()
+                            notification.save(title: "Application Approved!", body: "Congratulations \(name), your Khairk NGO account has been approved. You can now start with case.", userId: id)
+                        }
+                    }
+                   
+                } else {
+                    print("Error")
+                }
+
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

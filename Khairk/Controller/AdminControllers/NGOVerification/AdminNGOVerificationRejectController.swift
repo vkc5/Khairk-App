@@ -30,18 +30,36 @@ class AdminNGOVerificationRejectController: UIViewController {
 
         let db = Firestore.firestore()
         let reasonText = reason.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        db.collection("users").document(ngoID).updateData([
-            "applicationStatus": "rejected",
-            "rejection": [
-                "reason": reasonText,
-                "rejectedAt": Timestamp(date: Date()),
-            ]
-        ]) { error in
-            if let error = error {
-                print("Failed: \(error)")
-            } else {
-            }
-        }
+        let alert = UIAlertController(
+            title: "Confirm Rejection",message: "Are you sure you want to reject this application? The NGO will be notified with the reason: \n\(reasonText)", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Reject NGO", style: .destructive, handler: { _ in
+                if let id = self.ngoID {
+                    db.collection("users").document(ngoID).updateData([
+                        "applicationStatus": "rejected",
+                        "rejection": [
+                            "reason": reasonText,
+                            "rejectedAt": Timestamp(date: Date()),
+                        ]
+                    ]) { error in
+                        if let error = error {
+                            print("Failed: \(error)")
+                        } else {
+                            let notification = Notification()
+                            notification.save(title: "Application Status Update", body: "Your application was not approved. Reason: \(reasonText). If you have any questions, please contact the Khairk team at support@khairk.com", userId: id)
+                        }
+                    }
+                    
+                } else {
+                    print("Error: Donor ID is missing")
+                }
+
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
 
     }
     
