@@ -121,11 +121,15 @@
                                                             </stackView>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <gestureRecognizers/>
                                                         <constraints>
                                                             <constraint firstItem="APx-0t-1R4" firstAttribute="centerY" secondItem="Do1-65-yKs" secondAttribute="centerY" id="2pL-6Z-ZLk"/>
                                                             <constraint firstItem="APx-0t-1R4" firstAttribute="centerX" secondItem="Do1-65-yKs" secondAttribute="centerX" id="YBy-pU-5MT"/>
                                                             <constraint firstItem="APx-0t-1R4" firstAttribute="top" secondItem="Do1-65-yKs" secondAttribute="top" constant="19" id="ssx-ol-HFN"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="aWy-LP-gIA" appends="YES" id="Ao4-T6-SWV"/>
+                                                        </connections>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xeq-fj-kjx">
                                                         <rect key="frame" x="0.0" y="64" width="364" height="60"/>
@@ -407,6 +411,11 @@
                 <tapGestureRecognizer id="QHt-0V-3Zn">
                     <connections>
                         <action selector="logoutTapped:" destination="9tx-FP-ejw" id="3XO-1x-BcA"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="aWy-LP-gIA">
+                    <connections>
+                        <action selector="Send:" destination="9tx-FP-ejw" id="3a4-KK-BM7"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

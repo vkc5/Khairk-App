@@ -160,7 +160,25 @@ class AdminProfileViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    
+    @IBAction func Send(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminBroadcast", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminBroadcastViewController")
 
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func LogSystem(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminBroadcast", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminBroadcastViewController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
     /*
     // MARK: - Navigation
 
