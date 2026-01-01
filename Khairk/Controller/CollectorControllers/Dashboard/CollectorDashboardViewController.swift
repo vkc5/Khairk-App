@@ -17,12 +17,7 @@ class CollectorDashboardViewController: UIViewController {
     @IBOutlet weak var Acceptdonation: UIView!
     @IBOutlet weak var Mypickup: UIView!
     @IBOutlet weak var statsView: UIView!
-    
-    
-    
-    // Goal cards
-    @IBOutlet weak var goalCard1: UIView!
-    @IBOutlet weak var goalCard2: UIView!
+    @IBOutlet weak var ProfileView: UIView!
 
     // Spotlight cards (two)
     @IBOutlet weak var spotlightView1: UIView!
@@ -38,12 +33,8 @@ class CollectorDashboardViewController: UIViewController {
         styleTopBox(Acceptdonation)
         styleTopBox(Mypickup)
         styleTopBox(statsView)
+        styleTopBox(ProfileView)
 
-        // GOAL CARDS
-        styleGoalCard(goalCard1)
-        styleGoalCard(goalCard2)
-
-        // SPOTLIGHT (gradient added after layout)
         styleSpotlight(spotlightView1)
         styleSpotlight(spotlightView2)
     }
@@ -108,5 +99,72 @@ class CollectorDashboardViewController: UIViewController {
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
     }
+    
+    @IBAction func Add1(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "NGOCasesManagement", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "MyCasesVC")
 
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func Add2(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "NGOCasesManagement", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "MyCasesVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func ProfileTapped(_ sender: UIButton) {        
+        let storyboard = UIStoryboard(name: "CollectorProfile", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "CollectorProfileVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+
+    }
+    
+    @IBAction func ImpactTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "CollectorImpact", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "My_impactViewController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func ImpactTapped2(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "CollectorImpact", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "My_impactViewController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func AddCaseTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "NGOCasesManagement", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "MyCasesVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func MyPickup(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "CollectorPickupHistory", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "CollectorPickupHistoryController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    
+    
+    
 }

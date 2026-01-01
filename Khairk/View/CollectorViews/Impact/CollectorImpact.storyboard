@@ -8,40 +8,12 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Test Collector Impact-->
-        <scene sceneID="RAw-kT-Mqj">
-            <objects>
-                <viewController storyboardIdentifier="TestCollectorImpact" id="Vm5-7R-Nkd" customClass="TestCollectorImpact" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="xvi-wB-3fo" customClass="Test">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADO-Ic-6om">
-                                <rect key="frame" x="159" y="407" width="75" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.20392158630000001" green="0.4588235021" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                <connections>
-                                    <segue destination="kyd-LR-eKf" kind="show" id="ugS-2Y-x0S"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="xz6-st-aNR"/>
-                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="9WL-9U-ylU"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="K8H-yF-kvZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2917" y="-1311"/>
-        </scene>
         <!--Collector Impact View Controller-->
         <scene sceneID="nnb-fy-bRa">
             <objects>
                 <viewController storyboardIdentifier="My_impactViewController" id="kyd-LR-eKf" customClass="CollectorImpactViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VaH-Su-ec6">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background2" id="VBg-Oz-oJF">
@@ -354,7 +326,7 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="NrO-kQ-Bah"/>
-                        <color key="backgroundColor" red="0.20392158630000001" green="0.4588235021" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="mqB-Xn-sEU" firstAttribute="leading" secondItem="VaH-Su-ec6" secondAttribute="leading" id="PfC-XO-t8X"/>
                             <constraint firstAttribute="trailing" secondItem="mqB-Xn-sEU" secondAttribute="trailing" id="SBk-OE-IAB"/>
@@ -376,7 +348,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="et9-fm-FQW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4006.8702290076335" y="-1311.267605633803"/>
+            <point key="canvasLocation" x="3008" y="-1311"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="7Zd-gB-1rw">
@@ -389,7 +361,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Vm5-7R-Nkd" kind="relationship" relationship="rootViewController" id="Rkr-uu-2iT"/>
+                        <segue destination="kyd-LR-eKf" kind="show" id="YEX-Tv-Blj"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VCI-TY-7ul" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
