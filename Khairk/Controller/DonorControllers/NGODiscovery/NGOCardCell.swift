@@ -14,13 +14,20 @@ final class NGOCardCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        // CARD STYLE
         contentView.layer.cornerRadius = 16
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor(
+            red: 0xE0/255,
+            green: 0xE0/255,
+            blue: 0xE0/255,
+            alpha: 1
+        ).cgColor
         contentView.clipsToBounds = true
 
+        // IMAGE STYLE
         ngoImageView.layer.cornerRadius = 12
         ngoImageView.clipsToBounds = true
-
-        // ✅ Stretch (تملي المكان)
         ngoImageView.contentMode = .scaleToFill
     }
 

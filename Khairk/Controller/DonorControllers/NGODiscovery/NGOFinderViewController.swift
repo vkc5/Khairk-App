@@ -3,16 +3,20 @@ import FirebaseFirestore
 
 final class NGOFinderViewController: UIViewController {
 
+    // MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
 
+    // MARK: - Firestore
     private let db = Firestore.firestore()
 
+    // MARK: - Data
     private var allNGOs: [CollectorNGO] = []
     private var shownNGOs: [CollectorNGO] = []
 
     private var selectedArea: String? = nil
 
+    // MARK: - Filters
     private enum StatusFilter: Int {
         case all = 0, approved, pending, rejected
         var key: String? {
@@ -29,6 +33,7 @@ final class NGOFinderViewController: UIViewController {
     private enum SortOption: Int { case none = 0, nameAZ, areaAZ }
     private var sortOption: SortOption = .none
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "NGO Discovery"
@@ -38,17 +43,21 @@ final class NGOFinderViewController: UIViewController {
         fetchCollectorsAllStatuses()
     }
 
+    // MARK: - Setup
     private func setupCollection() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.keyboardDismissMode = .onDrag
 
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .vertical
-            layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-            layout.minimumInteritemSpacing = 12
-            layout.minimumLineSpacing = 16
-        }
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        layout.minimumInteritemSpacing = 12
+        layout.minimumLineSpacing = 16
+
+        layout.estimatedItemSize = .zero
+        layout.itemSize = .zero
     }
 
     private func setupSearchBar() {
@@ -59,6 +68,7 @@ final class NGOFinderViewController: UIViewController {
         searchBar.autocorrectionType = .no
     }
 
+    // MARK: - Filter Sheet
     @IBAction func filterTapped(_ sender: UITapGestureRecognizer) {
         presentFilterSheet()
     }
@@ -99,6 +109,7 @@ final class NGOFinderViewController: UIViewController {
         present(vc, animated: true)
     }
 
+    // MARK: - Firestore
     private func fetchCollectorsAllStatuses() {
         db.collection("users")
             .whereField("role", isEqualTo: "collector")
@@ -123,10 +134,13 @@ final class NGOFinderViewController: UIViewController {
                     )
                 } ?? []
 
-                DispatchQueue.main.async { self.applyFilters() }
+                DispatchQueue.main.async {
+                    self.applyFilters()
+                }
             }
     }
 
+    // MARK: - Filters Logic
     private func applyFilters() {
         var result = allNGOs
 
@@ -138,7 +152,10 @@ final class NGOFinderViewController: UIViewController {
             result = result.filter { $0.serviceArea.lowercased() == area.lowercased() }
         }
 
-        let q = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let q = (searchBar.text ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
         if !q.isEmpty {
             result = result.filter {
                 $0.name.lowercased().contains(q) ||
@@ -161,43 +178,68 @@ final class NGOFinderViewController: UIViewController {
 
 // MARK: - Search
 extension NGOFinderViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) { applyFilters() }
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) { searchBar.resignFirstResponder() }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        applyFilters()
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }
 
-// MARK: - Collection
+// MARK: - CollectionView
 extension NGOFinderViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         shownNGOs.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NGOCardCell", for: indexPath) as! NGOCardCell
+
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "NGOCardCell",
+            for: indexPath
+        ) as! NGOCardCell
+
         cell.configure(with: shownNGOs[indexPath.item])
         return cell
     }
-
+// puting ti image together
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.bounds.width - 44) / 2
-        return CGSize(width: width, height: 210)
+
+        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else {
+            return CGSize(width: 160, height: 210)
+        }
+
+        let columns: CGFloat = 2
+        let totalInsets = layout.sectionInset.left + layout.sectionInset.right
+        let totalSpacing = layout.minimumInteritemSpacing * (columns - 1)
+
+        let availableWidth = collectionView.bounds.width - totalInsets - totalSpacing
+        let itemWidth = floor(availableWidth / columns)
+
+        return CGSize(width: itemWidth, height: 210)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let selected = shownNGOs[indexPath.item]
-        let status = selected.applicationStatus.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let status = selected.applicationStatus
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
 
-        // ❌ rejected ما يفتح
-        if status == "rejected" {
-            return
-        }
+        // rejected ما يفتح
+        if status == "rejected" { return }
 
         let sb = UIStoryboard(name: "DonorNGODiscovery", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "CollectorDetailsViewController") as! CollectorDetailsViewController
+        let vc = sb.instantiateViewController(
+            withIdentifier: "CollectorDetailsViewController"
+        ) as! CollectorDetailsViewController
+
         vc.ngo = selected
         navigationController?.pushViewController(vc, animated: true)
     }

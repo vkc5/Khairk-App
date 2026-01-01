@@ -100,4 +100,14 @@ final class CollectorDetailsViewController: UIViewController {
         guard let ngo else { return }
         print("Donate Now tapped for:", ngo.name)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+
 }
