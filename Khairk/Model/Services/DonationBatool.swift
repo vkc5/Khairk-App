@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct Donation {
+    // ✅ Core fields (Batool)
     let id: String
     let foodName: String
     let description: String
@@ -20,12 +21,29 @@ struct Donation {
     let expiryDate: Date
     let donorId: String
     let caseId: String
-    
+
     let serviceArea: String?
     let pickupTime: Date?
     let latitude: Double?
     let longitude: Double?
-    // Initialize from Firebase dictionary
+
+    // ✅ Extra fields used by Collector screens (optional)
+    let ngoId: String?
+    let pickupStatus: String?
+
+    let donorName: String?
+    let donorEmail: String?
+    let donorPhone: String?
+
+    let foodType: String?
+    let pickupMethod: String?
+
+    let caseTitle: String?
+    let caseDescription: String?
+    let caseTarget: Int?
+    let caseCollected: Int?
+
+    // ✅ Batool initializer (dictionary)
     init?(id: String, dictionary: [String: Any]) {
         guard
             let foodName = dictionary["foodName"] as? String,
@@ -41,7 +59,7 @@ struct Donation {
         else {
             return nil
         }
-        
+
         self.id = id
         self.foodName = foodName
         self.description = description
@@ -63,5 +81,27 @@ struct Donation {
         } else {
             self.pickupTime = nil
         }
+
+        // Optional collector fields
+        self.ngoId = dictionary["ngoId"] as? String
+        self.pickupStatus = dictionary["pickupStatus"] as? String
+
+        self.donorName = dictionary["donorName"] as? String
+        self.donorEmail = dictionary["donorEmail"] as? String
+        self.donorPhone = dictionary["donorPhone"] as? String
+
+        self.foodType = dictionary["foodType"] as? String
+        self.pickupMethod = dictionary["pickupMethod"] as? String
+
+        self.caseTitle = dictionary["caseTitle"] as? String
+        self.caseDescription = dictionary["caseDescription"] as? String
+        self.caseTarget = dictionary["caseTarget"] as? Int
+        self.caseCollected = dictionary["caseCollected"] as? Int
+    }
+
+    // ✅ Collector initializer (DocumentSnapshot)
+    init?(doc: DocumentSnapshot) {
+        guard let d = doc.data() else { return nil }
+        self.init(id: doc.documentID, dictionary: d)
     }
 }
