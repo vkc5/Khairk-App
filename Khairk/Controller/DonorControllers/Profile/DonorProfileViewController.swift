@@ -33,7 +33,7 @@ class DonorProfileViewController: UIViewController {
 
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 22, weight: .semibold), 
-            .foregroundColor: UIColor.white
+            .foregroundColor: UIColor.label
         ]
         
         imageView.layer.cornerRadius = 8
@@ -175,6 +175,14 @@ class DonorProfileViewController: UIViewController {
         }
 
         present(vc, animated: true)
+    }
+    @IBAction func DonationGroupTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "DonationGroups", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonationGroupsVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
     }
     /*
     // MARK: - Navigation

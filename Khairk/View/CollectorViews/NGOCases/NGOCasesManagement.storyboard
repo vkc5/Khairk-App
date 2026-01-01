@@ -27,7 +27,7 @@
         <!--My Cases View Controller-->
         <scene sceneID="dct-iu-Qt4">
             <objects>
-                <viewController id="CSk-Dl-fAf" customClass="MyCasesViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MyCasesVC" id="CSk-Dl-fAf" customClass="MyCasesViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wg1-nD-OZk">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

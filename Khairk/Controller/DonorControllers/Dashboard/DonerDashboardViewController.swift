@@ -1,7 +1,11 @@
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
 
-class DonerDashboardViewController: UIViewController {
+private let db = Firestore.firestore()
+
+class DonerDashboardViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Outlets
 
@@ -12,9 +16,8 @@ class DonerDashboardViewController: UIViewController {
     @IBOutlet weak var goodnessView: UIView!
     @IBOutlet weak var statsView: UIView!
 
-    // Goal cards
-    @IBOutlet weak var goalCard1: UIView!
-    @IBOutlet weak var goalCard2: UIView!
+    @IBOutlet weak var tableView: UITableView!
+    private var goals: [Goal] = []
 
     // Spotlight cards (two)
     @IBOutlet weak var spotlightView1: UIView!
@@ -26,6 +29,14 @@ class DonerDashboardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.dataSource = self
+        tableView.delegate = self
+
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
+
+        loadGoalsForDashboard()
+        
         // TOP BOXES
         styleTopBox(ngoMapView)
         styleTopBox(donorHubView)
@@ -33,15 +44,24 @@ class DonerDashboardViewController: UIViewController {
         styleTopBox(goodnessView)
         styleTopBox(statsView)
 
-        // GOAL CARDS
-        styleGoalCard(goalCard1)
-        styleGoalCard(goalCard2)
-
         // SPOTLIGHT (gradient added after layout)
         styleSpotlight(spotlightView1)
         styleSpotlight(spotlightView2)
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return goals.count
+    }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "DashboardGoalCardCell",
+            for: indexPath
+        ) as! DashboardGoalCardCell
+
+        cell.configure(with: goals[indexPath.row], showDelete: false)
+        return cell
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -102,5 +122,57 @@ class DonerDashboardViewController: UIViewController {
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
     }
+    
+    
+    @IBAction func DonorRewardsTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "DonorRewards", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "gameViewController")
 
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func mapTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "DonorMap", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonorMap")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    @IBAction func DonationGroupTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "DonationGroups", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonationGroupsVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func DonationTrackingVCTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "DonationTracking", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonationTrackingVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    private func loadGoalsForDashboard() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        db.collection("users").document(uid).collection("goals")
+            .order(by: "createdAt", descending: true)
+            .addSnapshotListener { [weak self] snap, error in
+                guard let self = self else { return }
+                if let error = error { print(error.localizedDescription); return }
+
+                let all = (snap?.documents ?? []).compactMap { Goal(doc: $0) }
+                self.goals = all.filter { $0.status == "active" }   // local filter
+                self.tableView.reloadData()
+            }
+
+    }
+    
 }

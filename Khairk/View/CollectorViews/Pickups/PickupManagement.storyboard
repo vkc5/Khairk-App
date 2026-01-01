@@ -27,7 +27,7 @@
         <!--Active Pickups View Controller-->
         <scene sceneID="MMr-35-YKr">
             <objects>
-                <viewController id="qjQ-R3-5N8" customClass="NGOActivePickupsViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NGOActivePickupsVC" id="qjQ-R3-5N8" customClass="NGOActivePickupsViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IRG-Vu-pya">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
