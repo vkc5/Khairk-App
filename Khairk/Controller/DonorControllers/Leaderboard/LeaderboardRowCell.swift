@@ -13,13 +13,11 @@ final class LeaderboardRowCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
 
-        // row "pill" look
         contentView.backgroundColor = UIColor(white: 0.95, alpha: 1)
         contentView.layer.cornerRadius = 14
         contentView.clipsToBounds = true
 
-        // ✅ square avatar (not circle)
-        avatarImageView.layer.cornerRadius = 6   // set 0 if you want sharp corners
+        avatarImageView.layer.cornerRadius = 6
         avatarImageView.clipsToBounds = true
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.image = UIImage(systemName: "person.crop.square.fill")
@@ -37,11 +35,16 @@ final class LeaderboardRowCell: UITableViewCell {
         pointsLabel.textColor = .darkGray
     }
 
-    func configure(rank: Int, user: LeaderboardUser) {
+    // ✅ UPDATED: now accepts isMe
+    func configure(rank: Int, user: LeaderboardUser, isMe: Bool) {
         rankLabel.text = "\(rank)"
         nameLabel.text = user.name
         pointsLabel.text = String(format: "%.1f pts", user.points)
 
-        // If you later want to load image from URL, tell me and I’ll add it.
+        if isMe {
+            contentView.backgroundColor = UIColor(white: 0.90, alpha: 1)
+            nameLabel.textColor = .systemBlue
+            pointsLabel.textColor = .systemBlue
+        }
     }
 }

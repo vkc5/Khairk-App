@@ -3,39 +3,46 @@ import FirebaseFirestore
 
 final class NGOFinderViewController: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
 
-    // MARK: - Filter Tap (Gesture)
-    @IBAction func filterTapped(_ sender: UITapGestureRecognizer) {
-        showFilterSheet()
-    }
-
-    // MARK: - Firestore
     private let db = Firestore.firestore()
 
-    // MARK: - Data
     private var allNGOs: [CollectorNGO] = []
     private var shownNGOs: [CollectorNGO] = []
 
-    // MARK: - Area Filter
-    private var selectedArea: String? = nil   // nil = All
+    private var selectedArea: String? = nil
 
-    // MARK: - Sort
-    private enum SortOption { case none, nameAZ, areaAZ }
+    private enum StatusFilter: Int {
+        case all = 0, approved, pending, rejected
+        var key: String? {
+            switch self {
+            case .all: return nil
+            case .approved: return "approved"
+            case .pending: return "pending"
+            case .rejected: return "rejected"
+            }
+        }
+    }
+    private var statusFilter: StatusFilter = .all
+
+    private enum SortOption: Int { case none = 0, nameAZ, areaAZ }
     private var sortOption: SortOption = .none
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("collectionView:", collectionView as Any)
-        print("searchBar:", searchBar as Any)
+        title = "NGO Discovery"
+
+        setupCollection()
+        setupSearchBar()
+        fetchCollectorsAllStatuses()
     }
 
+    private func setupCollection() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.keyboardDismissMode = .onDrag
 
-    // MARK: - Layout
-    private func setupLayout() {
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
             layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
@@ -44,80 +51,65 @@ final class NGOFinderViewController: UIViewController {
         }
     }
 
-    // MARK: - SearchBar (Fix mirror line)
     private func setupSearchBar() {
         searchBar.delegate = self
         searchBar.searchBarStyle = .minimal
-        searchBar.backgroundImage = UIImage() // يشيل الخط / الميرور
+        searchBar.backgroundImage = UIImage()
+        searchBar.autocapitalizationType = .none
+        searchBar.autocorrectionType = .no
     }
 
-    // MARK: - Filter Sheet (Area + Sort)
-    private func showFilterSheet() {
+    @IBAction func filterTapped(_ sender: UITapGestureRecognizer) {
+        presentFilterSheet()
+    }
 
-        let areas = Array(
-            Set(allNGOs.map { $0.serviceArea }.filter { !$0.isEmpty })
-        ).sorted { $0.lowercased() < $1.lowercased() }
+    private func presentFilterSheet() {
+        let vc = AreaSortStatusSheetViewController()
 
-        let sheet = UIAlertController(title: "Filter", message: nil, preferredStyle: .actionSheet)
+        vc.areas = Array(Set(allNGOs.map { $0.serviceArea }.filter { !$0.isEmpty }))
+            .sorted { $0.lowercased() < $1.lowercased() }
 
-        // All Areas
-        sheet.addAction(UIAlertAction(title: "All Areas", style: .default) { _ in
-            self.selectedArea = nil
-            self.applySearchFilterSort()
-        })
+        vc.currentArea = selectedArea
+        vc.currentSortIndex = sortOption.rawValue
+        vc.currentStatusIndex = statusFilter.rawValue
 
-        // Area options
-        for area in areas {
-            sheet.addAction(UIAlertAction(title: area, style: .default) { _ in
-                self.selectedArea = area
-                self.applySearchFilterSort()
-            })
+        vc.onApply = { [weak self] area, sortIdx, statusIdx in
+            guard let self else { return }
+            self.selectedArea = area
+            self.sortOption = SortOption(rawValue: sortIdx) ?? .none
+            self.statusFilter = StatusFilter(rawValue: statusIdx) ?? .all
+            self.applyFilters()
         }
 
-        // Sort options
-        sheet.addAction(UIAlertAction(title: "Sort: Name A → Z", style: .default) { _ in
-            self.sortOption = .nameAZ
-            self.applySearchFilterSort()
-        })
-
-        sheet.addAction(UIAlertAction(title: "Sort: Area A → Z", style: .default) { _ in
-            self.sortOption = .areaAZ
-            self.applySearchFilterSort()
-        })
-
-        sheet.addAction(UIAlertAction(title: "Clear Sort", style: .default) { _ in
-            self.sortOption = .none
-            self.applySearchFilterSort()
-        })
-
-        // Reset everything
-        sheet.addAction(UIAlertAction(title: "Reset Filter", style: .destructive) { _ in
+        vc.onReset = { [weak self] in
+            guard let self else { return }
             self.selectedArea = nil
             self.sortOption = .none
+            self.statusFilter = .all
             self.searchBar.text = ""
-            self.applySearchFilterSort()
-        })
+            self.applyFilters()
+        }
 
-        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(sheet, animated: true)
+        vc.modalPresentationStyle = .pageSheet
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 20
+        }
+        present(vc, animated: true)
     }
 
-    // MARK: - Fetch Approved Collectors
-    private func fetchApprovedCollectors() {
+    private func fetchCollectorsAllStatuses() {
         db.collection("users")
             .whereField("role", isEqualTo: "collector")
-            .whereField("applicationStatus", isEqualTo: "approved")
             .getDocuments { [weak self] snap, err in
                 guard let self else { return }
-
                 if let err {
                     print("❌ Firestore error:", err.localizedDescription)
                     return
                 }
 
-                let docs = snap?.documents ?? []
-
-                self.allNGOs = docs.map { doc in
+                self.allNGOs = snap?.documents.map { doc in
                     let d = doc.data()
                     return CollectorNGO(
                         id: doc.documentID,
@@ -129,42 +121,33 @@ final class NGOFinderViewController: UIViewController {
                         email: d["email"] as? String ?? "",
                         phone: d["phone"] as? String ?? ""
                     )
-                }
+                } ?? []
 
-                DispatchQueue.main.async {
-                    self.applySearchFilterSort()
-                }
+                DispatchQueue.main.async { self.applyFilters() }
             }
     }
 
-    // MARK: - Apply Search + Filter + Sort
-    private func applySearchFilterSort() {
-
+    private func applyFilters() {
         var result = allNGOs
 
-        // Area filter
+        if let needed = statusFilter.key {
+            result = result.filter { $0.applicationStatus.lowercased() == needed }
+        }
+
         if let area = selectedArea, !area.isEmpty {
+            result = result.filter { $0.serviceArea.lowercased() == area.lowercased() }
+        }
+
+        let q = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if !q.isEmpty {
             result = result.filter {
-                $0.serviceArea.lowercased() == area.lowercased()
+                $0.name.lowercased().contains(q) ||
+                $0.serviceArea.lowercased().contains(q)
             }
         }
 
-        // Search
-        let query = searchBar.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .lowercased() ?? ""
-
-        if !query.isEmpty {
-            result = result.filter {
-                $0.name.lowercased().contains(query) ||
-                $0.serviceArea.lowercased().contains(query)
-            }
-        }
-
-        // Sort
         switch sortOption {
-        case .none:
-            break
+        case .none: break
         case .nameAZ:
             result.sort { $0.name.lowercased() < $1.name.lowercased() }
         case .areaAZ:
@@ -176,20 +159,14 @@ final class NGOFinderViewController: UIViewController {
     }
 }
 
-// MARK: - UISearchBarDelegate
+// MARK: - Search
 extension NGOFinderViewController: UISearchBarDelegate {
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        applySearchFilterSort()
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) { applyFilters() }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) { searchBar.resignFirstResponder() }
 }
 
-// MARK: - UICollectionViewDataSource
-extension NGOFinderViewController: UICollectionViewDataSource {
+// MARK: - Collection
+extension NGOFinderViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         shownNGOs.count
@@ -197,42 +174,30 @@ extension NGOFinderViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "NGOCardCell",
-            for: indexPath
-        ) as! NGOCardCell
-
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NGOCardCell", for: indexPath) as! NGOCardCell
         cell.configure(with: shownNGOs[indexPath.item])
         return cell
     }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension NGOFinderViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let columns: CGFloat = 2
-        let spacing: CGFloat = 12
-        let insets: CGFloat = 32
-        let total = insets + (columns - 1) * spacing
-        let width = (collectionView.bounds.width - total) / columns
-
+        let width = (collectionView.bounds.width - 44) / 2
         return CGSize(width: width, height: 210)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let selected = shownNGOs[indexPath.item]
+        let status = selected.applicationStatus.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        // ❌ rejected ما يفتح
+        if status == "rejected" {
+            return
+        }
+
         let sb = UIStoryboard(name: "DonorNGODiscovery", bundle: nil)
-
-        let vc = sb.instantiateViewController(
-            withIdentifier: "CollectorDetailsViewController"
-        ) as! CollectorDetailsViewController
-
+        let vc = sb.instantiateViewController(withIdentifier: "CollectorDetailsViewController") as! CollectorDetailsViewController
         vc.ngo = selected
         navigationController?.pushViewController(vc, animated: true)
     }
