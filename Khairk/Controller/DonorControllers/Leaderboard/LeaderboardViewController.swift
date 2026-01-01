@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 final class LeaderboardViewController: UIViewController {
 
@@ -19,7 +20,7 @@ final class LeaderboardViewController: UIViewController {
     @IBOutlet weak var thirdName: UILabel!
     @IBOutlet weak var thirdPoints: UILabel!
 
-    // 👑 تاج التوب 1 من الستوري بورد
+    // 👑 التاج (من الستوري بورد)
     @IBOutlet weak var firstCrownImageView: UIImageView!
 
     // MARK: - Data
@@ -29,6 +30,13 @@ final class LeaderboardViewController: UIViewController {
     // MARK: - Simple Image Cache
     private static let imageCache = NSCache<NSString, UIImage>()
 
+    // MARK: - My rank label (header فوق الليستة)
+    private let myRankLabel = UILabel()
+
+    // MARK: - Crown constraints
+    private var crownCenterX: NSLayoutConstraint?
+    private var crownBottom: NSLayoutConstraint?
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +45,8 @@ final class LeaderboardViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
 
         setupTable()
+        setupMyRankHeader()
+
         applyStyle()
         enforceSquareTopImages()
 
@@ -54,6 +64,9 @@ final class LeaderboardViewController: UIViewController {
             img.layer.cornerRadius = side / 2
             img.clipsToBounds = true
         }
+
+        // ثبت التاج فوق الفائز (اللي بالنص)
+        positionCrownAboveWinner()
     }
 
     // MARK: - Table
@@ -62,6 +75,20 @@ final class LeaderboardViewController: UIViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+    }
+
+    private func setupMyRankHeader() {
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 52))
+        header.backgroundColor = .clear
+
+        myRankLabel.frame = CGRect(x: 16, y: 10, width: tableView.bounds.width - 32, height: 32)
+        myRankLabel.font = .systemFont(ofSize: 14, weight: .semibold)
+        myRankLabel.textColor = .darkGray
+        myRankLabel.textAlignment = .left
+        myRankLabel.text = "" // بتتحدث بعدين
+
+        header.addSubview(myRankLabel)
+        tableView.tableHeaderView = header
     }
 
     // MARK: - Style
@@ -89,12 +116,11 @@ final class LeaderboardViewController: UIViewController {
             img?.layer.borderWidth = 2.5
             img?.layer.borderColor = green.cgColor
             img?.backgroundColor = .white
-
-            // ✅ مهم: لو ما فيه صورة، حط placeholder عشان ما يطلع فاضي
             img?.image = defaultAvatar()
+            img?.tintColor = .systemGray2
         }
 
-        // التاج من الستوربورد
+        // التاج (لا تخلينه hidden دايم)
         firstCrownImageView.contentMode = .scaleAspectFit
         firstCrownImageView.isHidden = true
 
@@ -120,8 +146,7 @@ final class LeaderboardViewController: UIViewController {
 
     private func defaultAvatar() -> UIImage? {
         let config = UIImage.SymbolConfiguration(pointSize: 26, weight: .regular)
-        let img = UIImage(systemName: "person.crop.circle.fill", withConfiguration: config)
-        return img
+        return UIImage(systemName: "person.crop.circle.fill", withConfiguration: config)
     }
 
     // MARK: - Force square (عشان تطلع دايرة)
@@ -141,14 +166,16 @@ final class LeaderboardViewController: UIViewController {
             LeaderboardUser(userId: "p1", name: "No data yet", points: 0.0, profileImageUrl: nil),
             LeaderboardUser(userId: "p2", name: "No data yet", points: 0.0, profileImageUrl: nil),
             LeaderboardUser(userId: "p3", name: "No data yet", points: 0.0, profileImageUrl: nil),
-            LeaderboardUser(userId: "p4", name: "No users yet — add a donation", points: 0.0, profileImageUrl: nil)
+            LeaderboardUser(userId: "p4", name: "No more users yet", points: 0.0, profileImageUrl: nil)
         ]
         updateTop3()
+        updateMyRankLabel()
         tableView.reloadData()
     }
 
-    // MARK: - Top3 UI
+    // MARK: - ✅ Top3 UI (FIXED: winner in center)
     private func updateTop3() {
+
         func set(_ user: LeaderboardUser?,
                  imgView: UIImageView,
                  nameLabel: UILabel,
@@ -157,11 +184,9 @@ final class LeaderboardViewController: UIViewController {
             nameLabel.text = user?.name ?? "No data yet"
             pointsLabel.text = String(format: "%.1f pts", user?.points ?? 0.0)
 
-            // ✅ always keep placeholder first (so it never looks empty)
             imgView.image = defaultAvatar()
             imgView.tintColor = .systemGray2
 
-            // ✅ load real image if exists
             if let urlStr = user?.profileImageUrl, !urlStr.isEmpty {
                 loadImage(urlStr: urlStr) { image in
                     if let image = image {
@@ -172,18 +197,59 @@ final class LeaderboardViewController: UIViewController {
             }
         }
 
-        set(users.indices.contains(0) ? users[0] : nil, imgView: firstImage,  nameLabel: firstName,  pointsLabel: firstPoints)
-        set(users.indices.contains(1) ? users[1] : nil, imgView: secondImage, nameLabel: secondName, pointsLabel: secondPoints)
-        set(users.indices.contains(2) ? users[2] : nil, imgView: thirdImage,  nameLabel: thirdName,  pointsLabel: thirdPoints)
+        let first  = users.indices.contains(0) ? users[0] : nil   // winner
+        let second = users.indices.contains(1) ? users[1] : nil
+        let third  = users.indices.contains(2) ? users[2] : nil
 
-        // 👑 التاج يظهر بس إذا فعلاً فيه متصدر
-        firstCrownImageView.isHidden = !(users.indices.contains(0) && users[0].points > 0.0)
+        // ✅ IMPORTANT: حسب ستوري بوردك: الوسط = secondImage
+        set(first,  imgView: secondImage, nameLabel: secondName, pointsLabel: secondPoints) // winner center
+        set(second, imgView: firstImage,  nameLabel: firstName,  pointsLabel: firstPoints)  // 2nd left
+        set(third,  imgView: thirdImage,  nameLabel: thirdName,  pointsLabel: thirdPoints)  // 3rd right
+
+        // 👑 يظهر بس إذا فعلاً فيه نقاط
+        firstCrownImageView.isHidden = !((first?.points ?? 0.0) > 0.0)
+
+        // ثبت التاج فوق winner
+        positionCrownAboveWinner()
+    }
+
+    // MARK: - ✅ Crown fixed (attach to center winner image)
+    private func positionCrownAboveWinner() {
+        firstCrownImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        // remove old
+        crownCenterX?.isActive = false
+        crownBottom?.isActive = false
+
+        crownCenterX = firstCrownImageView.centerXAnchor.constraint(equalTo: secondImage.centerXAnchor)
+        crownBottom  = firstCrownImageView.bottomAnchor.constraint(equalTo: secondImage.topAnchor, constant: -6)
+
+        NSLayoutConstraint.activate([
+            crownCenterX!,
+            crownBottom!,
+            firstCrownImageView.widthAnchor.constraint(equalToConstant: 26),
+            firstCrownImageView.heightAnchor.constraint(equalToConstant: 18)
+        ])
+    }
+
+    // MARK: - ✅ Your rank (from same users array)
+    private func updateMyRankLabel() {
+        guard let myId = Auth.auth().currentUser?.uid else {
+            myRankLabel.text = "Your rank: —"
+            return
+        }
+
+        if let idx = users.firstIndex(where: { $0.userId == myId }) {
+            let rank = idx + 1
+            myRankLabel.text = "Your rank: #\(rank) of \(users.count)"
+        } else {
+            myRankLabel.text = "Your rank: not ranked yet"
+        }
     }
 
     // MARK: - Image Loader (URL)
     private func loadImage(urlStr: String, completion: @escaping (UIImage?) -> Void) {
 
-        // Cache first
         if let cached = Self.imageCache.object(forKey: urlStr as NSString) {
             DispatchQueue.main.async { completion(cached) }
             return
@@ -204,7 +270,7 @@ final class LeaderboardViewController: UIViewController {
         }.resume()
     }
 
-    // MARK: - Firebase
+    // MARK: - Firebase (KEEP SAME LOGIC)
     private func loadLeaderboard() {
         db.collection("donations").getDocuments { [weak self] snapshot, error in
             guard let self = self else { return }
@@ -214,19 +280,37 @@ final class LeaderboardViewController: UIViewController {
                 return
             }
 
+            print("✅ donations count =", snapshot?.documents.count ?? 0)
+
+            snapshot?.documents.prefix(5).forEach { doc in
+                print("📄 donation doc:", doc.documentID, doc.data())
+            }
+
             var pointsByDonor: [String: Double] = [:]
 
             snapshot?.documents.forEach { doc in
                 let donorId = doc.data()["donorId"] as? String ?? ""
-                if !donorId.isEmpty {
+                if donorId.isEmpty {
+                    print("⚠️ donation missing donorId:", doc.documentID)
+                } else {
                     pointsByDonor[donorId, default: 0.0] += 0.5
                 }
             }
 
-            if pointsByDonor.isEmpty { return }
+            print("✅ unique donors =", pointsByDonor.count)
+            print("✅ donors keys sample =", Array(pointsByDonor.keys.prefix(10)))
+
+            if pointsByDonor.isEmpty {
+                print("⚠️ pointsByDonor EMPTY -> UI stays placeholders")
+                self.users = []
+                self.showEmpty()
+                return
+            }
+
             self.fetchUsers(pointsByDonor: pointsByDonor)
         }
     }
+
 
     private func fetchUsers(pointsByDonor: [String: Double]) {
         let group = DispatchGroup()
@@ -246,11 +330,18 @@ final class LeaderboardViewController: UIViewController {
         group.notify(queue: .main) {
             self.users = temp.sorted { $0.points > $1.points }
 
+            // إذا أقل من 3، خل placeholder عشان UI ما ينهار
+            while self.users.count < 3 {
+                self.users.append(LeaderboardUser(userId: "pX", name: "No data yet", points: 0.0, profileImageUrl: nil))
+            }
+
+            // إذا ما عندنا ناس تحت، ضيف واحد placeholder
             if self.users.count <= 3 {
                 self.users.append(LeaderboardUser(userId: "p4", name: "No more users yet", points: 0.0, profileImageUrl: nil))
             }
 
             self.updateTop3()
+            self.updateMyRankLabel()
             self.tableView.reloadData()
         }
     }
@@ -267,9 +358,16 @@ extension LeaderboardViewController: UITableViewDataSource, UITableViewDelegate 
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "LeaderboardRowCell", for: indexPath) as! LeaderboardRowCell
+
         let user = users[indexPath.row + 3]
         let rank = indexPath.row + 4
-        cell.configure(rank: rank, user: user)
+
+        let myId = Auth.auth().currentUser?.uid
+        let isMe = (user.userId == myId)
+
+        // إذا عندك configure قديم بدون isMe، عدلي LeaderboardRowCell أو شيل isMe
+        cell.configure(rank: rank, user: user, isMe: isMe)
+
         return cell
     }
 
@@ -285,3 +383,4 @@ extension LeaderboardViewController: UITableViewDataSource, UITableViewDelegate 
         return UIView()
     }
 }
+

@@ -162,7 +162,7 @@
                                 </prototypes>
                             </tableView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="crown" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="k0E-06-NYJ" userLabel="firstCrownImageView">
-                                <rect key="frame" x="208" y="118.66666666666674" width="25" height="25"/>
+                                <rect key="frame" x="209" y="125.66666666666674" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" name="AccentColor"/>
                             </imageView>

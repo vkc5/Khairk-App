@@ -13,7 +13,6 @@
 		51848A9D2ED20342008389FC /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A9C2ED20342008389FC /* FirebaseFirestore */; };
 		51848A9F2ED20342008389FC /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 51848A9E2ED20342008389FC /* FirebaseMessaging */; };
 		51848AA12ED20342008389FC /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 51848AA02ED20342008389FC /* FirebaseStorage */; };
-		F83CA58C2EFA86D6000FA988 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F83CA58B2EFA86D6000FA988 /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,7 +81,6 @@
 				51848A9F2ED20342008389FC /* FirebaseMessaging in Frameworks */,
 				51848A9B2ED20342008389FC /* FirebaseAuth in Frameworks */,
 				51848A972ED20342008389FC /* FirebaseAnalytics in Frameworks */,
-				F83CA58C2EFA86D6000FA988 /* FirebaseDatabase in Frameworks */,
 				51848AA12ED20342008389FC /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,7 +92,6 @@
 			isa = PBXGroup;
 			children = (
 				51848A5A2ED1D894008389FC /* Khairk */,
-				F83CA58A2EFA86D6000FA988 /* Frameworks */,
 				51848A592ED1D894008389FC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -105,13 +102,6 @@
 				51848A582ED1D894008389FC /* Khairk.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		F83CA58A2EFA86D6000FA988 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,7 +130,6 @@
 				51848A9C2ED20342008389FC /* FirebaseFirestore */,
 				51848A9E2ED20342008389FC /* FirebaseMessaging */,
 				51848AA02ED20342008389FC /* FirebaseStorage */,
-				F83CA58B2EFA86D6000FA988 /* FirebaseDatabase */,
 			);
 			productName = Khairk;
 			productReference = 51848A582ED1D894008389FC /* Khairk.app */;
@@ -158,7 +147,6 @@
 				TargetAttributes = {
 					51848A572ED1D894008389FC = {
 						CreatedOnToolsVersion = 16.4;
-						LastSwiftMigration = 1640;
 					};
 				};
 			};
@@ -210,7 +198,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Khairk/Khairk.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7F756L3TB;
@@ -222,7 +209,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -231,7 +217,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Team.Khairk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -242,7 +227,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Khairk/Khairk.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7F756L3TB;
@@ -254,7 +238,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -453,11 +436,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
-		};
-		F83CA58B2EFA86D6000FA988 /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 51848A952ED20342008389FC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
