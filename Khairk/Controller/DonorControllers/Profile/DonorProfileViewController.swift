@@ -184,6 +184,15 @@ class DonorProfileViewController: UIViewController {
 
         navigationController?.pushViewController(mapVC, animated: true)
     }
+    
+    @IBAction func LeaderBoardTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Leaderboard", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "LeaderboardViewController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
     /*
     // MARK: - Navigation
 

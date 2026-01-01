@@ -160,6 +160,9 @@
                                                                         <buttonConfiguration key="configuration" style="plain" title="Goodness">
                                                                             <fontDescription key="titleFontDescription" type="system" pointSize="0.0"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="DonorRewards2Tapped:" destination="sr3-GR-AUQ" eventType="touchUpInside" id="jGR-It-NFF"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -181,6 +184,9 @@
                                                                         <buttonConfiguration key="configuration" style="plain" title="Stats">
                                                                             <fontDescription key="titleFontDescription" type="system" pointSize="0.0"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="ImpactTapped:" destination="sr3-GR-AUQ" eventType="touchUpInside" id="DUd-MG-2hV"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -241,6 +247,10 @@
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="MUO-0o-EpO" appends="YES" id="Dga-or-QTh"/>
+                                                </connections>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="My Goals" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FvP-Vh-mqQ">
                                                 <rect key="frame" x="0.0" y="183.33333333333331" width="393" height="20.333333333333343"/>
@@ -402,6 +412,9 @@ Warmth And Care
                                                                         <buttonConfiguration key="configuration" style="plain" title="Donate Now">
                                                                             <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="10"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="Donate1:" destination="sr3-GR-AUQ" eventType="touchUpInside" id="4zQ-Hi-KE9"/>
+                                                                        </connections>
                                                                     </button>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Meal Collected |" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9T-iu-aXQ">
                                                                         <rect key="frame" x="31" y="114" width="279.66666666666669" height="13.333333333333329"/>
@@ -465,6 +478,9 @@ Khairk</string>
                                                                         <buttonConfiguration key="configuration" style="plain" title="Donate Now">
                                                                             <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="10"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="Donate2:" destination="sr3-GR-AUQ" eventType="touchUpInside" id="z53-7H-jcE"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="MainBrand-500"/>
@@ -536,8 +552,45 @@ Khairk</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PnE-fD-7g1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="MUO-0o-EpO">
+                    <connections>
+                        <action selector="LeaderBoardTapped:" destination="sr3-GR-AUQ" id="gAM-T6-53m"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1363" y="451"/>
+        </scene>
+        <!--Donation Root View Controller-->
+        <scene sceneID="JYI-oc-lhH">
+            <objects>
+                <viewController id="EQg-gl-Al0" customClass="DonationRootViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Lf7-Ho-Y7L">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7vL-4f-zBc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="jGV-gP-r5n"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hdZ-wj-sKy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2094" y="451"/>
+        </scene>
+        <!--Finder Root View Controller-->
+        <scene sceneID="hLy-DD-mcO">
+            <objects>
+                <viewController id="ArO-vP-C4E" customClass="NGOFinderRootViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ujT-OZ-0te">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="WOV-k9-OQ0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="LZL-Df-1f5"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pn3-Jc-e8D" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2818" y="451"/>
         </scene>
         <!--Item-->
         <scene sceneID="IAU-if-rNG">
@@ -2248,29 +2301,35 @@ Khairk</string>
             </objects>
             <point key="canvasLocation" x="1363" y="-239"/>
         </scene>
-        <!--Item-->
+        <!--Donation-->
         <scene sceneID="52X-0V-jfZ">
             <objects>
                 <navigationController id="7Sg-Qx-m3y" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="m3f-iv-HFf"/>
+                    <tabBarItem key="tabBarItem" title="Donation" image="fork.knife.circle" catalog="system" id="m3f-iv-HFf"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="zLj-cB-Bki">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="EQg-gl-Al0" kind="relationship" relationship="rootViewController" id="37W-fI-UCM"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JxQ-ZG-Zg4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2094" y="-239"/>
         </scene>
-        <!--Item-->
+        <!--NGO Finder-->
         <scene sceneID="4ih-lL-eg4">
             <objects>
                 <navigationController id="eYE-cM-j81" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="jm5-iI-cER"/>
+                    <tabBarItem key="tabBarItem" title="NGO Finder" image="building.2" catalog="system" id="jm5-iI-cER"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="R6g-SN-Qpz">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="ArO-vP-C4E" kind="relationship" relationship="rootViewController" id="jYZ-bQ-v8j"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S0h-vX-LgJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2279,7 +2338,6 @@ Khairk</string>
         <!--Profile-->
         <scene sceneID="N8E-u9-ikY">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MPQ-VT-6fN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uVR-F6-42s" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="Vbc-EW-62y"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="k0A-aN-ecU">
@@ -2290,6 +2348,7 @@ Khairk</string>
                         <segue destination="7kg-dc-KD2" kind="relationship" relationship="rootViewController" id="n5f-pM-9Jv"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MPQ-VT-6fN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3593" y="-239"/>
         </scene>
@@ -2316,6 +2375,8 @@ Khairk</string>
         <image name="bell" catalog="system" width="125" height="128"/>
         <image name="bitcoinsign.ring" catalog="system" width="128" height="124"/>
         <image name="box" width="512" height="512"/>
+        <image name="building.2" catalog="system" width="120" height="128"/>
+        <image name="fork.knife.circle" catalog="system" width="128" height="123"/>
         <image name="group" width="512" height="512"/>
         <image name="house.circle" catalog="system" width="128" height="123"/>
         <image name="map" catalog="system" width="128" height="112"/>

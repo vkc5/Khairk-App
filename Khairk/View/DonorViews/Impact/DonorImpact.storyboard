@@ -8,50 +8,22 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--New View Controller-->
-        <scene sceneID="OH2-qz-LDo">
-            <objects>
-                <viewController storyboardIdentifier="newViewController" id="pYS-RI-xAS" customClass="newViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="LgF-He-HEw" customClass="Test">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eoo-Wb-QaB">
-                                <rect key="frame" x="159" y="407" width="75" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.20392158630000001" green="0.4588235021" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                <connections>
-                                    <segue destination="fSg-5I-waJ" kind="show" id="pxM-NG-FIj"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="1jh-ip-5Nh"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="gdZ-up-d0k"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YQ6-1G-mDN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2917" y="-1311"/>
-        </scene>
-        <!--My impact View Controller-->
+        <!--My Impact -->
         <scene sceneID="0te-YU-Zn5">
             <objects>
                 <viewController storyboardIdentifier="My_impactViewController" id="fSg-5I-waJ" customClass="My_impactViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9xh-Lr-uAf">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background2" id="ijr-gt-VzZ">
-                                <rect key="frame" x="0.0" y="106" width="393" height="746"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="745"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZcF-jM-obK">
-                                <rect key="frame" x="0.0" y="143" width="393" height="709"/>
+                                <rect key="frame" x="0.0" y="143" width="393" height="602"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-Ic-50x">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-Ic-50x">
                                         <rect key="frame" x="-8" y="-14" width="393" height="848"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="Rectangle  Meals Shared " translatesAutoresizingMaskIntoConstraints="NO" id="qdZ-ad-fci">
@@ -338,23 +310,16 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="DHS-Ic-50x" firstAttribute="top" secondItem="ZcF-jM-obK" secondAttribute="top" id="6g8-dC-bQa"/>
-                                    <constraint firstAttribute="bottom" secondItem="DHS-Ic-50x" secondAttribute="bottom" id="8Ij-Oc-pa6"/>
-                                    <constraint firstItem="DHS-Ic-50x" firstAttribute="centerX" secondItem="ZcF-jM-obK" secondAttribute="centerX" id="Fio-gR-ETj"/>
-                                    <constraint firstItem="DHS-Ic-50x" firstAttribute="leading" secondItem="ZcF-jM-obK" secondAttribute="leading" id="PFj-8c-W0H"/>
-                                    <constraint firstAttribute="trailing" secondItem="DHS-Ic-50x" secondAttribute="trailing" id="bjk-W9-wkv"/>
+                                    <constraint firstItem="DHS-Ic-50x" firstAttribute="top" secondItem="ZcF-jM-obK" secondAttribute="top" constant="-14" id="6g8-dC-bQa"/>
+                                    <constraint firstAttribute="bottom" secondItem="DHS-Ic-50x" secondAttribute="bottom" constant="-232" id="8Ij-Oc-pa6"/>
+                                    <constraint firstItem="DHS-Ic-50x" firstAttribute="centerX" secondItem="ZcF-jM-obK" secondAttribute="centerX" constant="-8" id="Fio-gR-ETj"/>
+                                    <constraint firstItem="DHS-Ic-50x" firstAttribute="leading" secondItem="ZcF-jM-obK" secondAttribute="leading" constant="-8" id="PFj-8c-W0H"/>
+                                    <constraint firstAttribute="trailing" secondItem="DHS-Ic-50x" secondAttribute="trailing" constant="8" id="bjk-W9-wkv"/>
                                 </constraints>
                             </scrollView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="My Impact " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IWI-y5-e1q">
-                                <rect key="frame" x="137" y="60" width="118" height="28"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3a9-69-zGd"/>
-                        <color key="backgroundColor" red="0.20392158630000001" green="0.4588235021" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ZcF-jM-obK" secondAttribute="trailing" id="3Ez-DM-ZGN"/>
                             <constraint firstItem="ZcF-jM-obK" firstAttribute="bottom" secondItem="ijr-gt-VzZ" secondAttribute="bottom" id="8dq-Vx-y0M"/>
@@ -362,7 +327,7 @@
                             <constraint firstItem="ZcF-jM-obK" firstAttribute="leading" secondItem="9xh-Lr-uAf" secondAttribute="leading" id="eEg-HN-Gfm"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="05p-vY-BkS"/>
+                    <navigationItem key="navigationItem" title="My Impact " id="05p-vY-BkS"/>
                     <connections>
                         <outlet property="chartStackView" destination="jSf-Va-5T3" id="rYe-02-GQu"/>
                         <outlet property="familiesCountLabel" destination="kNG-te-heh" id="iaN-sa-trk"/>
@@ -376,7 +341,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xa4-0y-b3u" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4098" y="-1327"/>
+            <point key="canvasLocation" x="4096.9465648854957" y="-1327.4647887323945"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="iI8-TM-Qaz">
@@ -389,12 +354,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="pYS-RI-xAS" kind="relationship" relationship="rootViewController" id="c4b-n1-uFO"/>
+                        <segue destination="fSg-5I-waJ" kind="show" id="cIw-Qx-LMm"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qj4-WY-fbF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1784" y="-1288"/>
+            <point key="canvasLocation" x="2764" y="-1327"/>
         </scene>
     </scenes>
     <color key="tintColor" red="0.95999122160000006" green="0.95999122160000006" blue="0.95999122160000006" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

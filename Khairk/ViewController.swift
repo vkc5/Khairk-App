@@ -49,10 +49,8 @@ class ViewController: UIViewController {
     }
     
     func goToLogin() {
-        let storyboard = UIStoryboard(name: "AdminUserManagement", bundle: nil)
-//        let storyboard = UIStoryboard(name: "Auth", bundle: nil)
-        let loginVC = storyboard.instantiateViewController(withIdentifier: "UserManagementVC")
-//        let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginVC")
+        let storyboard = UIStoryboard(name: "Auth", bundle: nil)
+        let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginVC")
 
         // Smooth fade animation
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
