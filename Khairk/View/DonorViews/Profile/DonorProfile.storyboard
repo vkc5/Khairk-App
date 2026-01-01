@@ -1366,7 +1366,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DPJ-U0-8Ui">
-                                <rect key="frame" x="0.0" y="152" width="393" height="683"/>
+                                <rect key="frame" x="0.0" y="102" width="393" height="682"/>
                                 <subviews>
                                     <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cfN-Ao-SwV">
                                         <rect key="frame" x="0.0" y="10" width="393" height="64"/>
@@ -1380,10 +1380,10 @@
                                         </connections>
                                     </searchBar>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="tvG-uz-86t">
-                                        <rect key="frame" x="35" y="76" width="323" height="607"/>
+                                        <rect key="frame" x="35" y="76" width="323" height="556"/>
                                         <subviews>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="dvt-Hf-3Sg">
-                                                <rect key="frame" x="46.666666666666686" y="0.0" width="230" height="41"/>
+                                                <rect key="frame" x="46.666666666666686" y="0.0" width="230" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="230" id="tEH-mI-bac"/>
                                                 </constraints>
@@ -1393,7 +1393,7 @@
                                                 </segments>
                                             </segmentedControl>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="0tR-l9-ZC6">
-                                                <rect key="frame" x="7" y="56" width="309" height="32"/>
+                                                <rect key="frame" x="7" y="47" width="309" height="32"/>
                                                 <segments>
                                                     <segment title="Popular Topic"/>
                                                     <segment title="General"/>
@@ -1401,7 +1401,7 @@
                                                 </segments>
                                             </segmentedControl>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="AIp-JJ-mWG">
-                                                <rect key="frame" x="0.0" y="103" width="323" height="504"/>
+                                                <rect key="frame" x="0.0" y="94" width="323" height="462"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FAQCell" id="1lY-Nf-XAc">
@@ -1424,7 +1424,7 @@
                                 <constraints>
                                     <constraint firstItem="tvG-uz-86t" firstAttribute="leading" secondItem="DPJ-U0-8Ui" secondAttribute="leading" constant="35" id="78h-hM-hCf"/>
                                     <constraint firstItem="cfN-Ao-SwV" firstAttribute="leading" secondItem="DPJ-U0-8Ui" secondAttribute="leading" id="9GF-Pb-7Bo"/>
-                                    <constraint firstAttribute="bottom" secondItem="tvG-uz-86t" secondAttribute="bottom" id="IDq-GZ-kD1"/>
+                                    <constraint firstAttribute="bottom" secondItem="tvG-uz-86t" secondAttribute="bottom" constant="50" id="IDq-GZ-kD1"/>
                                     <constraint firstItem="tvG-uz-86t" firstAttribute="centerX" secondItem="DPJ-U0-8Ui" secondAttribute="centerX" id="UMh-1W-0zN"/>
                                     <constraint firstItem="cfN-Ao-SwV" firstAttribute="top" secondItem="DPJ-U0-8Ui" secondAttribute="top" constant="10" id="VZa-wu-QCO"/>
                                     <constraint firstItem="tvG-uz-86t" firstAttribute="centerX" secondItem="cfN-Ao-SwV" secondAttribute="centerX" id="rH9-fC-hpl"/>
@@ -1436,9 +1436,9 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="DPJ-U0-8Ui" firstAttribute="leading" secondItem="gHZ-kf-3fk" secondAttribute="leading" id="ADS-Q1-OpN"/>
-                            <constraint firstAttribute="bottom" secondItem="DPJ-U0-8Ui" secondAttribute="bottom" constant="17" id="bip-ZO-I1y"/>
+                            <constraint firstItem="DPJ-U0-8Ui" firstAttribute="bottom" secondItem="gHZ-kf-3fk" secondAttribute="bottom" id="e8E-7q-0tW"/>
                             <constraint firstItem="DPJ-U0-8Ui" firstAttribute="trailing" secondItem="gHZ-kf-3fk" secondAttribute="trailing" id="phm-gk-bPT"/>
-                            <constraint firstItem="DPJ-U0-8Ui" firstAttribute="top" secondItem="Dom-Mb-iAt" secondAttribute="top" constant="152" id="qL3-2Q-h4k"/>
+                            <constraint firstItem="DPJ-U0-8Ui" firstAttribute="top" secondItem="Dom-Mb-iAt" secondAttribute="top" constant="102" id="qL3-2Q-h4k"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Help &amp; support" id="rEe-4P-xi1"/>

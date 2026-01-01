@@ -20,7 +20,7 @@ class AdminNGOVerificationController: UIViewController, UISearchBarDelegate, UIT
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "NGO Verification (Manager)"
+        title = "NGO Verification"
         searchWithScope.delegate = self
         setupTableView()
         fetchNGOs()

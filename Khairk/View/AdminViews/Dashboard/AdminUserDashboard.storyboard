@@ -674,7 +674,7 @@ Khairk</string>
                                 <color key="backgroundColor" systemColor="systemGray3Color"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0O2-XN-npy">
-                                <rect key="frame" x="37" y="500" width="135" height="177.66666666666666"/>
+                                <rect key="frame" x="16" y="521" width="135" height="177.66666666666666"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XCC-Pc-BJm">
@@ -764,29 +764,35 @@ Khairk</string>
             </objects>
             <point key="canvasLocation" x="718" y="-1135"/>
         </scene>
-        <!--Item-->
+        <!--NGO Verify-->
         <scene sceneID="G57-nh-dgd">
             <objects>
                 <navigationController id="XGe-Q0-tlB" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="EYC-zQ-psX"/>
+                    <tabBarItem key="tabBarItem" title="NGO Verify" image="pencil.and.list.clipboard" catalog="system" id="EYC-zQ-psX"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8Ck-AF-t5W">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="7KA-Zj-Pt7" kind="relationship" relationship="rootViewController" id="lvd-Gi-kA6"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wmt-KA-7tG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1450" y="-1135"/>
         </scene>
-        <!--Item-->
+        <!--Khair-->
         <scene sceneID="hfw-zt-GYb">
             <objects>
                 <navigationController id="uwD-a2-Njd" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="n6P-TZ-c0c"/>
+                    <tabBarItem key="tabBarItem" title="Khair" image="chart.pie" catalog="system" id="n6P-TZ-c0c"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dyo-kI-6Pa">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="WeX-iw-Mn3" kind="relationship" relationship="rootViewController" id="wAf-71-GfW"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q3K-Wn-4vP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -795,16 +801,67 @@ Khairk</string>
         <!--Profile-->
         <scene sceneID="ko8-mO-iar">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="l5D-Tb-xmd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Icv-pD-UN5" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="oBx-Kh-m85"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="H5g-L8-yuA">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="Mjc-Cu-p4e" kind="relationship" relationship="rootViewController" id="ryf-Ym-lOP"/>
+                    </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l5D-Tb-xmd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2947" y="-1135"/>
+        </scene>
+        <!--AdminNGO Varify Root View Controller-->
+        <scene sceneID="1QW-xw-tFa">
+            <objects>
+                <viewController id="7KA-Zj-Pt7" customClass="AdminNGOVarifyRootViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VsI-9n-mlm">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Aok-hs-ne8"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="b5L-Ts-1E1"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-I4-JUk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1450" y="-442"/>
+        </scene>
+        <!--Admin Khair Root View Controller-->
+        <scene sceneID="0rh-kZ-eYV">
+            <objects>
+                <viewController id="WeX-iw-Mn3" customClass="AdminKhairRootViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LVJ-ph-JRn">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="IIN-lQ-b6z"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7RN-gI-7he"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eSd-6A-qvP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2172" y="-442"/>
+        </scene>
+        <!--Admin Profile Root View Controller-->
+        <scene sceneID="dca-Pe-aWJ">
+            <objects>
+                <viewController id="Mjc-Cu-p4e" customClass="AdminProfileRootViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1vk-5T-8I7">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="g84-Hj-cxH"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Rzw-3F-JMY"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bvP-OA-sjq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2946" y="-442"/>
         </scene>
     </scenes>
     <resources>
@@ -818,6 +875,7 @@ Khairk</string>
         <image name="ellipsis.message" catalog="system" width="128" height="106"/>
         <image name="heart.circle.fill" catalog="system" width="128" height="123"/>
         <image name="house.circle" catalog="system" width="128" height="123"/>
+        <image name="pencil.and.list.clipboard" catalog="system" width="114" height="128"/>
         <image name="person.badge.shield.checkmark" catalog="system" width="124" height="128"/>
         <image name="person.badge.shield.exclamationmark.fill" catalog="system" width="124" height="128"/>
         <image name="person.circle.fill" catalog="system" width="128" height="123"/>

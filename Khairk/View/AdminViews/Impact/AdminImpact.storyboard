@@ -8,34 +8,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Test Admin Collector Impact-->
-        <scene sceneID="jEl-dS-NkR">
-            <objects>
-                <viewController storyboardIdentifier="TestAdminCollectorImpact" id="l3n-Ad-V3k" customClass="TestAdminCollectorImpact" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ufe-kk-M6E" customClass="Test">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FQE-eL-gWM">
-                                <rect key="frame" x="159" y="407" width="75" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.20392158630000001" green="0.4588235021" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                <connections>
-                                    <segue destination="bko-E1-90N" kind="show" id="OTV-w4-0pb"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="u2O-ul-b7p"/>
-                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="N9T-CB-mnu"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QH5-Ff-N4K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2917" y="-1311"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="nwF-cB-EwM">
             <objects>
@@ -47,32 +19,25 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="l3n-Ad-V3k" kind="relationship" relationship="rootViewController" id="FpH-NN-Gkn"/>
+                        <segue destination="bko-E1-90N" kind="show" id="y2p-kG-ldo"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tky-2I-8uX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1845.0381679389311" y="-1311.267605633803"/>
         </scene>
-        <!--Admin Collector Impact-->
+        <!--My Impact -->
         <scene sceneID="fEl-nA-YDa">
             <objects>
                 <viewController storyboardIdentifier="AdminCollectorImpact" id="bko-E1-90N" customClass="AdminCollectorImpact" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nqr-4c-hof">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background2" id="zfA-Tv-ZHD">
                                 <rect key="frame" x="0.0" y="106" width="393" height="746"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="My Impact " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7M-4P-BK6">
-                                <rect key="frame" x="137" y="60" width="118" height="28"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bHd-qi-9Kh">
                                 <rect key="frame" x="0.0" y="143" width="393" height="709"/>
                                 <subviews>
@@ -367,7 +332,7 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HTP-ca-M54"/>
-                        <color key="backgroundColor" red="0.20392158630000001" green="0.4588235021" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="bHd-qi-9Kh" firstAttribute="leading" secondItem="nqr-4c-hof" secondAttribute="leading" id="5qd-tk-dc4"/>
                             <constraint firstItem="bHd-qi-9Kh" firstAttribute="bottom" secondItem="zfA-Tv-ZHD" secondAttribute="bottom" id="M9o-n7-H6b"/>
@@ -375,7 +340,7 @@
                             <constraint firstItem="bHd-qi-9Kh" firstAttribute="top" secondItem="nqr-4c-hof" secondAttribute="top" constant="143" id="kEZ-Nu-OC2"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="46C-BD-iP6"/>
+                    <navigationItem key="navigationItem" title="My Impact " id="46C-BD-iP6"/>
                     <connections>
                         <outlet property="allTimeMealsLabel" destination="Whj-b0-Rdh" id="qk7-c8-6Sz"/>
                         <outlet property="areaChartContainer" destination="b8u-L0-01d" id="OaO-7V-f26"/>
@@ -389,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="83T-ga-e9U" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4096.9465648854957" y="-1327.4647887323945"/>
+            <point key="canvasLocation" x="2924" y="-1311"/>
         </scene>
     </scenes>
     <resources>
