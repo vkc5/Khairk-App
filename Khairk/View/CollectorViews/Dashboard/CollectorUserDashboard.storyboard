@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Item-->
+        <!--Home-->
         <scene sceneID="zf8-on-swe">
             <objects>
                 <viewController storyboardIdentifier="CollectorDashboardViewController" id="rze-n8-uh8" customClass="CollectorDashboardViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
@@ -27,11 +27,6 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="plent" translatesAutoresizingMaskIntoConstraints="NO" id="34c-TG-sEt">
-                                        <rect key="frame" x="348" y="67" width="29" height="21.000000000006196"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" name="MainBrand-500"/>
-                                    </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bell" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ZEr-nO-TCZ">
                                         <rect key="frame" x="330" y="63.666666666666664" width="29" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -41,7 +36,7 @@
                                 <color key="backgroundColor" name="MainBrand-500"/>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tdR-Ol-bz8">
-                                <rect key="frame" x="0.0" y="118" width="393" height="666"/>
+                                <rect key="frame" x="0.0" y="118" width="393" height="617"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="d59-OZ-3e9">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="682.33333333333337"/>
@@ -385,7 +380,6 @@
                                                     </view>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="IUD-s4-Ru3" firstAttribute="leading" secondItem="ole-cj-CUr" secondAttribute="leading" constant="12" id="6sT-Hb-CPr"/>
                                                     <constraint firstAttribute="trailing" secondItem="NEe-qa-A9r" secondAttribute="trailing" constant="12" id="aW1-Zd-CZs"/>
                                                     <constraint firstItem="IUD-s4-Ru3" firstAttribute="height" secondItem="NEe-qa-A9r" secondAttribute="height" id="rOp-VN-oz8"/>
                                                     <constraint firstItem="NEe-qa-A9r" firstAttribute="leading" secondItem="ole-cj-CUr" secondAttribute="leading" constant="12" id="v3k-Zl-Oj3"/>
@@ -543,10 +537,10 @@ Deffernce</string>
                             <constraint firstItem="afs-ON-W3g" firstAttribute="top" secondItem="d08-ei-wee" secondAttribute="top" id="jdb-w0-jgc"/>
                             <constraint firstAttribute="bottom" secondItem="afs-ON-W3g" secondAttribute="bottom" constant="773" id="kdL-Db-gFx"/>
                             <constraint firstItem="tdR-Ol-bz8" firstAttribute="trailing" secondItem="ynn-GM-RgL" secondAttribute="trailing" id="kn4-UB-9wE"/>
-                            <constraint firstItem="tdR-Ol-bz8" firstAttribute="top" secondItem="ynn-GM-RgL" secondAttribute="top" id="nRs-Rb-hSQ"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" selectedImage="Appicons" id="JbY-ZR-qCx"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" selectedImage="house.circle" id="JbY-ZR-qCx"/>
+                    <navigationItem key="navigationItem" id="TZh-AI-j21"/>
                     <connections>
                         <outlet property="donorHubView" destination="sML-SY-Shf" id="jGt-NN-KNv"/>
                         <outlet property="goalCard1" destination="NEe-qa-A9r" id="x2E-AG-YXc"/>
@@ -561,16 +555,98 @@ Deffernce</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aA3-en-hHJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1083.206106870229" y="-1300"/>
+            <point key="canvasLocation" x="-199" y="-517"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="anT-vt-iEO">
+            <objects>
+                <tabBarController storyboardIdentifier="NgoTabBarVC" id="zkX-Ey-vJF" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nFK-14-9fI">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Odl-wD-iVX" kind="relationship" relationship="viewControllers" id="PVk-p3-VHv"/>
+                        <segue destination="aa1-SX-YSZ" kind="relationship" relationship="viewControllers" id="rbN-4r-Zm8"/>
+                        <segue destination="jM8-zM-Wck" kind="relationship" relationship="viewControllers" id="YxM-wh-UxB"/>
+                        <segue destination="zQ6-yH-FcG" kind="relationship" relationship="viewControllers" id="YKp-mw-F10"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hCu-ih-6lP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="915" y="-1996"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="O1f-qb-pnf">
+            <objects>
+                <navigationController id="Odl-wD-iVX" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" id="DSg-Xa-YNP"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kfy-Ew-IWG">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="rze-n8-uh8" kind="relationship" relationship="rootViewController" id="hOy-Ik-iNl"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DE3-zs-dEB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-198" y="-1243"/>
+        </scene>
+        <!--NGO Cases-->
+        <scene sceneID="9cN-xu-tEj">
+            <objects>
+                <navigationController id="aa1-SX-YSZ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="NGO Cases" image="list.bullet.clipboard" catalog="system" id="HUh-br-KKX"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="S3U-N7-j2U">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t2i-MV-kf2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="534" y="-1243"/>
+        </scene>
+        <!--My pickups-->
+        <scene sceneID="xPN-eE-abA">
+            <objects>
+                <navigationController id="jM8-zM-Wck" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="My pickups" image="figure.pickleball" catalog="system" id="jeO-Up-zad"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="StV-ry-BIt">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e2l-cp-P4i" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1257" y="-1243"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="HAa-5t-DQn">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="zQ6-yH-FcG" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="9QH-6d-bBO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HHa-U7-fnq">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YKE-LG-6sx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2031" y="-1243"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Appicons" width="87" height="71"/>
         <image name="bag" catalog="system" width="128" height="128"/>
         <image name="bell" catalog="system" width="125" height="128"/>
         <image name="chart.pie" catalog="system" width="128" height="123"/>
         <image name="checkmark.rectangle.stack" catalog="system" width="126" height="128"/>
+        <image name="figure.pickleball" catalog="system" width="120" height="128"/>
         <image name="fork.knife.circle" catalog="system" width="128" height="123"/>
+        <image name="house.circle" catalog="system" width="128" height="123"/>
+        <image name="list.bullet.clipboard" catalog="system" width="98" height="128"/>
+        <image name="person.crop.circle" catalog="system" width="128" height="123"/>
         <image name="plent" width="256" height="256"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="stats" width="512" height="512"/>

@@ -1153,6 +1153,82 @@ Khairk</string>
             </objects>
             <point key="canvasLocation" x="-2488" y="-1044"/>
         </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="RzB-XX-TyW">
+            <objects>
+                <tabBarController storyboardIdentifier="AdminTabBarVC" id="0cR-Z4-rIU" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XSI-Dr-LjT">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="O9L-xI-MQj" kind="relationship" relationship="viewControllers" id="na2-hu-lww"/>
+                        <segue destination="XGe-Q0-tlB" kind="relationship" relationship="viewControllers" id="3IY-5z-TMh"/>
+                        <segue destination="uwD-a2-Njd" kind="relationship" relationship="viewControllers" id="A3h-XA-DRm"/>
+                        <segue destination="Icv-pD-UN5" kind="relationship" relationship="viewControllers" id="ibo-nc-8L3"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IUW-5E-fLp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1831" y="-1888"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="qKq-Zn-hKB">
+            <objects>
+                <navigationController id="O9L-xI-MQj" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" id="LWp-uc-Or2"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UXV-qM-Zcl">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Uf-b3-JES" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="718" y="-1135"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="G57-nh-dgd">
+            <objects>
+                <navigationController id="XGe-Q0-tlB" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="EYC-zQ-psX"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8Ck-AF-t5W">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wmt-KA-7tG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1450" y="-1135"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="hfw-zt-GYb">
+            <objects>
+                <navigationController id="uwD-a2-Njd" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="n6P-TZ-c0c"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dyo-kI-6Pa">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q3K-Wn-4vP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2173" y="-1135"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="ko8-mO-iar">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l5D-Tb-xmd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Icv-pD-UN5" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="oBx-Kh-m85"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="H5g-L8-yuA">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="2947" y="-1135"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Appicons" width="87" height="71"/>
@@ -1164,9 +1240,11 @@ Khairk</string>
         <image name="checkmark.seal.fill" catalog="system" width="128" height="124"/>
         <image name="ellipsis.message" catalog="system" width="128" height="106"/>
         <image name="heart.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="house.circle" catalog="system" width="128" height="123"/>
         <image name="person.badge.shield.checkmark" catalog="system" width="124" height="128"/>
         <image name="person.badge.shield.exclamationmark.fill" catalog="system" width="124" height="128"/>
         <image name="person.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="person.crop.circle" catalog="system" width="128" height="123"/>
         <image name="plent" width="256" height="256"/>
         <image name="recycling" width="512" height="512"/>
         <image name="stats" width="512" height="512"/>

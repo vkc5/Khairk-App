@@ -62,4 +62,13 @@ class FoodCaseViewController: UIViewController {
     @IBAction func donateNowPressed(_ sender: UIButton) {
         // Logic for navigating to the payment or donation page
             }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
         }

@@ -7,15 +7,60 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseMessaging
+import UserNotifications
+
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        
+        //for notifocation delegate
+        UNUserNotificationCenter.current().delegate = self
+        Messaging.messaging().delegate = self
+        
+        //ask for permission
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            guard granted else { return }
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
+            print("Permission granted: \(granted)")
+        }
+
         return true
+    }
+    
+    // MARK: FCM token
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        guard let token = fcmToken else { return }
+        print("FCM token: \(token)")
+        // TODO: save token to firestore for this user
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        return [.banner, .sound, .badge]
+    }
+
+    // MARK: -
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+        let title = (userInfo["notification"] as? [String: Any])?["title"] as? String ?? ""
+        let body  = (userInfo["notification"] as? [String: Any])?["body"]  as? String ?? ""
+
+        print("Push received:", title, body)
+
+        Notification().save(
+            title: title,
+            body: body,
+            userId: "CURRENT_USER_ID"
+        )
+
+        completionHandler(.newData)
     }
 
     // MARK: UISceneSession Lifecycle

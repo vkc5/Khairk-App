@@ -192,10 +192,10 @@ class HelpSupportViewController: UIViewController, UITableViewDataSource, UITabl
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 22, weight: .semibold),
-            .foregroundColor: UIColor.white
+            .foregroundColor: UIColor.label
         ]
     }
     
@@ -369,7 +369,10 @@ class HelpSupportViewController: UIViewController, UITableViewDataSource, UITabl
             searchBar.resignFirstResponder()
     }
     
-
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
 
     /*
     // MARK: - Navigation

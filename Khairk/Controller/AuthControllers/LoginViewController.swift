@@ -54,8 +54,7 @@ class LoginViewController: UIViewController {
                 switch result {
                 case .success(let user):
                     print("✅ Logged in as \(user.email), role: \(user.role)")
-                    self?.navigateToProfileAsRoot()
-                    // NEXT STEP: navigate based on user.role
+                    self?.goToDashboard(for: user.role)
                 case .failure(let error):
                     self?.showAlert(title: "Login Failed", message: error.localizedDescription)
                 }
@@ -83,26 +82,44 @@ class LoginViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    func navigateToProfileAsRoot() {
-        let storyboard = UIStoryboard(name: "DonorProfile", bundle: nil)
-        let profileVC = storyboard.instantiateViewController(withIdentifier: "DonorProfileVC")
+    private func goToDashboard(for role: UserRole) {
+        let storyboardName: String
+        let tabBarId: String
 
-        let nav = UINavigationController(rootViewController: profileVC)
-        nav.navigationBar.isHidden = false
+        switch role {
+        case .donor:
+            storyboardName = "DonorUserDashboard"
+            tabBarId = "DonorTabBarVC"
 
+        case .collector:
+            storyboardName = "CollectorUserDashboard"
+            tabBarId = "NgoTabBarVC"
+
+        case .admin:
+            storyboardName = "AdminUserDashboard"
+            tabBarId = "AdminTabBarVC"
+        }
+
+        let sb = UIStoryboard(name: storyboardName, bundle: nil)
+        let tabBar = sb.instantiateViewController(withIdentifier: tabBarId)
+
+        // Make it the ROOT (no back button to login)
         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let sceneDelegate = scene.delegate as? SceneDelegate,
-           let window = sceneDelegate.window {
+           let window = scene.windows.first {
+
+            window.rootViewController = tabBar
+            window.makeKeyAndVisible()
 
             UIView.transition(with: window,
-                              duration: 0.35,
+                              duration: 0.25,
                               options: .transitionCrossDissolve,
-                              animations: {
-                window.rootViewController = nav
-            })
+                              animations: nil)
+        } else {
+            // fallback (rare)
+            tabBar.modalPresentationStyle = .fullScreen
+            present(tabBar, animated: true)
         }
     }
-
 
     /*
     // MARK: - Navigation
