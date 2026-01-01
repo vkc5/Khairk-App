@@ -220,7 +220,7 @@ class AdminDonationDetailsController: UIViewController{
                   let name = data["name"] as? String,
                   let phoneNumber = data["phone"] as? String,
                   let email = data["email"] as? String,
-                  let imageURL = data["profileImageUrl"] as? String
+                  let imageURL = data["logoUrl"] as? String
             else {
                 print("Donation not found or parsing failed")
                 return

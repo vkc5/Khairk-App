@@ -13,7 +13,7 @@
         <!--All Donations-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" customClass="AdminDonationHistoryController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdminDonationHistoryVC" id="Y6W-OH-hqX" customClass="AdminDonationHistoryController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -324,7 +324,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="7Ok-A9-G6p">
-                                                                <rect key="frame" x="0.0" y="27" width="363" height="20.333333333333314"/>
+                                                                <rect key="frame" x="0.0" y="27" width="363" height="20.333333333333329"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Posted Timestamp:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fkg-h8-KoE">
                                                                         <rect key="frame" x="0.0" y="0.0" width="151.33333333333334" height="20.333333333333332"/>
@@ -341,7 +341,7 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="WFP-GN-R1l">
-                                                                <rect key="frame" x="0.0" y="52.333333333333371" width="363" height="20.333333333333314"/>
+                                                                <rect key="frame" x="0.0" y="52.333333333333371" width="363" height="20.333333333333329"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to receive the donation:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="psW-ZC-tWo">
                                                                         <rect key="frame" x="0.0" y="0.0" width="223.33333333333334" height="20.333333333333332"/>
