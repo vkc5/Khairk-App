@@ -17,14 +17,25 @@ class AdminNGOVerificationController: UIViewController, UISearchBarDelegate, UIT
     var filteredNGOs: [User] = []
     var searchText: String = ""
     var selectedFilter: String = "All"
+    let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "NGO Verification"
         searchWithScope.delegate = self
+        ngoList.rowHeight = UITableView.automaticDimension
+        ngoList.estimatedRowHeight = 100
         setupTableView()
-        fetchNGOs()
+        
+        refreshControl.addTarget(self, action: #selector(refreshNGOData(_:)), for: .valueChanged)
+        ngoList.refreshControl = refreshControl
+        refreshControl.tintColor = UIColor.mainBrand500
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchNGOs()
     }
     
     private func setupTableView() {
@@ -66,7 +77,9 @@ class AdminNGOVerificationController: UIViewController, UISearchBarDelegate, UIT
             
             // Reload table view on main thread
             DispatchQueue.main.async {
+                self.updateEmptyState()
                 self.ngoList.reloadData()
+                self.refreshControl.endRefreshing()
             }
         }
     }
@@ -101,7 +114,7 @@ class AdminNGOVerificationController: UIViewController, UISearchBarDelegate, UIT
             
             return matchesSearch && matchesFilter
         }
-        
+        updateEmptyState()
         ngoList.reloadData()
     }
     
@@ -164,7 +177,25 @@ class AdminNGOVerificationController: UIViewController, UISearchBarDelegate, UIT
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return UITableView.automaticDimension
+    }
+    @objc private func refreshNGOData(_ sender: Any) {
+        fetchNGOs()
+    }
+    
+    private func updateEmptyState() {
+        if filteredNGOs.isEmpty {
+            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: ngoList.bounds.size.width, height: ngoList.bounds.size.height))
+            noDataLabel.text = searchText.isEmpty ? "No NGOs found." : "No results for \"\(searchText)\""
+            noDataLabel.textColor = .gray
+            noDataLabel.textAlignment = .center
+            noDataLabel.numberOfLines = 0
+            noDataLabel.font = .systemFont(ofSize: 16, weight: .medium)
+            
+            ngoList.backgroundView = noDataLabel
+        } else {
+            ngoList.backgroundView = nil
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
