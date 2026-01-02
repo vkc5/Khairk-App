@@ -8,6 +8,8 @@
 
 import UIKit
 import PhotosUI
+import FirebaseAuth
+
 
 final class DonationFormViewController: UIViewController, UITextFieldDelegate {
 
@@ -22,6 +24,16 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Variables
     private var selectedImage: UIImage?
     private var selectedExpiryDate: Date?
+    
+    // MARK: - ID Linking
+    // Passed from NgoCases screen
+    var caseId: String?
+    var ngoId: String?
+
+    // Current logged-in donor ID
+    private var donorId: String? {
+        return Auth.auth().currentUser?.uid
+    }
 
     private enum SegueID {
         static let confirmPickup = "ConfirmPickupSegue"
@@ -61,6 +73,11 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
             vc.descriptionText = desc
             vc.expiryDate = expiryDate
             vc.selectedImage = selectedImage
+            
+            // ✅ ADD THESE LINES
+            vc.donorId = donorId
+            vc.caseId = caseId
+            vc.ngoId = ngoId
         }
 
         if segue.identifier == SegueID.confirmLocation,
@@ -70,6 +87,11 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
             vc.descriptionText = desc
             vc.expiryDate = expiryDate
             vc.selectedImage = selectedImage
+            
+            // ✅ ADD THESE LINES
+            vc.donorId = donorId
+            vc.caseId = caseId
+            vc.ngoId = ngoId
         }
     }
 

@@ -15,6 +15,11 @@ final class ConfirmPickupViewController: UIViewController {
     var descriptionText: String = ""
     var expiryDate: Date = Date()
     var selectedImage: UIImage?
+    
+    // ✅ ADD HERE
+    var donorId: String?
+    var caseId: String?
+    var ngoId: String?
 
     @IBOutlet private weak var pickupDatePicker: UIDatePicker!
     @IBOutlet private weak var pickupDateLabel: UILabel!
@@ -53,12 +58,25 @@ final class ConfirmPickupViewController: UIViewController {
 
         CloudinaryService.shared.uploadImage(image) { [weak self] result in
             guard let self = self else { return }
+            
+            // Ensure we have a valid donor ID for linking
+            guard let uid = donorId else {
+                showAlert(title: "Error", message: "Missing user ID.")
+                return
+            }
+
 
             DispatchQueue.main.async {
                 switch result {
                 case .success(let urlString):
 
                     DonationService.shared.createDonation(
+                        
+                        donorId: uid,              // ✅ REQUIRED
+                        caseId: self.caseId,       // ✅ Optional
+                        ngoId: self.ngoId,         // ✅ Optional
+                        
+                        
                         foodName: self.foodName,
                         quantity: self.quantity,
                         expiryDate: self.expiryDate,

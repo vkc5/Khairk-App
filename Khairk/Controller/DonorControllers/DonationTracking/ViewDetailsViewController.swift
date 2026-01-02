@@ -191,7 +191,7 @@ final class ViewDetailsViewController: UIViewController {
         }
 
         // ✅ Allowed for pending/accepted (Firebase connection later)
-        showAlert(title: "Coming Soon", message: "Cancel will be connected to Firebase later.")
+        showAlert(title: "Coming Soon", message: "Cancel (Coming Soon).")
     }
 
     private func showAlert(title: String, message: String) {

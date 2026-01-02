@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -174,6 +175,9 @@
                                                                             </fragment>
                                                                         </attributedString>
                                                                     </buttonConfiguration>
+                                                                    <connections>
+                                                                        <segue destination="B5c-5k-I3k" kind="show" id="JCT-L2-jcM"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rit-J7-20k">
                                                                     <rect key="frame" x="195.66666666666663" y="-32" width="165.33333333333337" height="32"/>
@@ -270,6 +274,91 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1041.9847328244275" y="1.4084507042253522"/>
+        </scene>
+        <!--Contact NGO-->
+        <scene sceneID="qep-Iz-ugw">
+            <objects>
+                <viewController storyboardIdentifier="ContactNGOViewController" id="B5c-5k-I3k" customClass="ContactNGOViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fkJ-Te-g8Z">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Rp9-44-xOd">
+                                <rect key="frame" x="24" y="292" width="345" height="253.33333333333337"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vKK-LK-Ylq">
+                                        <rect key="frame" x="102.66666666666669" y="0.0" width="140" height="140"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="140" id="OJG-z6-HoP"/>
+                                            <constraint firstAttribute="width" constant="140" id="m2x-MA-wMz"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bahrain Food Bank" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zJm-Xs-YEH">
+                                        <rect key="frame" x="96.666666666666686" y="152" width="152" height="20.333333333333343"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Availabel to contact" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZyN-Jg-B9G">
+                                        <rect key="frame" x="109.33333333333334" y="184.33333333333331" width="126.66666666666666" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="INf-hQ-f7Y">
+                                        <rect key="frame" x="32.666666666666657" y="213.33333333333331" width="280" height="40"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4rJ-fT-sVE">
+                                                <rect key="frame" x="0.0" y="0.0" width="134" height="40"/>
+                                                <color key="backgroundColor" name="MainBrand-500"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Message">
+                                                    <backgroundConfiguration key="background"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="whatsappTapped:" destination="B5c-5k-I3k" eventType="touchUpInside" id="LC6-nM-oD8"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0AN-Ej-uuv">
+                                                <rect key="frame" x="146" y="0.0" width="134" height="40"/>
+                                                <color key="backgroundColor" name="MainBrand-500"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Call"/>
+                                                <connections>
+                                                    <action selector="callTapped:" destination="B5c-5k-I3k" eventType="touchUpInside" id="OmR-kI-XJe"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="M8i-MG-3H7"/>
+                                            <constraint firstAttribute="width" constant="280" id="fHy-i7-tLP"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="drC-07-Imf"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Rp9-44-xOd" firstAttribute="leading" secondItem="drC-07-Imf" secondAttribute="leading" constant="24" id="8oO-A1-r6V"/>
+                            <constraint firstItem="drC-07-Imf" firstAttribute="trailing" secondItem="Rp9-44-xOd" secondAttribute="trailing" constant="24" id="H4g-bN-aCX"/>
+                            <constraint firstItem="Rp9-44-xOd" firstAttribute="top" secondItem="drC-07-Imf" secondAttribute="top" constant="120" id="MDR-ud-bcx"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Contact NGO" id="mLd-kv-Kdh"/>
+                    <connections>
+                        <outlet property="callButton" destination="0AN-Ej-uuv" id="qt3-6Y-IR6"/>
+                        <outlet property="logoImageView" destination="vKK-LK-Ylq" id="S2d-Yj-N47"/>
+                        <outlet property="nameLabel" destination="zJm-Xs-YEH" id="wej-gT-qV0"/>
+                        <outlet property="statusLabel" destination="ZyN-Jg-B9G" id="cb8-g5-tX5"/>
+                        <outlet property="whatsappButton" destination="4rJ-fT-sVE" id="Qxj-PX-Sna"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2oh-Fm-pdQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1882" y="232"/>
         </scene>
         <!--View Details-->
         <scene sceneID="Foz-sr-76V">
@@ -418,7 +507,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HEQ-8H-Obw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1929" y="1"/>
+            <point key="canvasLocation" x="1882" y="-432"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="P3o-HB-Z9Z">
@@ -440,8 +529,11 @@
         </scene>
     </scenes>
     <resources>
+        <namedColor name="MainBrand-500">
+            <color red="0.027450980392156862" green="0.46666666666666667" blue="0.20392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemGroupedBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -450,7 +542,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

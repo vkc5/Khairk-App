@@ -17,6 +17,11 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
     var descriptionText: String = ""
     var expiryDate: Date = Date()
     var selectedImage: UIImage?
+    
+    // ✅ ADD HERE
+    var donorId: String?
+    var caseId: String?
+    var ngoId: String?
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var serviceAreaTextField: UITextField!
@@ -80,6 +85,11 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
             showAlert(title: "Error", message: "Missing confirmed coordinate.")
             return
         }
+        // Ensure we have a valid donor ID for linking
+        guard let uid = donorId else {
+            showAlert(title: "Error", message: "Missing user ID.")
+            return
+        }
 
         let area = (serviceAreaTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let building = (buildingNumberTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -94,6 +104,11 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
                 case .success(let urlString):
 
                     DonationService.shared.createDonation(
+                        
+                        donorId: uid,              // ✅ REQUIRED
+                        caseId: self.caseId,       // ✅ Optional
+                        ngoId: self.ngoId,         // ✅ Optional
+                        
                         foodName: self.foodName,
                         quantity: self.quantity,
                         expiryDate: self.expiryDate,

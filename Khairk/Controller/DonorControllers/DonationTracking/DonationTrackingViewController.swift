@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 final class DonationTrackingViewController: UIViewController {
 
@@ -42,6 +43,8 @@ final class DonationTrackingViewController: UIViewController {
     }
 
     struct DonationItem {
+        
+        let donorId: String
         let id: String
         let foodName: String
         let quantity: Int
@@ -189,7 +192,13 @@ final class DonationTrackingViewController: UIViewController {
     private func fetchDonations() {
         listener?.remove()
 
+        guard let currentUserId = Auth.auth().currentUser?.uid else {
+            print("❌ No logged in user")
+            return
+        }
+
         listener = db.collection("donations")
+            .whereField("donorId", isEqualTo: currentUserId) //  الفلترة
             .order(by: "createdAt", descending: true)
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self else { return }
@@ -204,14 +213,13 @@ final class DonationTrackingViewController: UIViewController {
                 }
 
                 let docs = snapshot?.documents ?? []
-                print("✅ donations count =", docs.count)
+                print("✅ my donations count =", docs.count)
 
                 let mapped: [DonationItem] = docs.compactMap { doc in
                     let data = doc.data()
 
                     let foodName = (data["foodName"] as? String) ?? "Unknown"
 
-                    // quantity can be Int or Double depending on how it was saved
                     let quantity: Int = {
                         if let i = data["quantity"] as? Int { return i }
                         if let d = data["quantity"] as? Double { return Int(d) }
@@ -224,21 +232,20 @@ final class DonationTrackingViewController: UIViewController {
                     let imageURL = data["imageURL"] as? String
                     let createdAt = (data["createdAt"] as? Timestamp)?.dateValue()
 
-                    // Details fields
                     let note = data["description"] as? String ?? data["note"] as? String
                     let expiryDate = (data["expiryDate"] as? Timestamp)?.dateValue()
                     let donationType = data["donationType"] as? String
 
-                    // Delivery fields
                     let serviceArea = data["serviceArea"] as? String
                     let street = data["street"] as? String
                     let block = data["block"] as? String
                     let buildingNumber = data["buildingNumber"] as? String
 
-                    // Pickup field
                     let pickupTime = (data["pickupTime"] as? Timestamp)?.dateValue()
+                    let donorId = data["donorId"] as? String ?? ""
 
                     return DonationItem(
+                        donorId: donorId,
                         id: doc.documentID,
                         foodName: foodName,
                         quantity: quantity,
@@ -262,6 +269,7 @@ final class DonationTrackingViewController: UIViewController {
                 }
             }
     }
+
 
     // MARK: - Actions
     @IBAction private func allTapped(_ sender: UIButton) { applyFilter(.all) }
