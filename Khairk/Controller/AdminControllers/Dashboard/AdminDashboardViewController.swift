@@ -265,6 +265,15 @@ final class AdminDashboardViewController: UIViewController, UICollectionViewData
         navigationController?.pushViewController(mapVC, animated: true)
     }
     
+    @IBAction func ProfileTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminProfile", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminProfileVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == topDonorsCV { return topDonors.count }
         return topNgos.count
