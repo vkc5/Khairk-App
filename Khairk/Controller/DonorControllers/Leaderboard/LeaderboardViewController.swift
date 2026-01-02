@@ -32,6 +32,11 @@ final class LeaderboardViewController: UIViewController {
 
     // MARK: - Data
     private let db = Firestore.firestore()
+
+    // ✅ Top 3 منفصلين عشان نقل "You" ما يخربهم
+    private var topThree: [LBUser] = []
+
+    // ✅ هذي حق الجدول (بعد Top 3)
     private var users: [LBUser] = []
 
     // MARK: - Image Cache
@@ -161,14 +166,17 @@ final class LeaderboardViewController: UIViewController {
 
     // MARK: - Empty
     private func showEmpty() {
-        users = [
+        topThree = [
             LBUser(userId: "p1", name: "No data yet", points: 0.0, profileImageUrl: nil),
             LBUser(userId: "p2", name: "No data yet", points: 0.0, profileImageUrl: nil),
-            LBUser(userId: "p3", name: "No data yet", points: 0.0, profileImageUrl: nil),
+            LBUser(userId: "p3", name: "No data yet", points: 0.0, profileImageUrl: nil)
+        ]
+        users = [
             LBUser(userId: "p4", name: "No more users yet", points: 0.0, profileImageUrl: nil)
         ]
+
         updateTop3()
-        updateMyRankLabel()
+        updateMyRankLabel(fullSortedAll: topThree + users)
         tableView.reloadData()
     }
 
@@ -196,9 +204,9 @@ final class LeaderboardViewController: UIViewController {
             }
         }
 
-        let first  = users.indices.contains(0) ? users[0] : nil
-        let second = users.indices.contains(1) ? users[1] : nil
-        let third  = users.indices.contains(2) ? users[2] : nil
+        let first  = topThree.indices.contains(0) ? topThree[0] : nil
+        let second = topThree.indices.contains(1) ? topThree[1] : nil
+        let third  = topThree.indices.contains(2) ? topThree[2] : nil
 
         // الوسط = secondImage
         set(first,  imgView: secondImage, nameLabel: secondName, pointsLabel: secondPoints)
@@ -226,15 +234,15 @@ final class LeaderboardViewController: UIViewController {
         ])
     }
 
-    // MARK: - My rank
-    private func updateMyRankLabel() {
+    // ✅ My rank ينحسب من Full Sorted (قبل نقل You)
+    private func updateMyRankLabel(fullSortedAll: [LBUser]) {
         guard let myId = Auth.auth().currentUser?.uid else {
             myRankLabel.text = "Your rank: —"
             return
         }
 
-        if let idx = users.firstIndex(where: { $0.userId == myId }) {
-            myRankLabel.text = "Your rank: #\(idx + 1) of \(users.count)"
+        if let idx = fullSortedAll.firstIndex(where: { $0.userId == myId }) {
+            myRankLabel.text = "Your rank: #\(idx + 1) of \(fullSortedAll.count)"
         } else {
             myRankLabel.text = "Your rank: not ranked yet"
         }
@@ -263,9 +271,7 @@ final class LeaderboardViewController: UIViewController {
         }.resume()
     }
 
-    // MARK: - ✅ Firebase (Fixed)
-    // 1) Get donations -> pointsByDonor
-    // 2) Get all donor users -> assign points (0 if none)
+    // MARK: - Firebase
     private func loadLeaderboard() {
 
         db.collection("donations").getDocuments { [weak self] donationSnap, err in
@@ -286,9 +292,6 @@ final class LeaderboardViewController: UIViewController {
                 }
             }
 
-            print("🧪 donations fetched:", donationSnap?.documents.count ?? 0)
-            print("✅ unique donorIds in donations:", pointsByDonor.count)
-
             self.fetchAllDonorUsers(pointsByDonor: pointsByDonor)
         }
     }
@@ -296,7 +299,7 @@ final class LeaderboardViewController: UIViewController {
     private func fetchAllDonorUsers(pointsByDonor: [String: Double]) {
 
         db.collection("users")
-            .whereField("role", isEqualTo: "donor") // إذا تبين كل الناس شيلي هالسطر
+            .whereField("role", isEqualTo: "donor")
             .getDocuments { [weak self] userSnap, err in
                 guard let self else { return }
 
@@ -305,8 +308,6 @@ final class LeaderboardViewController: UIViewController {
                     self.showEmpty()
                     return
                 }
-
-                print("✅ users fetched:", userSnap?.documents.count ?? 0)
 
                 var temp: [LBUser] = []
 
@@ -318,21 +319,39 @@ final class LeaderboardViewController: UIViewController {
                     let imgUrl = d["profileImageUrl"] as? String
 
                     let pts = pointsByDonor[uid] ?? 0.0
-
                     temp.append(LBUser(userId: uid, name: name, points: pts, profileImageUrl: imgUrl))
                 }
 
-                self.users = temp.sorted { $0.points > $1.points }
+                // ✅ 1) ترتيب كامل حقيقي
+                let fullSorted = temp.sorted { $0.points > $1.points }
 
-                while self.users.count < 3 {
-                    self.users.append(LBUser(userId: "pX", name: "No data yet", points: 0.0, profileImageUrl: nil))
+                // ✅ 2) Top 3 الحقيقيين
+                self.topThree = Array(fullSorted.prefix(3))
+
+                // ✅ 3) باقي الناس للجدول
+                var rest = Array(fullSorted.dropFirst(3))
+
+                // ✅ 4) نقل اليوزر الحالي للنهاية + اسم You (في الجدول فقط)
+                if let myId = Auth.auth().currentUser?.uid,
+                   let idx = rest.firstIndex(where: { $0.userId == myId }) {
+
+                    var me = rest.remove(at: idx)
+                    me = LBUser(userId: me.userId, name: "You", points: me.points, profileImageUrl: me.profileImageUrl)
+                    rest.append(me)
                 }
-                if self.users.count <= 3 {
-                    self.users.append(LBUser(userId: "p4", name: "No more users yet", points: 0.0, profileImageUrl: nil))
+
+                // ✅ placeholders
+                while self.topThree.count < 3 {
+                    self.topThree.append(LBUser(userId: "pX", name: "No data yet", points: 0.0, profileImageUrl: nil))
                 }
+                if rest.isEmpty {
+                    rest = [LBUser(userId: "p4", name: "No more users yet", points: 0.0, profileImageUrl: nil)]
+                }
+
+                self.users = rest
 
                 self.updateTop3()
-                self.updateMyRankLabel()
+                self.updateMyRankLabel(fullSortedAll: fullSorted)
                 self.tableView.reloadData()
             }
     }
@@ -342,7 +361,7 @@ final class LeaderboardViewController: UIViewController {
 extension LeaderboardViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return max(users.count - 3, 0)
+        return users.count
     }
 
     func tableView(_ tableView: UITableView,
@@ -350,7 +369,7 @@ extension LeaderboardViewController: UITableViewDataSource, UITableViewDelegate 
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "LeaderboardRowCell", for: indexPath) as! LeaderboardRowCell
 
-        let user = users[indexPath.row + 3]
+        let user = users[indexPath.row]
         let rank = indexPath.row + 4
 
         let myId = Auth.auth().currentUser?.uid
@@ -361,7 +380,7 @@ extension LeaderboardViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 58
+        return 78
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
