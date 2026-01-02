@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Collector Impact View Controller-->
+        <!--My Impact -->
         <scene sceneID="nnb-fy-bRa">
             <objects>
                 <viewController storyboardIdentifier="My_impactViewController" id="kyd-LR-eKf" customClass="CollectorImpactViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
@@ -317,13 +317,6 @@
                                     <constraint firstItem="Pei-vC-VIj" firstAttribute="leading" secondItem="mqB-Xn-sEU" secondAttribute="leading" id="JK9-PM-f67"/>
                                 </constraints>
                             </scrollView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="My Impact " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oQP-fB-2uJ">
-                                <rect key="frame" x="137" y="60" width="118" height="28"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="NrO-kQ-Bah"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -334,7 +327,7 @@
                             <constraint firstItem="mqB-Xn-sEU" firstAttribute="bottom" secondItem="VBg-Oz-oJF" secondAttribute="bottom" id="qKo-dx-YQz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="eKA-hy-FfF"/>
+                    <navigationItem key="navigationItem" title="My Impact " id="eKA-hy-FfF"/>
                     <connections>
                         <outlet property="activeCasesCountLabel" destination="Pcg-hi-Nwt" id="0ig-cJ-N1o"/>
                         <outlet property="chartStackView" destination="Lwx-Og-knM" id="cco-0K-DNw"/>

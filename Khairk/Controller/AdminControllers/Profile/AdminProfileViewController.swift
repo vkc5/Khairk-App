@@ -179,6 +179,15 @@ class AdminProfileViewController: UIViewController {
 
         navigationController?.pushViewController(mapVC, animated: true)
     }
+    
+    @IBAction func AdminImpactTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminImpact", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminCollectorImpact")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
     /*
     // MARK: - Navigation
 
