@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -756,9 +756,12 @@ Khairk</string>
                 <navigationController id="O9L-xI-MQj" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" id="LWp-uc-Or2"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="UXV-qM-Zcl">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="Cf6-fo-E2J" kind="relationship" relationship="rootViewController" id="a0z-cM-mxS"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Uf-b3-JES" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -770,7 +773,7 @@ Khairk</string>
                 <navigationController id="XGe-Q0-tlB" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="NGO Verify" image="pencil.and.list.clipboard" catalog="system" id="EYC-zQ-psX"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8Ck-AF-t5W">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -787,7 +790,7 @@ Khairk</string>
                 <navigationController id="uwD-a2-Njd" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Khair" image="chart.pie" catalog="system" id="n6P-TZ-c0c"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dyo-kI-6Pa">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -804,7 +807,7 @@ Khairk</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Icv-pD-UN5" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="oBx-Kh-m85"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="H5g-L8-yuA">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -814,6 +817,22 @@ Khairk</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l5D-Tb-xmd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2947" y="-1135"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Gvv-us-uZd">
+            <objects>
+                <viewController id="Cf6-fo-E2J" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sb5-VM-aUq">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Z6V-2f-jGE"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Ypo-pj-gzK"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UfZ-NE-aNw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="464.8854961832061" y="-401.40845070422534"/>
         </scene>
         <!--AdminNGO Varify Root View Controller-->
         <scene sceneID="1QW-xw-tFa">
@@ -872,7 +891,7 @@ Khairk</string>
         <image name="chart.bar.doc.horizontal" catalog="system" width="115" height="128"/>
         <image name="chart.pie" catalog="system" width="128" height="123"/>
         <image name="checkmark.seal.fill" catalog="system" width="128" height="124"/>
-        <image name="ellipsis.message" catalog="system" width="128" height="106"/>
+        <image name="ellipsis.message" catalog="system" width="128" height="116"/>
         <image name="heart.circle.fill" catalog="system" width="128" height="123"/>
         <image name="house.circle" catalog="system" width="128" height="123"/>
         <image name="pencil.and.list.clipboard" catalog="system" width="114" height="128"/>

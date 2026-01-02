@@ -52,8 +52,12 @@ class AdminUserManagementSendMassageController: UIViewController {
             
             alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
                 if let id = self.donorID {
-                    let notification = Notification()
-                    notification.save(title: title, body: body, userId: id)
+                    Notification.shared.save(
+                        title: title,
+                        body: body,
+                        userId: id,
+                        makeLocalNotification: true
+                    )
                     DispatchQueue.main.async {
                         self.titleTextField.text = ""
                         self.messageTextField.text = ""

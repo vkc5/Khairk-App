@@ -16,6 +16,7 @@ class AdminUserManagementController: UIViewController, UISearchBarDelegate, UITa
     var allDonors: [User] = []
     var filteredDonors: [User] = []
     var searchText: String = ""
+    let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,10 @@ class AdminUserManagementController: UIViewController, UISearchBarDelegate, UITa
         searchBar.delegate = self
         setupTableView()
         fetchDonors()
+        
+        refreshControl.addTarget(self, action: #selector(refreshDonorsData(_:)), for: .valueChanged)
+        donorsList.refreshControl = refreshControl
+        refreshControl.tintColor = UIColor.mainBrand500
         // Do any additional setup after loading the view.
     }
     
@@ -66,7 +71,9 @@ class AdminUserManagementController: UIViewController, UISearchBarDelegate, UITa
             
             // Reload table view on main thread
             DispatchQueue.main.async {
+                self.updateEmptyState()
                 self.donorsList.reloadData()
+                self.refreshControl.endRefreshing()
             }
         }
     }
@@ -88,7 +95,7 @@ class AdminUserManagementController: UIViewController, UISearchBarDelegate, UITa
             
             return matchesSearch
         }
-        
+        updateEmptyState()
         donorsList.reloadData()
     }
     
@@ -127,6 +134,25 @@ class AdminUserManagementController: UIViewController, UISearchBarDelegate, UITa
         
         
         return cell
+    }
+    
+    @objc private func refreshDonorsData(_ sender: Any) {
+        fetchDonors()
+    }
+    
+    private func updateEmptyState() {
+        if filteredDonors.isEmpty {
+            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: donorsList.bounds.size.width, height: donorsList.bounds.size.height))
+            noDataLabel.text = searchText.isEmpty ? "No Donors found." : "No results for \"\(searchText)\""
+            noDataLabel.textColor = .gray
+            noDataLabel.textAlignment = .center
+            noDataLabel.numberOfLines = 0
+            noDataLabel.font = .systemFont(ofSize: 16, weight: .medium)
+            
+            donorsList.backgroundView = noDataLabel
+        } else {
+            donorsList.backgroundView = nil
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

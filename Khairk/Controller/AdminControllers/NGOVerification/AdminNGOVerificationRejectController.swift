@@ -46,7 +46,13 @@ class AdminNGOVerificationRejectController: UIViewController {
                             print("Failed: \(error)")
                         } else {
                             let notification = Notification()
-                            notification.save(title: "Application Status Update", body: "Your application was not approved. Reason: \(reasonText). If you have any questions, please contact the Khairk team at support@khairk.com", userId: id)
+                            Notification.shared.save(
+                                title: "Application Update",
+                                body: "Your application was not approved. Reason: \(reasonText)",
+                                userId: id,
+                                makeLocalNotification: true
+                            )
+                            self.dismiss(animated: true)
                         }
                     }
                     

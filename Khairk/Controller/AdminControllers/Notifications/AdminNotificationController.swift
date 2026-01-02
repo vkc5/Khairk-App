@@ -8,9 +8,10 @@
 import UIKit
 import FirebaseStorage
 import FirebaseFirestore
+import FirebaseAuth
 
 class AdminNotificationController: UIViewController , UITableViewDelegate, UITableViewDataSource{
-
+    let refreshControl = UIRefreshControl()
     
     @IBOutlet weak var list: UITableView!
     struct DataStruct{
@@ -27,7 +28,9 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         
         setupTableView()
         fetchNotifications()
-
+        refreshControl.addTarget(self, action: #selector(refreshNotificationsData(_:)), for: .valueChanged)
+        list.refreshControl = refreshControl
+        refreshControl.tintColor = UIColor.mainBrand500
         
         // Do any additional setup after loading the view.
     }
@@ -43,7 +46,11 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     private func fetchNotifications() {
         let db = Firestore.firestore()
         
-        db.collection("notifications").getDocuments { [weak self] querySnapshot, error in
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        db.collection("notifications").whereField("userID", isEqualTo: uid).getDocuments { [weak self] querySnapshot, error in
             guard let self = self else { return }
             
             if let error = error {
@@ -72,7 +79,9 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
             
             // Reload table view on main thread
             DispatchQueue.main.async {
+                self.refreshControl.endRefreshing()
                 self.list.reloadData()
+                self.updateEmptyState()
             }
         }
     }
@@ -90,11 +99,13 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
                 }
                 self.notifications.removeAll()
                 self.list.reloadData()
+                self.updateEmptyState()
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             
             self.present(alert, animated: true, completion: nil)
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -127,6 +138,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         if editingStyle == .delete {
             notifications.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            self.updateEmptyState()
         }
     }
     
@@ -136,6 +148,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
             self.notifications.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            self.updateEmptyState()
             completionHandler(true)
         }
         deleteAction.image = UIImage(systemName: "trash")
@@ -193,7 +206,29 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
+    private func updateEmptyState() {
+        if notifications.isEmpty {
+            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: list.bounds.size.width, height: list.bounds.size.height))
+            
+            noDataLabel.text = "You have no notifications yet."
+            
+            noDataLabel.textColor = .gray
+            noDataLabel.textAlignment = .center
+            noDataLabel.numberOfLines = 0
+            noDataLabel.font = .systemFont(ofSize: 16, weight: .medium)
+            
+            // Setting the backgroundView of your table 'list'
+            list.backgroundView = noDataLabel
+            list.separatorStyle = .none // Hides line separators when empty
+        } else {
+            list.backgroundView = nil
+            list.separatorStyle = .singleLine
+        }
+    }
     
+    @objc private func refreshNotificationsData(_ sender: Any) {
+        fetchNotifications()
+    }
 
     /*
     // MARK: - Navigation

@@ -54,12 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
 
         print("Push received:", title, body)
 
-        Notification().save(
-            title: title,
-            body: body,
-            userId: "CURRENT_USER_ID"
-        )
-
         completionHandler(.newData)
     }
 

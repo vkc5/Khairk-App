@@ -235,7 +235,12 @@ class AdminNGOVerificationDetailsController: UIViewController {
                             print("Failed: \(error)")
                         } else {
                             let notification = Notification()
-                            notification.save(title: "Application Approved!", body: "Congratulations \(name), your Khairk NGO account has been approved. You can now start with case.", userId: id)
+                            Notification.shared.save(
+                                title: "Application Approved!",
+                                body: "Congratulations \(name), your Khairk NGO account has been approved.",
+                                userId: id,
+                                makeLocalNotification: true
+                            )
                         }
                     }
                    
