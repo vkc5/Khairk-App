@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -308,14 +308,14 @@
                                                                 <rect key="frame" x="24" y="19" width="316" height="20.333333333333329"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="z0M-p1-TKL">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="70.666666666666671" height="20.333333333333332"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="71.333333333333329" height="20.333333333333332"/>
                                                                         <subviews>
                                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphone.and.arrow.right.outward" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="EID-kc-62d">
-                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="19.333333333333332" height="19.666666666666668"/>
+                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="20" height="19.666666666666668"/>
                                                                                 <color key="tintColor" name="Neutral-Black-800"/>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KGh-zw-bYY">
-                                                                                <rect key="frame" x="24.333333333333332" y="0.0" width="46.333333333333343" height="20.333333333333332"/>
+                                                                                <rect key="frame" x="25.000000000000004" y="0.0" width="46.333333333333343" height="20.333333333333332"/>
                                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                                                 <color key="textColor" name="Neutral-Black-800"/>
                                                                                 <nil key="highlightedColor"/>
@@ -323,7 +323,7 @@
                                                                         </subviews>
                                                                     </stackView>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="mSe-k3-Zvl">
-                                                                        <rect key="frame" x="295.66666666666663" y="3" width="20.333333333333314" height="14.666666666666664"/>
+                                                                        <rect key="frame" x="296.33333333333331" y="3" width="19.666666666666686" height="14.666666666666664"/>
                                                                         <color key="tintColor" name="Greyscale-900"/>
                                                                     </imageView>
                                                                 </subviews>
@@ -424,13 +424,13 @@
         <!--Notifications-->
         <scene sceneID="VMI-fV-5X2">
             <objects>
-                <viewController id="OAF-VW-J2L" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdminNotificatinSettingsVC" id="OAF-VW-J2L" customClass="AdminNotificatinSettingsViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dea-Mh-i2H">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="7qB-dJ-3lE">
-                                <rect key="frame" x="32" y="182" width="329" height="146.33333333333337"/>
+                                <rect key="frame" x="32" y="172" width="329" height="155.33333333333337"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Common" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jex-hs-1oa">
                                         <rect key="frame" x="0.0" y="0.0" width="329" height="26.333333333333332"/>
@@ -439,46 +439,46 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="133" translatesAutoresizingMaskIntoConstraints="NO" id="vSt-cE-VRX">
-                                        <rect key="frame" x="0.0" y="38.333333333333343" width="329" height="28"/>
+                                        <rect key="frame" x="0.0" y="38.333333333333343" width="329" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mute notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M2e-mg-hsh">
-                                                <rect key="frame" x="0.0" y="0.0" width="135" height="28"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="147" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rH8-QR-Qi7">
-                                                <rect key="frame" x="268" y="0.0" width="63" height="28"/>
+                                                <rect key="frame" x="280" y="0.0" width="51" height="31"/>
                                                 <color key="onTintColor" name="WidgetBackground"/>
                                             </switch>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="102" translatesAutoresizingMaskIntoConstraints="NO" id="i67-bQ-Rr7">
-                                        <rect key="frame" x="0.0" y="78.333333333333314" width="329" height="28"/>
+                                        <rect key="frame" x="0.0" y="81.333333333333343" width="329" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sound" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Zt-Ss-sSV">
-                                                <rect key="frame" x="0.0" y="0.0" width="166" height="28"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="178" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DEz-25-5tI">
-                                                <rect key="frame" x="268" y="0.0" width="63" height="28"/>
+                                                <rect key="frame" x="280" y="0.0" width="51" height="31"/>
                                                 <color key="onTintColor" name="WidgetBackground"/>
                                             </switch>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="102" translatesAutoresizingMaskIntoConstraints="NO" id="QdI-Gq-wJa">
-                                        <rect key="frame" x="0.0" y="118.33333333333331" width="329" height="28"/>
+                                        <rect key="frame" x="0.0" y="124.33333333333331" width="329" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vibrate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ylx-QR-Qo2">
-                                                <rect key="frame" x="0.0" y="0.0" width="166" height="28"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="178" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="idY-dC-gfz">
-                                                <rect key="frame" x="268" y="0.0" width="63" height="28"/>
+                                                <rect key="frame" x="280" y="0.0" width="51" height="31"/>
                                                 <color key="onTintColor" name="WidgetBackground"/>
                                             </switch>
                                         </subviews>
@@ -506,7 +506,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SeK-HU-2TZ" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" backIndicatorImage="chevron.left" catalog="system" id="MNC-Kk-vfX">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <textAttributes key="titleTextAttributes">
@@ -589,7 +589,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zR-zI-RXe">
-                                <rect key="frame" x="0.0" y="172" width="393" height="612"/>
+                                <rect key="frame" x="0.0" y="162" width="393" height="622"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="JQx-nT-ZAJ">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="2168.6666666666665"/>
@@ -1165,7 +1165,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nYq-9r-ZRy">
-                                <rect key="frame" x="32" y="183" width="329.33333333333331" height="347"/>
+                                <rect key="frame" x="32" y="173" width="329.33333333333331" height="347"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Rs-cU-LGW">
                                         <rect key="frame" x="104" y="8" width="121.33333333333331" height="146"/>

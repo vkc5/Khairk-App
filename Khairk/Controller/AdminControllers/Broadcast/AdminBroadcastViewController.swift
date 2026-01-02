@@ -14,6 +14,7 @@ class AdminBroadcastViewController: UIViewController {
     @IBOutlet weak var recipientSegment: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var messageTextField: UITextField!
+    @IBOutlet weak var SelectTime: UIDatePicker!
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Send Massage (Broadcast)"
@@ -28,6 +29,8 @@ class AdminBroadcastViewController: UIViewController {
         let body = messageTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let selectedIndex = recipientSegment.selectedSegmentIndex
         var recipientRole = ""
+        let scheduledDate = SelectTime.date
+        let delay = scheduledDate.timeIntervalSinceNow
         
         switch selectedIndex {
             case 0: recipientRole = "all"
@@ -37,7 +40,7 @@ class AdminBroadcastViewController: UIViewController {
         }
         
         let alert = UIAlertController(
-            title: "Confirm Notification",message: "Title: \(title)\nMessage: \(body)\nSend to: \(recipientRole.capitalized)", preferredStyle: .alert)
+            title: "Confirm Notification",message: "Title: \(title)\nMessage: \(body)\nSend to: \(recipientRole.capitalized)\nTime: \(scheduledDate.formatted())", preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
                 let db = Firestore.firestore()
@@ -57,14 +60,20 @@ class AdminBroadcastViewController: UIViewController {
                     }
                     for document in documents {
                         let userId = document.documentID
-                        let notification = Notification()
-                        notification.save(title: title, body: body, userId: userId)
+                        Notification.shared.save(
+                            title: title,
+                            body: body,
+                            userId: userId,
+                            adminDelay: delay > 0 ? delay : 1.0,
+                            makeLocalNotification: true
+                        )
                     }
                 }
                 DispatchQueue.main.async {
                     self.titleTextField.text = ""
                     self.messageTextField.text = ""
                     self.recipientSegment.selectedSegmentIndex = UISegmentedControl.noSegment
+                    self.SelectTime.date = Date()
                 }
             }))
             

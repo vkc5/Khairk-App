@@ -286,7 +286,8 @@ class AdminDonationDetailsController: UIViewController, MKMapViewDelegate{
             }
             
             if let geoPoint = data["ngoLocation"] as? GeoPoint {
-                self.ngoCoords = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+                let coords = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+                self.ngoCoords = coords
             }
             
             // Reload table view on main thread

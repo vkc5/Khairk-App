@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Image references" minToolsVersion="12.0"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,7 +12,7 @@
         <!--Notifications-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" customClass="AdminNotificationController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdminNotificationVC" id="Y6W-OH-hqX" customClass="AdminNotificationController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -106,7 +105,7 @@
                     <navigationItem key="navigationItem" title="Notifications" leftItemsSupplementBackButton="YES" id="Fh5-hp-jr6">
                         <rightBarButtonItems>
                             <barButtonItem style="plain" id="Pa4-TT-WuI">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" toolTip="go to notifications seting" buttonType="system" lineBreakMode="middleTruncation" id="MHg-nV-LiB">
+                                <button key="customView" toolTip="go to notifications seting" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="MHg-nV-LiB">
                                     <rect key="frame" x="356.33333333333331" y="12" width="20.666666666666686" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -120,9 +119,12 @@
                                         </imageReference>
                                     </state>
                                 </button>
+                                <connections>
+                                    <segue destination="iBr-wf-Cyr" kind="push" id="X2w-xa-uWO"/>
+                                </connections>
                             </barButtonItem>
                             <barButtonItem style="plain" id="BdB-mB-cNs">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="F4c-Qj-cFB">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="F4c-Qj-cFB">
                                     <rect key="frame" x="305.33333333333331" y="5" width="43" height="34.333333333333336"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Button"/>
@@ -149,6 +151,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1316.793893129771" y="3.5211267605633805"/>
+        </scene>
+        <!--AdminNotificatinSettingsVC-->
+        <scene sceneID="9bu-8y-gTh">
+            <objects>
+                <viewControllerPlaceholder storyboardName="AdminProfile" referencedIdentifier="AdminNotificatinSettingsVC" id="iBr-wf-Cyr" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="xrG-If-mKj"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8VQ-Nu-YEv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1967" y="-203"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="asJ-Fe-QS7">
