@@ -1,5 +1,4 @@
 import UIKit
-import FirebaseAuth
 import FirebaseFirestore
 
 final class CaseDetailsViewController: UIViewController {
@@ -21,10 +20,6 @@ final class CaseDetailsViewController: UIViewController {
     private let progressView = UIProgressView(progressViewStyle: .default)
     private let progressLabel = UILabel()
     private let deleteButton = UIButton(type: .system)
-
-    private var ngoId: String {
-        Auth.auth().currentUser?.uid ?? "MISSING_NGO_ID"
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -159,14 +154,12 @@ final class CaseDetailsViewController: UIViewController {
     }
 
     private func startListening() {
-        guard ngoId != "MISSING_NGO_ID", !caseId.isEmpty else {
+        guard !caseId.isEmpty else {
             showAlert(title: "Missing Data", message: "Cannot load case details.")
             return
         }
 
-        listener = db.collection("ngos")
-            .document(ngoId)
-            .collection("cases")
+        listener = db.collection("ngoCases")
             .document(caseId)
             .addSnapshotListener { [weak self] doc, err in
                 guard let self = self else { return }
@@ -186,13 +179,22 @@ final class CaseDetailsViewController: UIViewController {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
 
-        detailsLabel.text = """
-        Food Type: \(item.foodType)
-        Goal: \(item.goal)
-        Start Date: \(formatter.string(from: item.startDate))
-        End Date: \(formatter.string(from: item.endDate))
-        Status: \(item.status)
-        """
+        var detailLines: [String] = [
+            "Measurements: \(item.measurements)",
+            "Goal: \(item.goal)",
+            "Start Date: \(formatter.string(from: item.startDate))",
+            "End Date: \(formatter.string(from: item.endDate))",
+        ]
+
+        if !item.status.isEmpty {
+            detailLines.append("Status: \(item.status)")
+        }
+
+        if !item.ngoName.isEmpty {
+            detailLines.append("NGO: \(item.ngoName)")
+        }
+
+        detailsLabel.text = detailLines.joined(separator: "\n")
 
         let goalSafe = max(item.goal, 1)
         let progress = min(Float(item.collected) / Float(goalSafe), 1)
@@ -201,7 +203,7 @@ final class CaseDetailsViewController: UIViewController {
     }
 
     @objc private func deleteTapped() {
-        guard ngoId != "MISSING_NGO_ID", !caseId.isEmpty else { return }
+        guard !caseId.isEmpty else { return }
 
         let confirm = UIAlertController(
             title: "Delete Case",
@@ -211,7 +213,7 @@ final class CaseDetailsViewController: UIViewController {
         confirm.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         confirm.addAction(UIAlertAction(title: "Yes, Delete Case", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.service.deleteCase(ngoId: self.ngoId, caseId: self.caseId) { result in
+            self.service.deleteCase(caseId: self.caseId) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success:
