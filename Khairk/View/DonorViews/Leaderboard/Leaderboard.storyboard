@@ -201,8 +201,7 @@
         <!--Rating View Controller-->
         <scene sceneID="s87-XC-F4W">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="65r-Nq-cHO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="RatingViewController" id="p00-8Z-NIy" customClass="RatingViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController restorationIdentifier="RatingViewController" storyboardIdentifier="RatingViewController" id="p00-8Z-NIy" customClass="RatingViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uIM-i6-3rU">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -257,6 +256,7 @@
                         <outlet property="submitButton" destination="rii-YI-Lo9" id="MUo-Ed-nHn"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="65r-Nq-cHO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-423.66412213740455" y="-133.09859154929578"/>
         </scene>

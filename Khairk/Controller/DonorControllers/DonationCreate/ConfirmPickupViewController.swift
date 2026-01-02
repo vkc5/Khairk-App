@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 final class ConfirmPickupViewController: UIViewController {
 
@@ -60,10 +61,12 @@ final class ConfirmPickupViewController: UIViewController {
             guard let self = self else { return }
             
             // Ensure we have a valid donor ID for linking
-            guard let uid = donorId else {
-                showAlert(title: "Error", message: "Missing user ID.")
+            guard let uid = Auth.auth().currentUser?.uid else {
+                self.nextButton.isEnabled = true
+                self.showAlert(title: "Error", message: "Missing logged-in user.")
                 return
             }
+
 
 
             DispatchQueue.main.async {
@@ -92,7 +95,7 @@ final class ConfirmPickupViewController: UIViewController {
                             case .success(let donationId):
                                 print("Saved donation:", donationId)
                                 self.showSuccessAlert {
-                                    self.navigationController?.popViewController(animated: true)
+                                self.performSegue(withIdentifier: "toRating", sender: nil)
                                 }
 
                             case .failure(let error):
@@ -108,6 +111,19 @@ final class ConfirmPickupViewController: UIViewController {
             }
         }
     }
+    
+    private func goToDashboard() {
+        // If your app uses Tab Bar, go to the first tab (Dashboard)
+        if let tab = self.tabBarController {
+            tab.selectedIndex = 0
+            self.navigationController?.popToRootViewController(animated: true)
+            return
+        }
+
+        // If it's only NavigationController, go back to root (Dashboard)
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+
 
     private func updatePickupLabel(with date: Date) {
         pickupDateLabel.text = formatDateTime(date)
