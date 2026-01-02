@@ -22,6 +22,7 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
     // Spotlight cards (two)
     @IBOutlet weak var spotlightView1: UIView!
     @IBOutlet weak var spotlightView2: UIView!
+    @IBOutlet weak var impactRowView: UIView!
 
 
     // MARK: - Lifecycle
@@ -35,8 +36,12 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
 
+
         loadGoalsForDashboard()
         
+        impactRowView.layer.borderWidth = 1
+        impactRowView.layer.borderColor = UIColor.systemGray4.cgColor
+        impactRowView.layer.cornerRadius = 10
         // TOP BOXES
         styleTopBox(ngoMapView)
         styleTopBox(donorHubView)
@@ -49,19 +54,37 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         styleSpotlight(spotlightView2)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return goals.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "DashboardGoalCardCell",
             for: indexPath
         ) as! DashboardGoalCardCell
 
-        cell.configure(with: goals[indexPath.row], showDelete: false)
+        cell.configure(with: goals[indexPath.section], showDelete: false)
+        cell.selectionStyle = .none
         return cell
     }
+    
+    func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
+        return 12   // spacing between cards
+    }
+
+    func tableView(_ tableView: UITableView,
+                   viewForHeaderInSection section: Int) -> UIView? {
+        return UIView() // transparent spacer
+    }
+
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -203,16 +226,32 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
         db.collection("users").document(uid).collection("goals")
-            .order(by: "createdAt", descending: true)
+            .order(by: "startDate", descending: true) // ✅ always exists
             .addSnapshotListener { [weak self] snap, error in
                 guard let self = self else { return }
-                if let error = error { print(error.localizedDescription); return }
+                if let error = error {
+                    print("❌ Load goals error:", error.localizedDescription)
+                    return
+                }
 
                 let all = (snap?.documents ?? []).compactMap { Goal(doc: $0) }
-                self.goals = all.filter { $0.status == "active" }   // local filter
-                self.tableView.reloadData()
-            }
+                self.goals = all.filter { $0.status == "active" }
 
+                print("✅ Goals loaded:", self.goals.count)   // ✅ DEBUG
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
 }

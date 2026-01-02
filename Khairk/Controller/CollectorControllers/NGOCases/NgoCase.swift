@@ -42,8 +42,21 @@ struct NgoCase {
 
         let title = data["title"] as? String ?? ""
         let foodType = data["foodType"] as? String ?? ""
-        let goal = data["goal"] as? Int ?? 0
-        let collected = data["collected"] as? Int ?? 0
+
+        // ✅ support both "goal" and "Goal"
+        let goal =
+            (data["goal"] as? Int)
+            ?? (data["Goal"] as? Int)
+            ?? (data["goal"] as? NSNumber)?.intValue
+            ?? (data["Goal"] as? NSNumber)?.intValue
+            ?? 0
+
+        let collected =
+            (data["collected"] as? Int)
+            ?? (data["Collected"] as? Int)
+            ?? (data["collected"] as? NSNumber)?.intValue
+            ?? (data["Collected"] as? NSNumber)?.intValue
+            ?? 0
 
         let startTS = data["startDate"] as? Timestamp
         let endTS = data["endDate"] as? Timestamp
@@ -67,6 +80,7 @@ struct NgoCase {
             status: status
         )
     }
+
 
     var asFirestoreData: [String: Any] {
         [

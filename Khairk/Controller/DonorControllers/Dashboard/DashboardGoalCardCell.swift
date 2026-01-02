@@ -30,34 +30,6 @@ class DashboardGoalCardCell: UITableViewCell {
         deleteButton.isUserInteractionEnabled = false
     }
 
-    func configure(goal: Goal) {
-        titleLabel.text = "Donate \(goal.targetAmount) meals"
-
-        let df = DateFormatter()
-        df.dateFormat = "dd MMM yyyy"
-        startLabel.text = "Start: \(df.string(from: goal.startDate))"
-
-        targetLabel.text = "Target: \(goal.targetAmount) meals"
-
-        // If you don’t have raised yet, keep it 0 for now
-        let raised = goal.raised   // always 0 for now
-        raisedLabel.text = "\(raised)"
-
-        // days left
-        let daysLeft = max(0, Calendar.current.dateComponents([.day], from: Date(), to: goal.endDate).day ?? 0)
-        daysLeftLabel.text = "\(daysLeft)"
-
-        // progress
-        let progress = goal.targetAmount > 0 ? Float(raised) / Float(goal.targetAmount) : 0
-        progressView.progress = min(max(progress, 0), 1)
-
-        // image
-        if let url = goal.imageUrl, !url.isEmpty {
-            loadImage(url)
-        } else {
-            goalImageView.image = UIImage(systemName: "photo")
-        }
-    }
 
     private func loadImage(_ urlString: String) {
         guard let url = URL(string: urlString) else { return }
@@ -78,8 +50,6 @@ class DashboardGoalCardCell: UITableViewCell {
         startLabel.text = "Start: \(df.string(from: goal.startDate))"
 
         targetLabel.text = "Target: \(goal.targetAmount) meals"
-
-        // ignoring raised for now
         raisedLabel.text = "0"
 
         let daysLeft = max(0, Calendar.current.dateComponents([.day], from: Date(), to: goal.endDate).day ?? 0)
@@ -93,6 +63,7 @@ class DashboardGoalCardCell: UITableViewCell {
             goalImageView.image = UIImage(systemName: "photo")
         }
     }
+
 
 
 }

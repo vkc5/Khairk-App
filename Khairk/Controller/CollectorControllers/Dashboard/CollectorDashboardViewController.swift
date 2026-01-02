@@ -7,8 +7,12 @@
  
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
 
-class CollectorDashboardViewController: UIViewController {
+private let db = Firestore.firestore()
+
+class CollectorDashboardViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Outlets
 
@@ -18,15 +22,30 @@ class CollectorDashboardViewController: UIViewController {
     @IBOutlet weak var Mypickup: UIView!
     @IBOutlet weak var statsView: UIView!
     @IBOutlet weak var ProfileView: UIView!
+    @IBOutlet weak var tableView: UITableView!
+    private var cases: [NgoCase] = []
 
     // Spotlight cards (two)
     @IBOutlet weak var spotlightView1: UIView!
     @IBOutlet weak var spotlightView2: UIView!
+    @IBOutlet weak var impactRowView: UIView!
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.dataSource = self
+        tableView.delegate = self
+
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
+
+        loadCasesForCollectorDashboard()
+
+        
+        impactRowView.layer.borderWidth = 1
+        impactRowView.layer.borderColor = UIColor.systemGray4.cgColor
+        impactRowView.layer.cornerRadius = 10
 
         // TOP BOXES
         styleTopBox(Mycase)
@@ -37,6 +56,53 @@ class CollectorDashboardViewController: UIViewController {
 
         styleSpotlight(spotlightView1)
         styleSpotlight(spotlightView2)
+    }
+    
+    // spacing method (sections)
+    func numberOfSections(in tableView: UITableView) -> Int { cases.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "CollectorCaseCardCell",
+            for: indexPath
+        ) as! CollectorCaseCardCell
+
+        cell.configure(with: cases[indexPath.section])
+        cell.selectionStyle = .none
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { 12 }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { UIView() }
+
+    private func loadCasesForCollectorDashboard() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        db.collection("ngoCases")
+            .whereField("ngoID", isEqualTo: uid)       // ✅ belongs to this NGO
+            .addSnapshotListener { [weak self] snap, error in
+                guard let self else { return }
+
+                if let error = error {
+                    print("❌ Load cases error:", error.localizedDescription)
+                    return
+                }
+
+                let all = (snap?.documents ?? []).compactMap { NgoCase(doc: $0) }
+
+                // ✅ optional: keep active only
+                self.cases = all.filter { $0.status == "active" }
+
+                // ✅ sort locally (avoid composite index)
+                self.cases.sort { $0.startDate > $1.startDate }
+
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
     }
 
 
@@ -164,6 +230,15 @@ class CollectorDashboardViewController: UIViewController {
         navigationController?.pushViewController(mapVC, animated: true)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
     
     
     
