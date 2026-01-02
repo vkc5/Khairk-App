@@ -19,7 +19,7 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
 
     private var starButtons: [UIButton] = []
 
-    private var selectedRating: Int = 5 {
+    private var selectedRating: Int = 0 {
         didSet {
             updateSubmitState()
         }
