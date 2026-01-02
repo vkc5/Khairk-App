@@ -9,7 +9,7 @@ import UIKit
 import FirebaseFirestore
 import MapKit
 
-class AdminDonationDetailsController: UIViewController{
+class AdminDonationDetailsController: UIViewController, MKMapViewDelegate{
     var donationID: String?
 
     @IBOutlet weak var foodImage: UIImageView!
@@ -46,19 +46,31 @@ class AdminDonationDetailsController: UIViewController{
     @IBOutlet weak var ngoCaseBody: UILabel!
     @IBOutlet weak var ngoCaseContainer: UIView!
     
+    @IBOutlet weak var locationContainer: UIView!
+    @IBOutlet weak var locationMapView: MKMapView!
+    @IBOutlet weak var locationTitle: UILabel!
+    @IBOutlet weak var locationAddress: UILabel!
+    @IBOutlet weak var pickupTimeStampContainer: UIStackView!
+    @IBOutlet weak var pickupTime: UILabel!
+    @IBOutlet weak var pickupDate: UILabel!
+    private var donationCoords: CLLocationCoordinate2D?
+    private var ngoCoords: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         uiSetup()
+        locationMapView.delegate = self
         if let id = donationID {
             print("Received Donation ID: \(id)")
             fetchDonationDetails()
+            
         }
         // Do any additional setup after loading the view.
     }
     
     private func uiSetup() {
+        pickupTimeStampContainer.isHidden = true
         foodImage.contentMode = .scaleAspectFill
         foodImage.clipsToBounds = true
         foodImage.layer.cornerRadius = 5
@@ -81,8 +93,26 @@ class AdminDonationDetailsController: UIViewController{
         ngoImage.contentMode = .scaleAspectFill
         ngoImage.layer.borderWidth = 1
         ngoImage.layer.borderColor = UIColor.lightGray.cgColor
-
         
+        locationContainer.layer.cornerRadius = 5
+        locationMapView.layer.cornerRadius = 5
+        locationMapView.isUserInteractionEnabled = true
+        locationMapView.isZoomEnabled = true
+        locationMapView.isScrollEnabled = true
+        pickupTimeStampContainer.distribution = .fillEqually
+        
+    }
+    
+    private func setupMap(with coordinate: CLLocationCoordinate2D, title: String) {
+        locationMapView.removeAnnotations(locationMapView.annotations)
+        
+        let pin = MKPointAnnotation()
+        pin.coordinate = coordinate
+        pin.title = title
+        locationMapView.addAnnotation(pin)
+        
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
+        locationMapView.setRegion(region, animated: true)
     }
     
     private func fetchDonationDetails() {
@@ -109,18 +139,32 @@ class AdminDonationDetailsController: UIViewController{
                 return
             }
             
+            if let lat = donation.latitude, let lon = donation.longitude {
+                self.donationCoords = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            }
+            
 
             // Reload table view on main thread
             DispatchQueue.main.async {
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_BH")
+                dateFormatter.dateStyle = .medium
+                dateFormatter.timeStyle = .none
+                
+                let timeFormatter = DateFormatter()
+                timeFormatter.locale = Locale(identifier: "en_BH")
+                timeFormatter.dateStyle = .none
+                timeFormatter.timeStyle = .short
+                
                 self.foodImage.loadImage(from: donation.imageURL)
                 self.idLabel.text = "ID: \(donation.id)"
                 self.foodNameLabel.text = donation.foodName
                 self.foodNameHeaderLabel.text = donation.foodName
                 self.statusLabel.text = donation.status
-                self.createdAtLabel.text = donation.createdAt.description
+                self.createdAtLabel.text = dateFormatter.string(from: donation.createdAt)
                 self.donationTypeLabel.text = donation.donationType
                 self.Quantity.text = "\(donation.quantity)"
-                self.expireDateLabel.text = donation.expiryDate.description
+                self.expireDateLabel.text = "At \(dateFormatter.string(from: donation.expiryDate)) on \(timeFormatter.string(from: donation.expiryDate))"
                 self.descriptionLabel.text = donation.description
                 
                 let calendar = Calendar.current
@@ -128,6 +172,20 @@ class AdminDonationDetailsController: UIViewController{
                     self.expiresSoonContainer.isHidden = daysUntilExpiration > 2
                 } else {
                     self.expiresSoonContainer.isHidden = true
+                }
+                
+                if donation.donationType.lowercased() == "delivery" {
+                    if let coords = self.donationCoords {
+                        self.setupMap(with: coords, title: "Donor's Delivery Location")
+                    }
+                    self.locationTitle.text = "Delivery Location"
+                    self.locationAddress.text = donation.serviceArea ?? "Specified delivery zone"
+                } else {
+                    
+                    if let pTime = donation.pickupTime {
+                        self.pickupDate.text = dateFormatter.string(from: pTime)
+                        self.pickupTime.text = timeFormatter.string(from: pTime)
+                    }
                 }
 
             }
@@ -220,12 +278,16 @@ class AdminDonationDetailsController: UIViewController{
                   let name = data["name"] as? String,
                   let phoneNumber = data["phone"] as? String,
                   let email = data["email"] as? String,
-                  let imageURL = data["logoUrl"] as? String
+                  let imageURL = data["logoUrl"] as? String,
+                  let area = data["serviceArea"] as? String
             else {
                 print("Donation not found or parsing failed")
                 return
             }
             
+            if let geoPoint = data["ngoLocation"] as? GeoPoint {
+                self.ngoCoords = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+            }
             
             // Reload table view on main thread
             DispatchQueue.main.async {
@@ -233,6 +295,14 @@ class AdminDonationDetailsController: UIViewController{
                 self.ngoName.text = name
                 self.ngoEmail.text = email
                 self.ngoPhoneNumber.text = phoneNumber
+                if self.donationTypeLabel.text?.lowercased() == "pickup" {
+                    if let coords = self.ngoCoords {
+                        self.setupMap(with: coords, title: "\(name) Location")
+                    }
+                    self.locationTitle.text = "\(name) Location"
+                    self.locationAddress.text = area
+                    self.pickupTimeStampContainer.isHidden = false
+                }
                
             }
         }

@@ -16,6 +16,7 @@ class AdminUserManagementController: UIViewController, UISearchBarDelegate, UITa
     var allDonors: [User] = []
     var filteredDonors: [User] = []
     var searchText: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Donors Manager"

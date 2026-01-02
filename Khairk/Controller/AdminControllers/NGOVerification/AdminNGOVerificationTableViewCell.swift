@@ -18,7 +18,15 @@ class AdminNGOVerificationTableViewCell: UITableViewCell {
     @IBOutlet weak var ngoArea: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        ngoName.numberOfLines = 0
+        ngoName.lineBreakMode = .byWordWrapping
+        ngoName.setContentCompressionResistancePriority(.init(751), for: .vertical)
+        ngoName.setContentCompressionResistancePriority(.init(751), for: .horizontal)
+        ngoName.setContentHuggingPriority(.init(249), for: .horizontal)
+        
+        ngoStatus.setContentCompressionResistancePriority(.init(752), for: .horizontal)
+        ngoStatusIcon.setContentCompressionResistancePriority(.init(752), for: .horizontal)
+        ngoStatus.setContentHuggingPriority(.init(251), for: .horizontal)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

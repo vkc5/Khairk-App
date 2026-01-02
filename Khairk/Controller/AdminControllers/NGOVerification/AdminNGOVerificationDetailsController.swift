@@ -25,7 +25,9 @@ class AdminNGOVerificationDetailsController: UIViewController {
     @IBOutlet weak var ngoMemberName: UILabel!
     @IBOutlet weak var ngoMemberEmail: UILabel!
     @IBOutlet weak var ngoMemberPhone: UILabel!
+    @IBOutlet weak var ngoMemberContainer: UIView!
     @IBOutlet weak var approveBtn: UIButton!
+    @IBOutlet weak var licenseContainer: UIView!
     @IBOutlet weak var rejectBtn: UIButton!
     var licenseURLString: String?
     private var documentController: UIDocumentInteractionController?
@@ -34,20 +36,31 @@ class AdminNGOVerificationDetailsController: UIViewController {
         uiSetup()
         if let id = ngoID {
             print("Received NGO ID: \(id)")
-            fetchNGODetails()
         }
         // Do any additional setup after loading the view.
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchNGODetails()
+        tabBarController?.tabBar.isHidden = true
+    }
     
     private func uiSetup() {
+        ngoNameHeader.numberOfLines = 0
+        ngoNameHeader.lineBreakMode = .byWordWrapping
+        ngoNameHeader.setContentCompressionResistancePriority(.required, for: .vertical)
+        ngoNameHeader.setContentHuggingPriority(.required, for: .vertical)
         self.approveBtn.isHidden = true
         self.rejectBtn.isHidden = true
         bannerImage.contentMode = .scaleAspectFill
         bannerImage.clipsToBounds = true
-        ngoLogo.layer.cornerRadius = 10
-        ngoLogo.clipsToBounds = true
-        ngoLogo.layer.borderWidth = 0.5
         ngoLogo.contentMode = .scaleAspectFill
+        ngoLogo.clipsToBounds = true
+        ngoLogo.layer.cornerRadius = 10
+        ngoLogo.layer.borderWidth = 0.5
+        ngoLogo.layer.borderColor = UIColor.lightGray.cgColor
+        licenseContainer.layer.cornerRadius = 5
+        ngoMemberContainer.layer.cornerRadius = 5
     }
     
     private func fetchNGODetails() {
@@ -79,6 +92,8 @@ class AdminNGOVerificationDetailsController: UIViewController {
             DispatchQueue.main.async {
                 if let url = ngo.profileImageUrl, !url.isEmpty {
                     self.bannerImage.loadImage(from: url)
+                } else {
+                    self.bannerImage.image = UIImage(named: "NGOBanner")
                 }
                 if let url = ngo.logoUrl, !url.isEmpty {
                     self.ngoLogo.loadImage(from: url)
@@ -183,19 +198,23 @@ class AdminNGOVerificationDetailsController: UIViewController {
     
     @IBAction func rejectBtnClick(_ sender: Any) {
         guard let ngoID = ngoID else {
-                print("NGO ID is nil at reject click")
-                return
-            }
+            print("NGO ID is nil at reject click")
+            return
+        }
 
-            guard let vc = storyboard?.instantiateViewController(
-                withIdentifier: "AdminNGOVerificationRejectController"
-            ) as? AdminNGOVerificationRejectController else {
-                fatalError("Storyboard ID not set for AdminNGOVerificationRejectController")
-            }
+        guard let vc = storyboard?.instantiateViewController( withIdentifier: "AdminNGOVerificationRejectController") as? AdminNGOVerificationRejectController else {
+            fatalError("Storyboard ID not set for AdminNGOVerificationRejectController")
+        }
 
-            vc.ngoID = ngoID
-            vc.modalPresentationStyle = .formSheet   // or .fullScreen
-            present(vc, animated: true)
+        vc.ngoID = ngoID
+        vc.modalPresentationStyle = .pageSheet
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersEdgeAttachedInCompactHeight = true
+        }
+        
+        present(vc, animated: true)
     }
     @IBAction func approveBtnClick(_ sender: Any) {
         guard let ngoID = ngoID else {
@@ -245,11 +264,6 @@ class AdminNGOVerificationDetailsController: UIViewController {
                 }
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
