@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
 
@@ -14,6 +15,7 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
     @IBOutlet weak var filterButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var pickupList: UITableView!
+    
     
     struct PickupItem {
         let donation: Donation
@@ -25,8 +27,8 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
     var filteredPickups: [PickupItem] = []
     var searchText: String = ""
     var selectedFilter: String? = nil
-    
-    let ngoId = "NZ2aoocAENXChA4GnEYvsCKYjBO2"
+    let refreshControl = UIRefreshControl()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +37,10 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
         setupFilterMenu()
         setupTableView()
         fetchDonations()
+        
+        refreshControl.addTarget(self, action: #selector(refreshPickupsData(_:)), for: .valueChanged)
+        pickupList.refreshControl = refreshControl
+        refreshControl.tintColor = UIColor.mainBrand500
         // Do any additional setup after loading the view.
     }
 
@@ -138,7 +144,11 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
     private func fetchDonations() {
         let db = Firestore.firestore()
         
-        db.collection("ngoCases").whereField("ngoID", isEqualTo: ngoId).getDocuments { [weak self] querySnapshot, error in
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        db.collection("ngoCases").whereField("ngoID", isEqualTo: uid).getDocuments { [weak self] querySnapshot, error in
             guard let self = self else { return }
             
             if let error = error {
@@ -210,7 +220,9 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
             }
             
             DispatchQueue.main.async {
+                self.updateEmptyState()
                 self.pickupList.reloadData()
+                self.refreshControl.endRefreshing()
             }
         }
     }
@@ -268,10 +280,32 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
             
             return matchesSearch && matchesFilter
         }
-        
+        updateEmptyState()
         pickupList.reloadData()
     }
 
+    private func updateEmptyState() {
+        if filteredPickups.isEmpty {
+            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: pickupList.bounds.size.width, height: pickupList.bounds.size.height))
+            if !searchText.isEmpty && selectedFilter != nil {
+                noDataLabel.text = "No results for \"\(searchText)\" and \(selectedFilter!)"
+            } else if !searchText.isEmpty {
+                noDataLabel.text = "No results found for \"\(searchText)\""
+            } else if let filter = selectedFilter {
+                noDataLabel.text = "No results found for \"\(filter)\""
+            } else {
+                noDataLabel.text = "No Pickups found."
+            }
+            noDataLabel.textColor = .gray
+            noDataLabel.textAlignment = .center
+            noDataLabel.numberOfLines = 0
+            noDataLabel.font = .systemFont(ofSize: 16, weight: .medium)
+            
+            pickupList.backgroundView = noDataLabel
+        } else {
+            pickupList.backgroundView = nil
+        }
+    }
 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -322,10 +356,14 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
         return cell
     }
     
+    @objc private func refreshPickupsData(_ sender: Any) {
+        fetchDonations()
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedDonation = filteredPickups[indexPath.row]
-        performSegue(withIdentifier: "ShowPickupDetails", sender: selectedDonation.donation.id)
+        performSegue(withIdentifier: "ShowPickupDetails", sender: selectedDonation)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -334,9 +372,10 @@ class CollectorPickupHistoryController: UIViewController, UISearchBarDelegate, U
             // 2. Check the destination view controller type
             if let destinationVC = segue.destination as? CollectorPickupHistoryDetailsController {
                 // 3. Check if the sender is the expected data type (the donation ID)
-                if let donationID = sender as? String { // Use the correct type for your ID (e.g., String, UUID, Int)
+                if let selectedDonation = sender as? PickupItem { // Use the correct type for your ID (e.g., String, UUID, Int)
                     // 4. Pass the data to a property in the destination view controller
-                    destinationVC.donationID = donationID
+                    destinationVC.donationID = selectedDonation.donation.id
+                    destinationVC.ngoID = selectedDonation.ngoCase.ngoId
                     segue.destination.navigationItem.title = "Pickup Details"
                 }
             }
