@@ -230,11 +230,11 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
         if filteredDonations.isEmpty {
             let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: donationsList.bounds.size.width, height: donationsList.bounds.size.height))
             if !searchText.isEmpty && selectedFilter != nil {
-                noDataLabel.text = "No results for \"\(searchText)\" in \(selectedFilter!)"
+                noDataLabel.text = "No results for \"\(searchText)\" and \(selectedFilter!)"
             } else if !searchText.isEmpty {
                 noDataLabel.text = "No results found for \"\(searchText)\""
             } else if let filter = selectedFilter {
-                noDataLabel.text = "No donations found for \"\(filter)\""
+                noDataLabel.text = "No results found for \"\(filter)\""
             } else {
                 noDataLabel.text = "No donations found."
             }
