@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Food Donation View Controller-->
+        <!--Donation-->
         <scene sceneID="RUL-kq-AWc">
             <objects>
                 <viewController storyboardIdentifier="FoodDonationViewController" id="dWO-Yr-gWB" customClass="FoodDonationViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" contentMode="scaleAspectFit" fixedFrame="YES" image="filter" translatesAutoresizingMaskIntoConstraints="NO" id="Pnd-jY-0zx">
-                                        <rect key="frame" x="333" y="25" width="42" height="49"/>
+                                        <rect key="frame" x="333" y="39" width="29" height="33"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <gestureRecognizers/>
                                     </imageView>
@@ -170,7 +170,7 @@
                             <outletCollection property="gestureRecognizers" destination="BhP-iM-3aq" appends="YES" id="NTc-IO-UsZ"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" id="C8I-VK-2ii"/>
+                    <navigationItem key="navigationItem" title="Donation" id="C8I-VK-2ii"/>
                     <connections>
                         <outlet property="filterImageView" destination="Pnd-jY-0zx" id="VjX-44-FEO"/>
                         <outlet property="searchBar" destination="9ZS-rf-CUK" id="C5W-Fb-570"/>
