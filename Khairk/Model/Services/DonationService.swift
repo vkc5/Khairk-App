@@ -9,6 +9,10 @@ final class DonationService {
 
     // MARK: - Create Donation (Donor)
     func createDonation(
+        donorId: String,                 // NEW: link to users/{uid}
+        caseId: String? = nil,            // NEW: link to ngoCases/{docId} (optional)
+        ngoId: String? = nil,             // NEW: link to users/{collectorUid} (optional)
+
         foodName: String,
         quantity: Int,
         expiryDate: Date,
@@ -25,6 +29,7 @@ final class DonationService {
         completion: @escaping (Result<String, Error>) -> Void
     ) {
 
+        // Core donation payload
         var donationData: [String: Any] = [
             "foodName": foodName,
             "quantity": quantity,
@@ -32,11 +37,24 @@ final class DonationService {
             "description": description,
             "donationType": donationType,
             "imageURL": imageURL,
-            "donorId": "",
-            "status": "accepted",
-            "createdAt": Timestamp()
+
+            // ID linking
+            "donorId": donorId,
+
+            // Initial status should be pending so collectors can see it
+            "status": "pending",
+            "createdAt": FieldValue.serverTimestamp()
         ]
 
+        // Optional linking IDs
+        if let caseId = caseId, !caseId.isEmpty {
+            donationData["caseId"] = caseId
+        }
+        if let ngoId = ngoId, !ngoId.isEmpty {
+            donationData["ngoId"] = ngoId
+        }
+
+        // Optional pickup/delivery fields
         if let pickupTime = pickupTime {
             donationData["pickupTime"] = Timestamp(date: pickupTime)
         }
@@ -57,6 +75,7 @@ final class DonationService {
             }
         }
     }
+
 
     // MARK: - Listen (Collector / NGO)
     func listenPendingDonations(

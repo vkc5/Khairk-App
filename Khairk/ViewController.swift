@@ -61,7 +61,7 @@ class ViewController: UIViewController {
                 duration: 0.4,
                 options: .transitionCrossDissolve,
                 animations: {
-                    window.rootViewController = UINavigationController(rootViewController: loginVC)
+                    window.rootViewController =  UINavigationController(rootViewController: loginVC)
                 },
                 completion: nil
             )
