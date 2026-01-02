@@ -18,13 +18,7 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
     var filteredDonations: [Donation] = []
     var searchText: String = ""
     var selectedFilter: String? = nil
-    
-    var loader: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.hidesWhenStopped = true
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
+    let refreshControl = UIRefreshControl()
 
     
     override func viewDidLoad() {
@@ -33,19 +27,13 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
         searchBar.delegate = self
         setupFilterMenu()
         setupTableView()
-        setupLoader()
         fetchDonations()
+        
+        refreshControl.addTarget(self, action: #selector(refreshDonationsData(_:)), for: .valueChanged)
+        donationsList.refreshControl = refreshControl
+        refreshControl.tintColor = UIColor.mainBrand500
         // Do any additional setup after loading the view.
     }
-
-    private func setupLoader() {
-        view.addSubview(loader)
-        NSLayoutConstraint.activate([
-            loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loader.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
-
     
     private func setupTableView() {
         donationsList.dataSource = self
@@ -175,7 +163,9 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
             
             // Reload table view on main thread
             DispatchQueue.main.async {
+                self.updateEmptyState()
                 self.donationsList.reloadData()
+                self.refreshControl.endRefreshing()
             }
         }
     }
@@ -232,11 +222,32 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
             
             return matchesSearch && matchesFilter
         }
-        
+        updateEmptyState()
         donationsList.reloadData()
     }
-
-
+    
+    private func updateEmptyState() {
+        if filteredDonations.isEmpty {
+            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: donationsList.bounds.size.width, height: donationsList.bounds.size.height))
+            if !searchText.isEmpty && selectedFilter != nil {
+                noDataLabel.text = "No results for \"\(searchText)\" in \(selectedFilter!)"
+            } else if !searchText.isEmpty {
+                noDataLabel.text = "No results found for \"\(searchText)\""
+            } else if let filter = selectedFilter {
+                noDataLabel.text = "No donations found for \"\(filter)\""
+            } else {
+                noDataLabel.text = "No donations found."
+            }
+            noDataLabel.textColor = .gray
+            noDataLabel.textAlignment = .center
+            noDataLabel.numberOfLines = 0
+            noDataLabel.font = .systemFont(ofSize: 16, weight: .medium)
+            
+            donationsList.backgroundView = noDataLabel
+        } else {
+            donationsList.backgroundView = nil
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredDonations.count
@@ -266,6 +277,10 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
         return cell
     }
     
+    @objc private func refreshDonationsData(_ sender: Any) {
+        fetchDonations()
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedDonation = filteredDonations[indexPath.row]
@@ -286,8 +301,8 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
             }
         }
     }
-
-
+    
+    
     /*
     // MARK: - Navigation
 
