@@ -4,16 +4,15 @@ import FirebaseFirestore
 final class CaseService {
     private let db = Firestore.firestore()
 
-    private func casesRef(ngoId: String) -> CollectionReference {
-        db.collection("ngos").document(ngoId).collection("cases")
+    private func casesRef() -> CollectionReference {
+        db.collection("ngoCases")
     }
 
     func createCase(
-        ngoId: String,
         newCase: NgoCase,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
-        let ref = casesRef(ngoId: ngoId).document()
+        let ref = casesRef().document()
         var data = newCase.asFirestoreData
         data["createdAt"] = FieldValue.serverTimestamp()
 
@@ -30,7 +29,8 @@ final class CaseService {
         ngoId: String,
         onChange: @escaping (Result<[NgoCase], Error>) -> Void
     ) -> ListenerRegistration {
-        casesRef(ngoId: ngoId)
+        casesRef()
+            .whereField("ngoID", isEqualTo: ngoId)
             .order(by: "createdAt", descending: true)
             .addSnapshotListener { snap, err in
                 if let err = err {
@@ -43,11 +43,10 @@ final class CaseService {
     }
 
     func deleteCase(
-        ngoId: String,
         caseId: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        casesRef(ngoId: ngoId).document(caseId).delete { err in
+        casesRef().document(caseId).delete { err in
             if let err = err {
                 completion(.failure(err))
                 return

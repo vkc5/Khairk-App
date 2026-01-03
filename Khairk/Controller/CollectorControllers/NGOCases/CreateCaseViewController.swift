@@ -1,26 +1,23 @@
 import UIKit
-import FirebaseAuth
+import FirebaseFirestore
 
 final class CreateCaseViewController: UIViewController {
 
     private let service = CaseService()
+    private let db = Firestore.firestore()
 
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let stackView = UIStackView()
 
     private let uploadButton = UIButton(type: .system)
-    private let foodTypeField = UITextField()
+    private let titleField = UITextField()
     private let goalField = UITextField()
     private let startDatePicker = UIDatePicker()
     private let endDatePicker = UIDatePicker()
     private let measurementField = UITextField()
     private let descriptionTextView = UITextView()
     private let confirmButton = UIButton(type: .system)
-
-    private var ngoId: String {
-        Auth.auth().currentUser?.uid ?? "MISSING_NGO_ID"
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,11 +37,11 @@ final class CreateCaseViewController: UIViewController {
 
         configureUploadButton()
 
-        configureTextField(foodTypeField, placeholder: "Enter Food Type")
+        configureTextField(titleField, placeholder: "Enter Title")
         configureTextField(goalField, placeholder: "Enter Goal")
         goalField.keyboardType = .numberPad
 
-        configureTextField(measurementField, placeholder: "Measurement")
+        configureTextField(measurementField, placeholder: "Measurements")
         let chevron = UIImageView(image: UIImage(systemName: "chevron.down"))
         chevron.tintColor = .secondaryLabel
         measurementField.rightView = chevron
@@ -76,8 +73,8 @@ final class CreateCaseViewController: UIViewController {
         contentView.addSubview(stackView)
 
         stackView.addArrangedSubview(uploadButton)
-        stackView.addArrangedSubview(makeSectionLabel(text: "Food Type"))
-        stackView.addArrangedSubview(foodTypeField)
+        stackView.addArrangedSubview(makeSectionLabel(text: "Title"))
+        stackView.addArrangedSubview(titleField)
         stackView.addArrangedSubview(makeSectionLabel(text: "Goal"))
         stackView.addArrangedSubview(goalField)
         stackView.addArrangedSubview(makeSectionLabel(text: "Start date & End date"))
@@ -140,21 +137,35 @@ final class CreateCaseViewController: UIViewController {
         showAlert(title: "Upload Image", message: "Image upload is not wired yet.")
     }
 
-    @objc private func saveTapped() {
-        guard ngoId != "MISSING_NGO_ID" else {
-            showAlert(title: "Not Logged In", message: "Please log in as an NGO first.")
-            return
+    private func fetchNgoName(ngoId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        db.collection("ngos").document(ngoId).getDocument { doc, err in
+            if let err = err {
+                completion(.failure(err))
+                return
+            }
+            let name = doc?.data()?["name"] as? String ?? ""
+            if name.isEmpty {
+                completion(.failure(NSError(
+                    domain: "CreateCaseViewController",
+                    code: 404,
+                    userInfo: [NSLocalizedDescriptionKey: "NGO name is missing."]
+                )))
+                return
+            }
+            completion(.success(name))
         }
+    }
 
-        let foodType = (foodTypeField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    @objc private func saveTapped() {
+        let titleText = (titleField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let goal = Int(goalField.text ?? "") ?? 0
         let startDate = startDatePicker.date
         let endDate = endDatePicker.date
         let measurementText = (measurementField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let descriptionText = (descriptionTextView.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !foodType.isEmpty, goal > 0 else {
-            showAlert(title: "Missing Info", message: "Enter Food Type and a valid Goal.")
+        guard !titleText.isEmpty, goal > 0 else {
+            showAlert(title: "Missing Info", message: "Enter Title and a valid Goal.")
             return
         }
 
@@ -163,44 +174,53 @@ final class CreateCaseViewController: UIViewController {
             return
         }
 
-        let combinedDetails: String
-        if measurementText.isEmpty {
-            combinedDetails = descriptionText
-        } else if descriptionText.isEmpty {
-            combinedDetails = "Measurements: \(measurementText)"
-        } else {
-            combinedDetails = "Measurements: \(measurementText)\n\(descriptionText)"
-        }
+        NGOContext.shared.getNgoId { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let err):
+                self.showAlert(title: "Error", message: err.localizedDescription)
+            case .success(let ngoId):
+                self.fetchNgoName(ngoId: ngoId) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .failure(let err):
+                        self.showAlert(title: "Error", message: err.localizedDescription)
+                    case .success(let ngoName):
+                        let newCase = NgoCase(
+                            id: "temp",
+                            title: titleText,
+                            measurements: measurementText,
+                            goal: goal,
+                            collected: 0,
+                            startDate: startDate,
+                            endDate: endDate,
+                            details: descriptionText,
+                            imageURL: nil,
+                            status: "active",
+                            ngoId: ngoId,
+                            ngoName: ngoName
+                        )
 
-        let newCase = NgoCase(
-            id: "temp",
-            title: foodType,
-            foodType: foodType,
-            goal: goal,
-            collected: 0,
-            startDate: startDate,
-            endDate: endDate,
-            details: combinedDetails,
-            imageURL: nil,
-            status: "active"
-        )
-
-        service.createCase(ngoId: ngoId, newCase: newCase) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                switch result {
-                case .success:
-                    let alert = UIAlertController(
-                        title: "Case Added",
-                        message: "Your new case has been created and added to the list.",
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "OK, Got It", style: .default) { _ in
-                        self.navigationController?.popViewController(animated: true)
-                    })
-                    self.present(alert, animated: true)
-                case .failure(let error):
-                    self.showAlert(title: "Save Failed", message: error.localizedDescription)
+                        self.service.createCase(newCase: newCase) { [weak self] result in
+                            DispatchQueue.main.async {
+                                guard let self = self else { return }
+                                switch result {
+                                case .success:
+                                    let alert = UIAlertController(
+                                        title: "Case Added",
+                                        message: "Your new case has been created and added to the list.",
+                                        preferredStyle: .alert
+                                    )
+                                    alert.addAction(UIAlertAction(title: "OK, Got It", style: .default) { _ in
+                                        self.navigationController?.popViewController(animated: true)
+                                    })
+                                    self.present(alert, animated: true)
+                                case .failure(let error):
+                                    self.showAlert(title: "Save Failed", message: error.localizedDescription)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
