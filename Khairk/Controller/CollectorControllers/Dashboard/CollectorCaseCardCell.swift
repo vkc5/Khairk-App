@@ -35,7 +35,7 @@ class CollectorCaseCardCell: UITableViewCell {
         startLabel.text = "Start: \(df.string(from: c.startDate))"
 
         // target text (your design: "Target: 100 meals")
-        targetLabel.text = "Target: \(c.goal) \(c.foodType)"
+        targetLabel.text = "Target: \(c.goal) \(c.measurements)"
 
         // collected == raised
         raisedLabel.text = "\(c.collected)"
