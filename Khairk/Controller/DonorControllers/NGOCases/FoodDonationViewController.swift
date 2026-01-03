@@ -19,6 +19,7 @@ class FoodDonationViewController: UIViewController, UITableViewDelegate, UITable
     struct NgoCase {
         var id: String
         var title: String
+        var ngoId: String      // ✅ add this
         var description: String
         var goal: Double
         var currentRaised: Double
@@ -126,6 +127,7 @@ class FoodDonationViewController: UIViewController, UITableViewDelegate, UITable
                 let item = NgoCase(
                     id: document.documentID,
                     title: data["title"] as? String ?? "",
+                    ngoId: data["ngoID"] as? String ?? "",
                     description: data["description"] as? String ?? "",
                     goal: data["Goal"] as? Double ?? 0.0,
                     currentRaised: data["raisedAmount"] as? Double ?? 0.0,
@@ -134,6 +136,7 @@ class FoodDonationViewController: UIViewController, UITableViewDelegate, UITable
                     name: data["name"] as? String ?? "",
                     createdAt: (data["createdAt"] as? Timestamp)?.dateValue() ?? Date()
                 )
+
                 
                 // Only add campaigns that are NOT completed and NOT expired
                 if !item.isCompletedOrExpired {
@@ -237,6 +240,13 @@ class FoodDonationViewController: UIViewController, UITableViewDelegate, UITable
            let destinationVC = segue.destination as? FoodCaseViewController,
            let caseToPass = sender as? NgoCase {
             destinationVC.selectedCase = caseToPass
+        }
+        if segue.identifier == "ShowDonationForm",
+           let vc = segue.destination as? DonationFormViewController,
+           let c = sender as? NgoCase {
+
+            vc.caseId = c.id
+            vc.ngoId  = c.ngoId
         }
     }
 }

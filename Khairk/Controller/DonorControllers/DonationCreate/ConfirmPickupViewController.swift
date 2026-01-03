@@ -16,7 +16,8 @@ final class ConfirmPickupViewController: UIViewController {
     var descriptionText: String = ""
     var expiryDate: Date = Date()
     var selectedImage: UIImage?
-    
+    private var createdDonationId: String?
+
     // ✅ ADD HERE
     var donorId: String?
     var caseId: String?
@@ -53,6 +54,13 @@ final class ConfirmPickupViewController: UIViewController {
             showAlert(title: "Error", message: "Missing selected image.")
             return
         }
+        
+        guard let caseId = self.caseId, !caseId.isEmpty,
+              let ngoId = self.ngoId, !ngoId.isEmpty else {
+            showAlert(title: "Missing IDs", message: "caseId / ngoId not found. Go back and select a case again.")
+            return
+        }
+
 
         let pickupTime = pickupDatePicker.date
         nextButton.isEnabled = false
@@ -76,8 +84,8 @@ final class ConfirmPickupViewController: UIViewController {
                     DonationService.shared.createDonation(
                         
                         donorId: uid,              // ✅ REQUIRED
-                        caseId: self.caseId,       // ✅ Optional
-                        ngoId: self.ngoId,         // ✅ Optional
+                        caseId: caseId,       // ✅ REQUIRED
+                        ngoId: ngoId,         // ✅ REQUIRED
                         
                         
                         foodName: self.foodName,
@@ -94,8 +102,9 @@ final class ConfirmPickupViewController: UIViewController {
                             switch saveResult {
                             case .success(let donationId):
                                 print("Saved donation:", donationId)
+                                self.createdDonationId = donationId
                                 self.showSuccessAlert {
-                                self.performSegue(withIdentifier: "toRating", sender: nil)
+                                    self.performSegue(withIdentifier: "toRating", sender: nil)
                                 }
 
                             case .failure(let error):
@@ -151,4 +160,20 @@ final class ConfirmPickupViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toRating" {
+
+            let dest = segue.destination
+            let ratingVC = (dest as? RatingViewController)
+                ?? (dest as? UINavigationController)?.topViewController as? RatingViewController
+
+            guard let vc = ratingVC else { return }
+
+            vc.ngoId = self.ngoId
+            vc.caseId = self.caseId
+            vc.donationId = self.createdDonationId
+            vc.donorId = Auth.auth().currentUser?.uid
+        }
+    }
+
 }

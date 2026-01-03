@@ -6,6 +6,11 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var starsStack: UIStackView!
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var submitButton: UIButton!
+    
+    var ngoId: String?
+    var caseId: String?
+    var donorId: String?
+    var donationId: String?
 
     // MARK: - Properties
     private let atayaYellow = UIColor(
@@ -28,7 +33,8 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = "Rate Your Experience"
+        print("Rating got ngoId=\(ngoId ?? "nil"), caseId=\(caseId ?? "nil"), donationId=\(donationId ?? "nil")")
         buildStars(count: 5)
         setupTextView()
         setupSubmitButton()

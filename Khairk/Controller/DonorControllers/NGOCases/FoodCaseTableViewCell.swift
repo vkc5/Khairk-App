@@ -38,7 +38,9 @@ class FoodCaseTableViewCell: UITableViewCell {
         cardView.layer.shadowOpacity = 0.1
         cardView.layer.shadowOffset = CGSize(width: 0, height: 2)
         cardView.layer.shadowRadius = 4
-        
+        cardView.layer.borderWidth = 1
+        cardView.layer.borderColor = UIColor.systemGray4.cgColor
+
         // Image appearance settings
         caseImageView.layer.cornerRadius = 12
         caseImageView.clipsToBounds = true
