@@ -330,7 +330,7 @@
                     <navigationItem key="navigationItem" title="My Impact " id="eKA-hy-FfF"/>
                     <connections>
                         <outlet property="activeCasesCountLabel" destination="Pcg-hi-Nwt" id="0ig-cJ-N1o"/>
-                        <outlet property="chartStackView" destination="Lwx-Og-knM" id="cco-0K-DNw"/>
+                        <outlet property="areaChartContainer" destination="Lwx-Og-knM" id="0aE-NN-cAe"/>
                         <outlet property="donationsCollectedCountLabel" destination="DXb-Uz-Lac" id="f0W-s9-hAr"/>
                         <outlet property="familiesSupportedCountLabel" destination="X7z-We-L32" id="gGb-dR-1F1"/>
                         <outlet property="mealsDeliveredTitleLabel" destination="8GY-Cz-KDg" id="gI3-2Z-fLR"/>

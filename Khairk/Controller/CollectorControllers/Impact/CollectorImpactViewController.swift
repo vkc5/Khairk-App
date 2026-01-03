@@ -4,116 +4,173 @@
 //
 //  Created by Yousif Qassim on 27/12/2025.
 //
-
 import UIKit
-import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
 
 class CollectorImpactViewController: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet weak var mealsDeliveredTitleLabel: UILabel! // العنوان الرئيسي (مثلاً: 480 Meals Delivered)
+    @IBOutlet weak var mealsDeliveredTitleLabel: UILabel!
     @IBOutlet weak var monthlyProgressBar: UIProgressView!
     @IBOutlet weak var progressPercentageLabel: UILabel!
     
-    @IBOutlet weak var donationsCollectedCountLabel: UILabel! // المربع 1: Donations Collected
-    @IBOutlet weak var familiesSupportedCountLabel: UILabel!  // المربع 2: Families Supported
-    @IBOutlet weak var activeCasesCountLabel: UILabel!        // المربع 3: Active Cases
-    @IBOutlet weak var peopleReachedCountLabel: UILabel!      // المربع 4: People Reached
+    @IBOutlet weak var donationsCollectedCountLabel: UILabel!
+    @IBOutlet weak var familiesSupportedCountLabel: UILabel!
+    @IBOutlet weak var activeCasesCountLabel: UILabel!
+    @IBOutlet weak var peopleReachedCountLabel: UILabel!
     
-    @IBOutlet weak var chartStackView: UIStackView! // الجارت الخاص بـ Pickups
-    
+    @IBOutlet weak var areaChartContainer: UIView!
     // MARK: - Properties
-    let monthlyGoal: Int = 600 // الهدف الشهري للتوصيل بناءً على التصميم (70% من 600 تقريباً 420-480)
+    let monthlyGoal: Int = 600
     private let db = Firestore.firestore()
+    private var donationsListener: ListenerRegistration?
+    private var casesListener: ListenerRegistration?
     
-    // بيانات الرسم البياني لعمليات الاستلام (Pickups)
-    var weeklyPickupData: [CGFloat] = [10, 25, 23, 15, 30, 18, 22]
+    var weeklyPickupData: [CGFloat] = [0, 0, 0, 0, 0, 0, 0]
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // عرض البيانات الوهمية حالياً للتأكد من الشكل
-        showCollectorMockData()
+        fetchCollectorImpactData()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // رسم الجارت بناءً على البيانات
-        setupWeeklyPickupsChart()
+        setupAreaChart()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        donationsListener?.remove()
+        casesListener?.remove()
     }
 }
 
-// MARK: - UI & Mock Data Logic
+// MARK: - Firebase Logic
 extension CollectorImpactViewController {
     
-    private func showCollectorMockData() {
-        let mockData: [String: Any] = [
-            "mealsDelivered": 480,
-            "donationsCollected": 64,
-            "familiesSupported": 38,
-            "activeCases": 6,
-            "peopleReached": 28,
-            "weeklyPickups": [10, 25, 23, 15, 30, 18, 22]
-        ]
-        updateCollectorUI(with: mockData)
-    }
-
-    private func updateCollectorUI(with data: [String: Any]) {
-        let delivered = data["mealsDelivered"] as? Int ?? 0
+    private func fetchCollectorImpactData() {
+        guard let currentNgoID = Auth.auth().currentUser?.uid else { return }
         
-        // تحديث النصوص حسب التصميم الجديد
-        self.mealsDeliveredTitleLabel.text = "\(delivered)"
-        self.donationsCollectedCountLabel.text = "\(data["donationsCollected"] as? Int ?? 0)"
-        self.familiesSupportedCountLabel.text = "\(data["familiesSupported"] as? Int ?? 0)"
-        self.activeCasesCountLabel.text = "\(data["activeCases"] as? Int ?? 0)"
-        self.peopleReachedCountLabel.text = "\(data["peopleReached"] as? Int ?? 0)"
-        
-        // تحديث شريط التقدم والنسبة المئوية
-        let progress = Float(delivered) / Float(monthlyGoal)
-        self.monthlyProgressBar.setProgress(progress, animated: true)
-        self.progressPercentageLabel.text = "\(Int(progress * 100))%"
-        
-        // تلوين الشريط بالأخضر إذا اكتمل الهدف
-        if progress >= 1.0 {
-            self.monthlyProgressBar.progressTintColor = .systemGreen
-        }
-    }
-}
-
-// MARK: - Chart Logic (Pickups Activity)
-extension CollectorImpactViewController {
-    
-    private func setupWeeklyPickupsChart() {
-        // تنظيف الجارت قبل الرسم
-        chartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        chartStackView.axis = .horizontal
-        chartStackView.distribution = .fillEqually
-        chartStackView.alignment = .bottom
-        chartStackView.spacing = 8
-        
-        // تحديد المقياس الأعلى للرسم
-        guard let maxPickups = weeklyPickupData.max(), maxPickups > 0 else { return }
-        
-        for value in weeklyPickupData {
-            let bar = UIView()
-            bar.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.7)
-            bar.layer.cornerRadius = 4
-            
-            chartStackView.addArrangedSubview(bar)
-            bar.translatesAutoresizingMaskIntoConstraints = false
-            
-            // حساب الارتفاع النسبي
-            let heightMultiplier = value / maxPickups
-            bar.heightAnchor.constraint(equalTo: chartStackView.heightAnchor, multiplier: heightMultiplier).isActive = true
-            
-            // انيميشن الظهور
-            bar.alpha = 0
-            UIView.animate(withDuration: 0.6) {
-                bar.alpha = 1
+        // 1. Fetch Active Cases from 'ngoCases'
+        casesListener = db.collection("ngoCases")
+            .whereField("ngoID", isEqualTo: currentNgoID)
+            .addSnapshotListener { [weak self] snapshot, _ in
+                let casesCount = snapshot?.documents.count ?? 0
+                DispatchQueue.main.async {
+                    self?.activeCasesCountLabel.text = "\(casesCount)"
+                }
             }
+        
+        // 2. Fetch Donations and Calculate Stats
+        donationsListener = db.collection("donations")
+            .whereField("ngoID", isEqualTo: currentNgoID)
+            .whereField("status", in: ["accepted", "collected", "completed"])
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self, let documents = snapshot?.documents else { return }
+                
+                let donations = documents.compactMap { Donation(doc: $0) }
+                
+                let totalMeals = donations.reduce(0) { $0 + $1.quantity }
+                let donationsCount = donations.count
+                
+                self.updateWeeklyChartData(from: donations)
+                
+                DispatchQueue.main.async {
+                    // Pass calculations: 1 donation = 1 family / 1 person reached
+                    self.updateUI(meals: totalMeals, donations: donationsCount, families: donationsCount, people: donationsCount)
+                }
+            }
+    }
+    
+    private func updateUI(meals: Int, donations: Int, families: Int, people: Int) {
+        // Display ONLY the number in the header
+        self.mealsDeliveredTitleLabel.text = "\(meals)"
+        
+        self.donationsCollectedCountLabel.text = "\(donations)"
+        self.familiesSupportedCountLabel.text = "\(families)"
+        self.peopleReachedCountLabel.text = "\(people)"
+        
+        // Capping progress at 100%
+        let rawProgress = Float(meals) / Float(monthlyGoal)
+        let finalProgress = min(rawProgress, 1.0)
+        
+        self.monthlyProgressBar.setProgress(finalProgress, animated: true)
+        self.progressPercentageLabel.text = "\(Int(finalProgress * 100))%"
+        
+        self.setupAreaChart()
+    }
+    
+    private func updateWeeklyChartData(from donations: [Donation]) {
+        let calendar = Calendar.current
+        var weeklyCounts: [CGFloat] = [0, 0, 0, 0, 0, 0, 0]
+        for i in 0..<7 {
+            if let date = calendar.date(byAdding: .day, value: -i, to: Date()) {
+                let dailyCount = donations.filter { calendar.isDate($0.createdAt, inSameDayAs: date) }.count
+                weeklyCounts[6 - i] = CGFloat(dailyCount)
+            }
+        }
+        self.weeklyPickupData = weeklyCounts
+    }
+}
+
+// MARK: - Area Chart Drawing
+extension CollectorImpactViewController {
+    
+    private func setupAreaChart() {
+        areaChartContainer.layer.sublayers?.forEach { if $0 is CAShapeLayer || $0 is CAGradientLayer { $0.removeFromSuperlayer() } }
+        
+        guard weeklyPickupData.count > 0 else { return }
+        
+        let path = UIBezierPath()
+        let width = areaChartContainer.bounds.width
+        let height = areaChartContainer.bounds.height
+        let maxVal = (weeklyPickupData.max() ?? 10) == 0 ? 10 : weeklyPickupData.max()!
+        
+        let columnXPoint = { (column: Int) -> CGFloat in
+            let spacing = width / CGFloat(self.weeklyPickupData.count - 1)
+            return CGFloat(column) * spacing
+        }
+        let columnYPoint = { (value: CGFloat) -> CGFloat in
+            return height - (value / maxVal * height)
+        }
+
+        path.move(to: CGPoint(x: columnXPoint(0), y: columnYPoint(weeklyPickupData[0])))
+        for i in 1..<weeklyPickupData.count {
+            path.addLine(to: CGPoint(x: columnXPoint(i), y: columnYPoint(weeklyPickupData[i])))
+        }
+
+        // Gradient Background
+        let fillPath = UIBezierPath(cgPath: path.cgPath)
+        fillPath.addLine(to: CGPoint(x: width, y: height))
+        fillPath.addLine(to: CGPoint(x: 0, y: height))
+        fillPath.close()
+
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = areaChartContainer.bounds
+        gradientLayer.colors = [UIColor.systemGreen.withAlphaComponent(0.4).cgColor, UIColor.clear.cgColor]
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = fillPath.cgPath
+        gradientLayer.mask = maskLayer
+        areaChartContainer.layer.addSublayer(gradientLayer)
+
+        // Main Line
+        let lineLayer = CAShapeLayer()
+        lineLayer.path = path.cgPath
+        lineLayer.strokeColor = UIColor.systemGreen.cgColor
+        lineLayer.fillColor = UIColor.clear.cgColor
+        lineLayer.lineWidth = 3
+        areaChartContainer.layer.addSublayer(lineLayer)
+
+        // Data Points (Dots)
+        for i in 0..<weeklyPickupData.count {
+            let point = CGPoint(x: columnXPoint(i), y: columnYPoint(weeklyPickupData[i]))
+            let dotPath = UIBezierPath(arcCenter: point, radius: 4, startAngle: 0, endAngle: .pi * 2, clockwise: true)
+            let dotLayer = CAShapeLayer()
+            dotLayer.path = dotPath.cgPath
+            dotLayer.fillColor = UIColor.black.cgColor
+            areaChartContainer.layer.addSublayer(dotLayer)
         }
     }
 }

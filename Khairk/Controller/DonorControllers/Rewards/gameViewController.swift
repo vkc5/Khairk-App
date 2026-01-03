@@ -5,6 +5,8 @@
 //  Created by Yousif Qassim on 28/12/2025.
 //
 import UIKit
+import FirebaseFirestore
+import FirebaseAuth
 
 class gameViewController: UIViewController {
     
@@ -18,115 +20,146 @@ class gameViewController: UIViewController {
     @IBOutlet weak var SpinButton: UIButton!
     
     // MARK: - Properties
-    static var shouldLevelUp = false
-    var currentLevel = 1
-    var currentXP = 100 // لغرض الاختبار ممتلئ
-    let maxXP = 100
-    let customGreen = UIColor(red: 7/255, green: 119/255, blue: 52/255, alpha: 1.0)
+    private let db = Firestore.firestore()
+    private let xpPerDonation = 25
+    private let maxXP = 100
+    private let usedSpinsKey = "UserUsedSpinsCount"
+    private let customGreen = UIColor(red: 7/255, green: 119/255, blue: 52/255, alpha: 1.0)
     
+    private var currentLevel = 1
+    private var currentXP = 0
+    
+    static var shouldLevelUp = false
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // 1. إعداد الواجهة الأساسية
-        setupUI()
-        
-        // 2. إضافة "مراقب لمس" يدوي كحل لمشكلة حجب الطبقات
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(forceInfoTap))
-        InfoButton.addGestureRecognizer(tapGesture)
-        
-        // 3. الاستماع لإشعار زيادة المستوى عند العودة من العجلة
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLevelUp), name: NSNotification.Name("UserLeveledUp"), object: nil)
+        setupInitialUI()
+        startFirebaseObservation()
+        setupNotifications() // استدعاء دالة الإشعارات واللمس
     }
     
-    @objc func forceInfoTap() {
-        print("✅ تم رصد اللمسة عن طريق الـ Gesture Recognizer")
-        openInfoPage()
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         
-        // التحقق من حالة الترقية فور ظهور الشاشة
         if gameViewController.shouldLevelUp {
-            executeLevelUp()
-            gameViewController.shouldLevelUp = false
-        } else {
             updateUI()
+            gameViewController.shouldLevelUp = false
         }
     }
+}
+
+// MARK: - Firebase Logic
+extension gameViewController {
+    private func startFirebaseObservation() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection("donations")
+            .whereField("donorId", isEqualTo: uid)
+            .whereField("status", in: ["accepted", "approved", "collected"])
+            .addSnapshotListener { [weak self] (querySnapshot, error) in
+                guard let self = self, let documents = querySnapshot?.documents else { return }
+                self.calculateGameProgress(totalDonations: documents.count)
+            }
+    }
     
-    func setupUI() {
-        SpinButton.layer.cornerRadius = 20
+    private func calculateGameProgress(totalDonations: Int) {
+        let rawTotalXP = totalDonations * xpPerDonation
+        let usedSpins = UserDefaults.standard.integer(forKey: usedSpinsKey)
         
-        // تعطيل التفاعل مع الصور لضمان وصول اللمس للأزرار خلفها
-        seedImage.isUserInteractionEnabled = false
-        sproutImage.isUserInteractionEnabled = false
-        treeImage.isUserInteractionEnabled = false
+        // المستوى: يعتمد على إجمالي التبرعات ولا ينقص
+        self.currentLevel = (rawTotalXP / maxXP) + 1
         
-        // التأكد من أن الزر مفعّل
-        InfoButton.isUserInteractionEnabled = true
+        // النقاط المتبقية: هي التي تُخصم بعد السبين
+        let totalSpentXP = usedSpins * maxXP
+        self.currentXP = max(0, rawTotalXP - totalSpentXP)
         
-        // إحضار الأزرار للأمام (فوق الصور)
-        self.view.bringSubviewToFront(InfoButton)
-        self.view.bringSubviewToFront(SpinButton)
-        
-        updateUI()
-    }
-
-    // الدالة الأصلية للأكشن المربوط بالزر
-    @IBAction func infoButtonTapped(_ sender: UIButton) {
-        openInfoPage()
-    }
-
-    func openInfoPage() {
-        // تم إصلاح القوس المفقود هنا
-        if let infoVC = storyboard?.instantiateViewController(withIdentifier: "InfoVC") as? InfoViewController {
-            infoVC.modalPresentationStyle = .overFullScreen
-            infoVC.modalTransitionStyle = .crossDissolve
-            self.present(infoVC, animated: true, completion: nil)
-        } else {
-            print("❌ خطأ: لم يتم العثور على Storyboard ID باسم InfoVC")
+        DispatchQueue.main.async {
+            self.updateUI()
         }
     }
+}
 
-    @objc func handleLevelUp() {
-        gameViewController.shouldLevelUp = true
-    }
-    
-    func executeLevelUp() {
-        currentLevel += 1
-        currentXP = 0
-        updateUI()
-        print("🎉 مبروك! انتقلت للمستوى التالي: \(currentLevel)")
-    }
-    
-    func updateUI() {
-        // تحديث النصوص والبار
+// MARK: - UI Management
+extension gameViewController {
+    private func updateUI() {
         statusLabel.text = "Level \(currentLevel)  \(currentXP)/\(maxXP) EXP"
         let progress = Float(currentXP) / Float(maxXP)
         xpProgressBar.setProgress(progress, animated: true)
         
-        // منطق إخفاء وإظهار الصور
-        seedImage.isHidden = (currentLevel != 1)
-        sproutImage.isHidden = !(currentLevel >= 2 && currentLevel < 5)
-        treeImage.isHidden = (currentLevel < 5)
+        updatePlantEvolution()
+        toggleSpinButton(enabled: currentXP >= maxXP)
         
-        // التأكد من بقاء زر المعلومات في المقدمة في كل تحديث
         self.view.bringSubviewToFront(InfoButton)
-        
-        // منطق زر السبين
-        if currentXP >= maxXP {
-            SpinButton.isEnabled = true
+        self.view.bringSubviewToFront(SpinButton)
+    }
+    
+    private func updatePlantEvolution() {
+        seedImage.isHidden = (currentLevel != 1)
+        sproutImage.isHidden = !(currentLevel >= 2 && currentLevel < 4)
+        treeImage.isHidden = (currentLevel < 4)
+    }
+    
+    private func toggleSpinButton(enabled: Bool) {
+        SpinButton.isEnabled = enabled
+        if enabled {
             SpinButton.backgroundColor = customGreen
-            SpinButton.setTitle("Spin the wheel", for: .normal)
+            startPulseAnimation()
         } else {
-            SpinButton.isEnabled = false
             SpinButton.backgroundColor = customGreen.withAlphaComponent(0.2)
-            SpinButton.setTitle("Donate more to spin", for: .normal)
+            stopPulseAnimation()
         }
     }
+}
 
+// MARK: - Actions & Notifications
+extension gameViewController {
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLevelUpNotification), name: NSNotification.Name("UserLeveledUp"), object: nil)
+        
+        // تم إصلاح الخطأ هنا: تعريف tapGesture بشكل صحيح
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(forceInfoTap))
+        InfoButton.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func handleLevelUpNotification() {
+        let currentSpins = UserDefaults.standard.integer(forKey: usedSpinsKey)
+        UserDefaults.standard.set(currentSpins + 1, forKey: usedSpinsKey)
+        
+        gameViewController.shouldLevelUp = true
+        updateUI()
+    }
+    
     @IBAction func SpinButtonPressed(_ sender: UIButton) {
         self.performSegue(withIdentifier: "goToWheel", sender: nil)
+    }
+    
+    @objc private func forceInfoTap() {
+        if let infoVC = storyboard?.instantiateViewController(withIdentifier: "InfoVC") {
+            infoVC.modalPresentationStyle = .overFullScreen
+            self.present(infoVC, animated: true)
+        }
+    }
+}
+
+// MARK: - Setup & Animations
+extension gameViewController {
+    private func setupInitialUI() {
+        SpinButton.layer.cornerRadius = 20
+        [seedImage, sproutImage, treeImage].forEach { $0?.isUserInteractionEnabled = false }
+    }
+    
+    private func startPulseAnimation() {
+        if SpinButton.layer.animation(forKey: "pulse") == nil {
+            let pulse = CABasicAnimation(keyPath: "transform.scale")
+            pulse.duration = 0.6; pulse.fromValue = 1.0; pulse.toValue = 1.08
+            pulse.autoreverses = true; pulse.repeatCount = .infinity
+            SpinButton.layer.add(pulse, forKey: "pulse")
+        }
+    }
+    
+    private func stopPulseAnimation() {
+        SpinButton.layer.removeAnimation(forKey: "pulse")
     }
 }
