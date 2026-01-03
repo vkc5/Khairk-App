@@ -315,6 +315,8 @@ final class NgoCaseCardCell: UITableViewCell {
     private let progressView = UIProgressView(progressViewStyle: .default)
     private let progressLabel = UILabel()
     private let metaLabel = UILabel()
+    private var imageTask: URLSessionDataTask?
+    private var currentImageURL: String?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -348,6 +350,27 @@ final class NgoCaseCardCell: UITableViewCell {
 
         metaLabel.text = "Raised \(Int(progress * 100))%  •  Days left \(max(daysLeft, 0))"
 
+        imageTask?.cancel()
+        currentImageURL = item.imageURL
+        caseImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
+
+        if let urlString = item.imageURL, !urlString.isEmpty, let url = URL(string: urlString) {
+            imageTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+                guard let self = self, let data = data else { return }
+                if self.currentImageURL != urlString { return }
+                DispatchQueue.main.async {
+                    self.caseImageView.image = UIImage(data: data)
+                }
+            }
+            imageTask?.resume()
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageTask?.cancel()
+        imageTask = nil
+        currentImageURL = nil
         caseImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
     }
 

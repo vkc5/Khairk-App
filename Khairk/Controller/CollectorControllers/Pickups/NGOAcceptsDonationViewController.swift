@@ -209,6 +209,8 @@ final class NGODonationRequestCell: UITableViewCell {
     private let subtitleLabel = UILabel()
     private let donorLabel = UILabel()
     private let statusLabel = UILabel()
+    private var imageTask: URLSessionDataTask?
+    private var currentImageURL: String?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -230,7 +232,21 @@ final class NGODonationRequestCell: UITableViewCell {
         titleLabel.text = foodTitle
         subtitleLabel.text = "\(donation.quantity) items"
         donorLabel.text = donation.donorName
+
+        imageTask?.cancel()
+        currentImageURL = donation.imageURL
         pickupImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
+
+        if !donation.imageURL.isEmpty, let url = URL(string: donation.imageURL) {
+            imageTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+                guard let self = self, let data = data else { return }
+                if self.currentImageURL != donation.imageURL { return }
+                DispatchQueue.main.async {
+                    self.pickupImageView.image = UIImage(data: data)
+                }
+            }
+            imageTask?.resume()
+        }
 
         let status = donation.status.lowercased()
         let statusColor: UIColor
@@ -247,6 +263,14 @@ final class NGODonationRequestCell: UITableViewCell {
         statusLabel.text = donation.status.capitalized
         statusLabel.textColor = statusColor
         statusLabel.backgroundColor = statusColor.withAlphaComponent(0.12)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageTask?.cancel()
+        imageTask = nil
+        currentImageURL = nil
+        pickupImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
     }
 
     private func setupCard() {

@@ -1,4 +1,5 @@
 import UIKit
+import PhotosUI
 import FirebaseFirestore
 
 final class CreateCaseViewController: UIViewController {
@@ -19,12 +20,25 @@ final class CreateCaseViewController: UIViewController {
     private let descriptionTextView = UITextView()
     private let confirmButton = UIButton(type: .system)
 
+    private var selectedImage: UIImage? {
+        didSet {
+            updateUploadButtonAppearance()
+        }
+    }
+    private var uploadedImageURL: String?
+    private var isUploading = false {
+        didSet {
+            updateUploadState()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "New Case"
         view.backgroundColor = .systemBackground
 
         setupLayout()
+        updateUploadState()
     }
 
     private func setupLayout() {
@@ -113,6 +127,9 @@ final class CreateCaseViewController: UIViewController {
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         uploadButton.backgroundColor = UIColor.systemGray6
         uploadButton.layer.cornerRadius = 14
+        uploadButton.clipsToBounds = true
+        uploadButton.contentHorizontalAlignment = .center
+        uploadButton.contentVerticalAlignment = .center
         uploadButton.heightAnchor.constraint(equalToConstant: 90).isActive = true
         uploadButton.addTarget(self, action: #selector(uploadTapped), for: .touchUpInside)
     }
@@ -134,7 +151,53 @@ final class CreateCaseViewController: UIViewController {
     }
 
     @objc private func uploadTapped() {
-        showAlert(title: "Upload Image", message: "Image upload is not wired yet.")
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = 1
+
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+
+    private func updateUploadButtonAppearance() {
+        if let image = selectedImage {
+            uploadButton.setTitle("", for: .normal)
+            uploadButton.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+            uploadButton.contentHorizontalAlignment = .fill
+            uploadButton.contentVerticalAlignment = .fill
+            uploadButton.imageView?.contentMode = .scaleAspectFill
+        } else {
+            uploadButton.setImage(nil, for: .normal)
+            uploadButton.setTitle("Upload Image", for: .normal)
+            uploadButton.contentHorizontalAlignment = .center
+            uploadButton.contentVerticalAlignment = .center
+        }
+    }
+
+    private func updateUploadState() {
+        let enabled = !isUploading
+        uploadButton.isEnabled = enabled
+        confirmButton.isEnabled = enabled
+        uploadButton.alpha = enabled ? 1.0 : 0.6
+        confirmButton.alpha = enabled ? 1.0 : 0.6
+    }
+
+    private func uploadImage(_ image: UIImage) {
+        isUploading = true
+        CloudinaryService.shared.uploadImage(image) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.isUploading = false
+                switch result {
+                case .success(let url):
+                    self.uploadedImageURL = url
+                case .failure(let error):
+                    self.uploadedImageURL = nil
+                    self.showAlert(title: "Upload Failed", message: error.localizedDescription)
+                }
+            }
+        }
     }
 
     private func fetchNgoName(ngoId: String, completion: @escaping (Result<String, Error>) -> Void) {
@@ -185,6 +248,11 @@ final class CreateCaseViewController: UIViewController {
             return
         }
 
+        if isUploading {
+            showAlert(title: "Uploading", message: "Please wait for the image upload to finish.")
+            return
+        }
+
         NGOContext.shared.getNgoId { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -206,7 +274,7 @@ final class CreateCaseViewController: UIViewController {
                             startDate: startDate,
                             endDate: endDate,
                             details: descriptionText,
-                            imageURL: nil,
+                            imageURL: uploadedImageURL,
                             status: "active",
                             ngoId: ngoId,
                             ngoName: ngoName
@@ -241,5 +309,25 @@ final class CreateCaseViewController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+}
+
+extension CreateCaseViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+
+        guard let provider = results.first?.itemProvider,
+              provider.canLoadObject(ofClass: UIImage.self) else {
+            return
+        }
+
+        provider.loadObject(ofClass: UIImage.self) { [weak self] object, _ in
+            guard let self = self, let image = object as? UIImage else { return }
+            DispatchQueue.main.async {
+                self.selectedImage = image
+                self.uploadedImageURL = nil
+                self.uploadImage(image)
+            }
+        }
     }
 }
