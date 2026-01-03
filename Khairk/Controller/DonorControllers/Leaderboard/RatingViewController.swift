@@ -1,4 +1,6 @@
 import UIKit
+import FirebaseFirestore
+import FirebaseAuth
 
 final class RatingViewController: UIViewController, UITextViewDelegate {
 
@@ -6,11 +8,12 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var starsStack: UIStackView!
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var submitButton: UIButton!
-    
-    var ngoId: String?
-    var caseId: String?
-    var donorId: String?
-    var donationId: String?
+
+    // MARK: - Flow Data (لازم يجي من الصفحة اللي قبل)
+    var ngoId: String!   // ✅ لازم تمريرها قبل العرض
+
+    // MARK: - Firebase
+    private let db = Firestore.firestore()
 
     // MARK: - Properties
     private let atayaYellow = UIColor(
@@ -21,26 +24,26 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
     )
 
     private let placeholderText = "Enter your feedback..."
-
     private var starButtons: [UIButton] = []
 
     private var selectedRating: Int = 0 {
-        didSet {
-            updateSubmitState()
-        }
+        didSet { updateSubmitState() }
     }
+    // MARK: - Optional Context (coming from ConfirmPickup)
+    var caseId: String?
+    var donationId: String?
+    var donorId: String?
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Rate Your Experience"
-        print("Rating got ngoId=\(ngoId ?? "nil"), caseId=\(caseId ?? "nil"), donationId=\(donationId ?? "nil")")
+
         buildStars(count: 5)
         setupTextView()
         setupSubmitButton()
         applyPlaceholderIfNeeded()
         updateStars()
-        updateSubmitState() // submit disabled at start
+        updateSubmitState()
     }
 
     // MARK: - Build Stars
@@ -92,9 +95,7 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
             usingSpringWithDamping: 0.5,
             initialSpringVelocity: 1,
             options: [.allowUserInteraction],
-            animations: {
-                button.transform = .identity
-            }
+            animations: { button.transform = .identity }
         )
     }
 
@@ -115,12 +116,7 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
         commentTextView.layer.cornerRadius = 12
         commentTextView.layer.borderWidth = 1
         commentTextView.layer.borderColor = UIColor.systemGray4.cgColor
-        commentTextView.textContainerInset = UIEdgeInsets(
-            top: 12,
-            left: 12,
-            bottom: 12,
-            right: 12
-        )
+        commentTextView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
     }
 
     private func applyPlaceholderIfNeeded() {
@@ -144,22 +140,89 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
     // MARK: - Submit Action
     @IBAction func submitTapped(_ sender: UIButton) {
         guard selectedRating > 0 else { return }
+        guard let ngoId = ngoId, !ngoId.isEmpty else {
+            showAlert(title: "Error", message: "Missing NGO ID.")
+            return
+        }
+        guard let userId = Auth.auth().currentUser?.uid else {
+            showAlert(title: "Login Required", message: "Please login first.")
+            return
+        }
 
-        let comment =
-        (commentTextView.text == placeholderText) ? "" : commentTextView.text
+        // ✅ نظّف التعليق
+        let raw = commentTextView.text ?? ""
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        let comment = (trimmed == placeholderText) ? "" : trimmed
 
-        let message = """
-        Thank you for your feedback!
-        Rating: \(selectedRating)/5
+        submitButton.isEnabled = false
+        submitButton.alpha = 0.5
 
-        Your review matters 💛
-        """
+        saveRatingAndUpdateAvg(ngoId: ngoId, userId: userId, rating: selectedRating, comment: comment)
+    }
 
-        showAlert(title: "Thank You", message: message)
+    // MARK: - Firebase Save + Update Average (Transaction)
+    private func saveRatingAndUpdateAvg(ngoId: String, userId: String, rating: Int, comment: String) {
 
-        // 🔜 لاحقاً:
-        // Save rating + comment to Firebase
-        // Navigate to another page
+        // collections
+        let ratingsRef = db.collection("ngo_ratings").document()     // autoId rating doc
+        let statsRef   = db.collection("ngo_stats").document(ngoId) // one doc per NGO
+
+        db.runTransaction({ transaction, errorPointer -> Any? in
+
+            // 1) read stats
+            let statsSnap: DocumentSnapshot
+            do {
+                statsSnap = try transaction.getDocument(statsRef)
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+
+            let currentCount = statsSnap.data()?["ratingCount"] as? Int ?? 0
+            let currentSum   = statsSnap.data()?["ratingSum"] as? Int ?? 0
+
+            let newCount = currentCount + 1
+            let newSum   = currentSum + rating
+            let newAvg   = Double(newSum) / Double(newCount)
+
+            // 2) write rating document
+            transaction.setData([
+                "ngoId": ngoId,
+                "userId": userId,
+                "rating": rating,
+                "comment": comment,
+                "createdAt": FieldValue.serverTimestamp()
+            ], forDocument: ratingsRef)
+
+            // 3) update stats document
+            transaction.setData([
+                "ratingCount": newCount,
+                "ratingSum": newSum,
+                "ratingAvg": newAvg,
+                "updatedAt": FieldValue.serverTimestamp()
+            ], forDocument: statsRef, merge: true)
+
+            return nil
+
+        }, completion: { [weak self] _, error in
+            guard let self = self else { return }
+
+            self.submitButton.isEnabled = true
+            self.submitButton.alpha = 1.0
+
+            if let error = error {
+                self.showAlert(title: "Failed", message: "Could not submit rating.\n\(error.localizedDescription)")
+                return
+            }
+
+            let message = """
+            Thank you for your feedback!
+            Rating: \(self.selectedRating)/5
+
+            Your review matters 💛
+            """
+            self.showAlert(title: "Thank You", message: message)
+        })
     }
 
     // MARK: - Alert

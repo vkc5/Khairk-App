@@ -30,33 +30,46 @@ final class NGOCardCell: UICollectionViewCell {
         ngoImageView.clipsToBounds = true
         ngoImageView.contentMode = .scaleToFill
     }
-
-
     func configure(with ngo: CollectorNGO) {
+
+        // 🔴 مهم جدًا: تصفير الحالة (عشان reuse)
+        verifiedIcon.isHidden = true
+        trustedLabel.isHidden = true
+
         nameLabel.text = ngo.name
 
-        let status = ngo.applicationStatus.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let status = ngo.applicationStatus
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
 
-        // ✅ verified icon يطلع بس للـ approved
-        verifiedIcon.isHidden = (status != "approved")
+        // ✅ verified + trusted فقط للـ approved
+        if status == "approved" {
+            verifiedIcon.isHidden = false
+            trustedLabel.isHidden = false
+            trustedLabel.text = "Trusted Partner"
+        }
 
-        // ✅ trusted label
-        trustedLabel.text = "Trusted Partner"
-        trustedLabel.isHidden = (status != "approved")
-
-        // ✅ status label + لون حسب الحالة
+        // ✅ ratingLabel حسب الحالة
         switch status {
         case "approved":
-            ratingLabel.text = "Approved"
-            ratingLabel.textColor = .systemGreen
+            if ngo.ratingCount > 0 {
+                ratingLabel.text = String(format: "⭐ %.1f (%d)", ngo.ratingAvg, ngo.ratingCount)
+                ratingLabel.textColor = .label
+            } else {
+                ratingLabel.text = "No ratings yet"
+                ratingLabel.textColor = .secondaryLabel
+            }
+
         case "pending":
             ratingLabel.text = "Pending"
             ratingLabel.textColor = .systemOrange
+
         case "rejected":
             ratingLabel.text = "Rejected"
             ratingLabel.textColor = .systemRed
+
         default:
-            ratingLabel.text = ngo.applicationStatus.isEmpty ? "—" : ngo.applicationStatus
+            ratingLabel.text = "—"
             ratingLabel.textColor = .secondaryLabel
         }
 
@@ -65,6 +78,9 @@ final class NGOCardCell: UICollectionViewCell {
         let urlString = !ngo.profileImageUrl.isEmpty ? ngo.profileImageUrl : ngo.logoUrl
         loadImage(from: urlString)
     }
+
+    
+    
 
     private func loadImage(from urlString: String) {
         ngoImageView.image = UIImage(named: "placeholder")
