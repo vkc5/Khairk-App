@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -36,7 +36,7 @@
                 <navigationController id="O9L-xI-MQj" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" id="LWp-uc-Or2"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="UXV-qM-Zcl">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -53,7 +53,7 @@
                 <navigationController id="XGe-Q0-tlB" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="NGO Verify" image="pencil.and.list.clipboard" catalog="system" id="EYC-zQ-psX"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8Ck-AF-t5W">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -70,7 +70,7 @@
                 <navigationController id="uwD-a2-Njd" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Khair" image="chart.pie" catalog="system" id="n6P-TZ-c0c"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dyo-kI-6Pa">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -87,7 +87,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Icv-pD-UN5" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="oBx-Kh-m85"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="H5g-L8-yuA">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -552,6 +552,7 @@
                     <navigationItem key="navigationItem" id="uKp-Xf-CFD"/>
                     <connections>
                         <outlet property="ManageDonation" destination="pxo-ED-YNl" id="odI-sN-grO"/>
+                        <outlet property="NotificationsBtn" destination="CWq-9O-ODj" id="qfq-Uc-bzU"/>
                         <outlet property="UserAccount" destination="Cpy-wB-WbM" id="tkl-kl-vVy"/>
                         <outlet property="goodnessView" destination="jM6-Eu-n9U" id="OWS-FC-cXF"/>
                         <outlet property="impactRowView" destination="S0r-NQ-yjp" id="MhI-Cd-hZ7"/>
@@ -575,7 +576,7 @@
         <image name="bell" catalog="system" width="125" height="128"/>
         <image name="chart.pie" catalog="system" width="128" height="123"/>
         <image name="checkmark.seal.fill" catalog="system" width="128" height="124"/>
-        <image name="ellipsis.message" catalog="system" width="128" height="106"/>
+        <image name="ellipsis.message" catalog="system" width="128" height="116"/>
         <image name="gift" catalog="system" width="128" height="125"/>
         <image name="house.circle" catalog="system" width="128" height="123"/>
         <image name="pencil.and.list.clipboard" catalog="system" width="114" height="128"/>
