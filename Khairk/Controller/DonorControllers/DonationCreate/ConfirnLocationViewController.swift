@@ -19,7 +19,8 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
     var descriptionText: String = ""
     var expiryDate: Date = Date()
     var selectedImage: UIImage?
-    
+    private var createdDonationId: String?
+
     // ✅ ADD HERE
     var donorId: String?
     var caseId: String?
@@ -88,6 +89,13 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
             return
         }
         
+        guard let caseId = self.caseId, !caseId.isEmpty,
+              let ngoId = self.ngoId, !ngoId.isEmpty else {
+            showAlert(title: "Missing IDs", message: "caseId / ngoId not found. Go back and select a case again.")
+            return
+        }
+
+        
         // Ensure we have a valid donor ID for linking
         guard let uid = Auth.auth().currentUser?.uid else {
             showAlert(title: "Error", message: "Missing logged-in user.")
@@ -109,8 +117,8 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
                     DonationService.shared.createDonation(
                         
                         donorId: uid,              // ✅ REQUIRED
-                        caseId: self.caseId,       // ✅ Optional
-                        ngoId: self.ngoId,         // ✅ Optional
+                        caseId: caseId,       // ✅ REQUIRED
+                        ngoId: ngoId,         // ✅ REQUIRED
                         
                         foodName: self.foodName,
                         quantity: self.quantity,
@@ -128,7 +136,7 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
                         DispatchQueue.main.async {
                             switch saveResult {
                             case .success(let donationId):
-                                print("Saved donation:", donationId)
+                                self.createdDonationId = donationId
                                 self.showAlert(
                                     title: "Thank you for Donating!",
                                     message: "Your delivery location and image have been submitted successfully."
@@ -260,6 +268,21 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
         alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in onOK?() })
         present(alert, animated: true)
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toRating" {
+            let dest = segue.destination
+            let ratingVC = (dest as? RatingViewController)
+                ?? (dest as? UINavigationController)?.topViewController as? RatingViewController
+
+            guard let vc = ratingVC else { return }
+
+            vc.ngoId = self.ngoId
+            vc.caseId = self.caseId
+            vc.donorId = Auth.auth().currentUser?.uid
+            vc.donationId = self.createdDonationId
+        }
+    }
+
 }
 
 extension ConfirmLocationViewController: UIPickerViewDataSource, UIPickerViewDelegate {

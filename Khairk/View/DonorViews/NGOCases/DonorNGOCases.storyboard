@@ -255,6 +255,9 @@
                                         <buttonConfiguration key="configuration" style="plain" title="Donate Now">
                                             <color key="baseForegroundColor" red="0.94901353119999998" green="0.94901353119999998" blue="0.94901353119999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="donateNowTapped:" destination="TWV-Hl-J64" eventType="touchUpInside" id="q8S-Df-csW"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>

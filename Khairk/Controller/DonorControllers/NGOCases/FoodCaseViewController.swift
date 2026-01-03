@@ -117,4 +117,22 @@ class FoodCaseViewController: UIViewController {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
     }
+    
+    @IBAction func donateNowTapped(_ sender: UIButton) {
+        guard let item = selectedCase else {
+            print("❌ selectedCase is nil")
+            return
+        }
+
+        let sb = UIStoryboard(name: "DonationCreate", bundle: nil)
+        let formVC = sb.instantiateViewController(withIdentifier: "DonationFormViewController") as! DonationFormViewController
+
+        // ✅ PASS IDs
+        formVC.caseId = item.id
+        formVC.ngoId  = item.ngoId
+
+        navigationController?.pushViewController(formVC, animated: true)
+        // or present(formVC, animated: true) if you use modal
+    }
+
 }
