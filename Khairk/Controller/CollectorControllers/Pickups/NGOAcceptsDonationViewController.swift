@@ -234,7 +234,7 @@ final class NGODonationRequestCell: UITableViewCell {
 
         let status = donation.status.lowercased()
         let statusColor: UIColor
-        if status == "accepted" || status == "approved" {
+        if status == "accepted" {
             statusColor = .systemGreen
         } else if status == "rejected" {
             statusColor = .systemRed

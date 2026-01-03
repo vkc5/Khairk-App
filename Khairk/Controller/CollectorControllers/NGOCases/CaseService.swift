@@ -31,7 +31,6 @@ final class CaseService {
     ) -> ListenerRegistration {
         casesRef()
             .whereField("ngoID", isEqualTo: ngoId)
-            .order(by: "createdAt", descending: true)
             .addSnapshotListener { snap, err in
                 if let err = err {
                     onChange(.failure(err))
