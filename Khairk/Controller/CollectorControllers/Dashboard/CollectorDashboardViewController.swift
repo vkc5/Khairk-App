@@ -23,6 +23,7 @@ class CollectorDashboardViewController: UIViewController, UITableViewDataSource,
     @IBOutlet weak var statsView: UIView!
     @IBOutlet weak var ProfileView: UIView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var NotificationsBtn: UIImageView!
     private var cases: [NgoCase] = []
 
     // Spotlight cards (two)
@@ -56,6 +57,10 @@ class CollectorDashboardViewController: UIViewController, UITableViewDataSource,
 
         styleSpotlight(spotlightView1)
         styleSpotlight(spotlightView2)
+        
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(goToNotifications))
+        NotificationsBtn.addGestureRecognizer(tapGesture)
     }
     
     // spacing method (sections)
@@ -240,6 +245,15 @@ class CollectorDashboardViewController: UIViewController, UITableViewDataSource,
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
+    @objc func goToNotifications() {
+        let storyboard = UIStoryboard(name: "CollectorNotifications", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "CollectorNotificationsVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+
     
     
 }
