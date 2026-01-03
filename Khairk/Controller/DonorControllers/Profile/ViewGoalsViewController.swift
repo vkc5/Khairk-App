@@ -12,6 +12,10 @@ import FirebaseAuth
 class ViewGoalsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
 
     @IBOutlet weak var tableView: UITableView!
+    
+    private var donations: [DonationLite] = []
+    private var donationsListener: ListenerRegistration?
+    private var raisedByGoalId: [String: Int] = [:]
 
     private let db = Firestore.firestore()
     private var goals: [Goal] = []
@@ -26,11 +30,14 @@ class ViewGoalsViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.backgroundColor = .clear
 
         startListeningGoals()
+        startListeningDonations()   // ✅ add this
     }
 
     deinit {
         listener?.remove()
+        donationsListener?.remove()
     }
+
 
     private func startListeningGoals() {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -47,7 +54,7 @@ class ViewGoalsViewController: UIViewController, UITableViewDataSource, UITableV
                 }
 
                 self?.goals = snap?.documents.compactMap { Goal(doc: $0) } ?? []
-
+                self?.recalculateRaised()
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                 }
@@ -101,14 +108,15 @@ class ViewGoalsViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let goal = goals[indexPath.section]   // 👈 section, not row
 
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "GoalCardCell",
             for: indexPath
         ) as! GoalCardCellTableViewCell
 
-        cell.configure(goal: goal)
+        let goal = goals[indexPath.section]
+        let raised = raisedByGoalId[goal.id] ?? 0
+        cell.configure(goal: goal, raised: raised)
 
         cell.onDeleteTapped = { [weak self] in
             self?.confirmDelete(goal: goal)
@@ -116,6 +124,46 @@ class ViewGoalsViewController: UIViewController, UITableViewDataSource, UITableV
 
         cell.selectionStyle = .none
         return cell
+    }
+    
+    private func startListeningDonations() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        donationsListener = db.collection("donations")
+            .whereField("donorID", isEqualTo: uid) // ✅ use EXACT field name from Firestore (your screenshot shows donorID)
+            .addSnapshotListener { [weak self] snap, err in
+                guard let self = self else { return }
+                if let err = err {
+                    print("❌ Load donations error:", err.localizedDescription)
+                    return
+                }
+
+                self.donations = snap?.documents.compactMap { DonationLite(doc: $0) } ?? []
+                self.recalculateRaised()
+            }
+    }
+    
+    private func recalculateRaised() {
+        var map: [String: Int] = [:]
+        let cal = Calendar.current
+
+        for goal in goals {
+            let start = cal.startOfDay(for: goal.startDate)
+            let end = cal.startOfDay(for: goal.endDate)
+
+            let total = donations.reduce(0) { partial, d in
+                let day = cal.startOfDay(for: d.createdAt)
+                if day >= start && day <= end {
+                    return partial + d.quantity
+                }
+                return partial
+            }
+
+            map[goal.id] = total
+        }
+
+        self.raisedByGoalId = map
+        DispatchQueue.main.async { self.tableView.reloadData() }
     }
 
     /*
@@ -129,3 +177,23 @@ class ViewGoalsViewController: UIViewController, UITableViewDataSource, UITableV
     */
 
 }
+
+private struct DonationLite {
+    let quantity: Int
+    let createdAt: Date
+
+    init?(doc: QueryDocumentSnapshot) {
+        let data = doc.data()
+
+        // quantity might be Int or Double in Firestore
+        let qInt = data["quantity"] as? Int
+        let qDouble = data["quantity"] as? Double
+        let quantity = qInt ?? Int(qDouble ?? 0)
+
+        guard let ts = data["createdAt"] as? Timestamp else { return nil }
+
+        self.quantity = quantity
+        self.createdAt = ts.dateValue()
+    }
+}
+
