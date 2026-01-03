@@ -52,7 +52,7 @@ struct Donation {
             let quantity = dictionary["quantity"] as? Int,
             let status = dictionary["status"] as? String,
             let imageURL = dictionary["imageURL"] as? String,
-            let donorId = dictionary["donorId"] as? String,
+            let donorId = (dictionary["donorID"] as? String) ?? (dictionary["donorId"] as? String),
             let caseId = dictionary["caseId"] as? String,
             let createdAtTimestamp = dictionary["createdAt"] as? Timestamp,
             let expiryTimestamp = dictionary["expiryDate"] as? Timestamp
@@ -83,7 +83,7 @@ struct Donation {
         }
 
         // Optional collector fields
-        self.ngoId = dictionary["ngoId"] as? String
+        self.ngoId = (dictionary["ngoID"] as? String) ?? (dictionary["ngoId"] as? String)
         self.pickupStatus = dictionary["pickupStatus"] as? String
 
         self.donorName = dictionary["donorName"] as? String
