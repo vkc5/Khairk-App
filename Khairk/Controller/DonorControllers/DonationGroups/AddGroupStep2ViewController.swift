@@ -52,7 +52,7 @@ final class AddGroupStep2ViewController: UIViewController {
 
     private var collectionHeightConstraint: NSLayoutConstraint?
 
-    // ✅ IMPORTANT: do NOT create a new draft here
+    // IMPORTANT: do NOT create a new draft here
     private var draft: DonationGroupDraft {
         get { DonationGroupDraftStore.shared.draft }
         set { DonationGroupDraftStore.shared.draft = newValue }

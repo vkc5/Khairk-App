@@ -21,7 +21,7 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
     var selectedImage: UIImage?
     private var createdDonationId: String?
 
-    // ✅ ADD HERE
+    // passing
     var donorId: String?
     var caseId: String?
     var ngoId: String?
@@ -116,7 +116,7 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
 
                     DonationService.shared.createDonation(
                         
-                        donorId: uid,              // ✅ REQUIRED
+                        donorId: uid,         // ✅ REQUIRED
                         caseId: caseId,       // ✅ REQUIRED
                         ngoId: ngoId,         // ✅ REQUIRED
                         

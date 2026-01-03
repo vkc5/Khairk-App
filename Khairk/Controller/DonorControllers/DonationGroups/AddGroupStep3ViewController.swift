@@ -19,7 +19,7 @@ final class AddGroupStep3ViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
-    // ✅ IMPORTANT: do NOT create a new draft here
+    // IMPORTANT: do NOT create a new draft here
     private var draft: DonationGroupDraft {
         DonationGroupDraftStore.shared.draft
     }
