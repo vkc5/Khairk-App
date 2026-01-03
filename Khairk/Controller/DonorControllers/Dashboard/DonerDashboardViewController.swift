@@ -24,6 +24,8 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var spotlightView2: UIView!
     @IBOutlet weak var impactRowView: UIView!
 
+    @IBOutlet weak var NotificationsBtn: UIImageView!
+    
 
     // MARK: - Lifecycle
 
@@ -52,6 +54,10 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         // SPOTLIGHT (gradient added after layout)
         styleSpotlight(spotlightView1)
         styleSpotlight(spotlightView2)
+        
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(goToNotifications))
+        NotificationsBtn.addGestureRecognizer(tapGesture)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -254,6 +260,15 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    @objc func goToNotifications() {
+        let storyboard = UIStoryboard(name: "DonorNotifications", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonorNotificationsVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
     }
 
 }
