@@ -41,7 +41,7 @@ final class DonationCardCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        // أفضل للشادو: shadowPath
+        // shadowPath
         cardView.layer.shadowPath = UIBezierPath(roundedRect: cardView.bounds, cornerRadius: 16).cgPath
     }
 
@@ -135,7 +135,7 @@ final class DonationCardCell: UITableViewCell {
         donationImageView.image = UIImage(systemName: "photo")
     }
 
-    // نفس شغلك: تثبيت الكارد داخل السيل
+    
     override func updateConstraints() {
         super.updateConstraints()
         guard !didSetupConstraints else { return }

@@ -28,7 +28,7 @@ final class DonationGroupsViewController: UIViewController {
         setupSearchBar()
         setupAddButton()
 
-        // ✅ Listen for "group created" and refresh
+        //  Listen for "group created" and refresh
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadGroups),
@@ -36,7 +36,7 @@ final class DonationGroupsViewController: UIViewController {
             object: nil
         )
 
-        // ✅ First load (real-time)
+        //  First load (real-time)
         startListeningForGroups()
     }
 
@@ -45,13 +45,13 @@ final class DonationGroupsViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    // ✅ Called when Step3 posts .groupCreated
+    // Called when Step3 posts .groupCreated
     @objc private func reloadGroups() {
         print("🔄 Reloading groups after creation")
         startListeningForGroups()
     }
 
-    // ✅ Real-time listener (NO ownerId filter)
+    // Real-time listener (NO ownerId filter)
     private func startListeningForGroups() {
         groupsListener?.remove()
 
@@ -61,7 +61,7 @@ final class DonationGroupsViewController: UIViewController {
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ listener error:", error.localizedDescription)
+                    print("listener error:", error.localizedDescription)
                     return
                 }
 

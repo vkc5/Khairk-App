@@ -18,7 +18,7 @@ final class ConfirmPickupViewController: UIViewController {
     var selectedImage: UIImage?
     private var createdDonationId: String?
 
-    // ✅ ADD HERE
+    // ADD (passing)
     var donorId: String?
     var caseId: String?
     var ngoId: String?
@@ -83,7 +83,7 @@ final class ConfirmPickupViewController: UIViewController {
 
                     DonationService.shared.createDonation(
                         
-                        donorId: uid,              // ✅ REQUIRED
+                        donorId: uid,         // ✅ REQUIRED
                         caseId: caseId,       // ✅ REQUIRED
                         ngoId: ngoId,         // ✅ REQUIRED
                         

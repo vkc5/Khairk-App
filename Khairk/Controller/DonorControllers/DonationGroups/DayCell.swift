@@ -74,7 +74,7 @@ final class DayCell: UICollectionViewCell {
         }
     }
 
-    // ✅ highlight should NEVER change the style (prevents "hover" look)
+    //highlight should NEVER change the style (prevents "hover" look)
     override var isHighlighted: Bool {
         didSet { /* do nothing */ }
     }

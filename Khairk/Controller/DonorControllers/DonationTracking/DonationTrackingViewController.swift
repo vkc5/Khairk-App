@@ -5,6 +5,8 @@
 //  Created by FM on 18/12/2025.
 //
 
+
+
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
@@ -43,27 +45,25 @@ final class DonationTrackingViewController: UIViewController {
     }
 
     struct DonationItem {
-        
         let donorId: String
         let id: String
+        let caseId: String
+
         let foodName: String
         let quantity: Int
         let status: DonationStatus
         let imageURL: String?
         let createdAt: Date?
 
-        // Details screen fields
         let note: String?
         let expiryDate: Date?
-        let donationType: String? // "pickup" or "delivery"
+        let donationType: String?
 
-        // Delivery fields
         let serviceArea: String?
         let street: String?
         let block: String?
         let buildingNumber: String?
 
-        // Pickup field
         let pickupTime: Date?
     }
 
@@ -126,18 +126,11 @@ final class DonationTrackingViewController: UIViewController {
         var config = UIButton.Configuration.filled()
         config.cornerStyle = .capsule
         config.title = title
-
-        // Force one-line title
         config.titleLineBreakMode = .byTruncatingTail
-
-        // Padding using configuration insets
         config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
-
-        // Default (unselected) style
         config.baseBackgroundColor = unselectedBg
         config.baseForegroundColor = unselectedText
 
-        // Smaller font to prevent wrapping
         config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
             outgoing.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
@@ -193,7 +186,7 @@ final class DonationTrackingViewController: UIViewController {
         listener?.remove()
 
         guard let uid = Auth.auth().currentUser?.uid else {
-            print("❌ No logged in user")
+            print("No logged in user")
             return
         }
 
@@ -203,29 +196,20 @@ final class DonationTrackingViewController: UIViewController {
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Tracking error:", error)
+                    print("Tracking error:", error)
                     return
                 }
 
                 let docs = snapshot?.documents ?? []
-                print("✅ ALL donations count =", docs.count)
-
-                // Debug: print first doc
-                if let first = docs.first {
-                    let d = first.data()
-                    print("🔎 first doc donorId:", d["donorId"] ?? "nil",
-                          "foodName:", d["foodName"] ?? "nil")
-                }
+                print("ALL donations count =", docs.count)
 
                 let mapped: [DonationItem] = docs.compactMap { doc in
                     let data = doc.data()
 
-                    // ✅ donorId (required by your struct)
                     let donorId = data["donorId"] as? String ?? ""
-
+                    let caseId = (data["caseId"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                     let foodName = (data["foodName"] as? String) ?? "Unknown"
 
-                    // quantity can be Int or Double
                     let quantity: Int = {
                         if let i = data["quantity"] as? Int { return i }
                         if let d = data["quantity"] as? Double { return Int(d) }
@@ -238,23 +222,21 @@ final class DonationTrackingViewController: UIViewController {
                     let imageURL = data["imageURL"] as? String
                     let createdAt = (data["createdAt"] as? Timestamp)?.dateValue()
 
-                    // Details fields
                     let note = data["description"] as? String ?? data["note"] as? String
                     let expiryDate = (data["expiryDate"] as? Timestamp)?.dateValue()
                     let donationType = data["donationType"] as? String
 
-                    // Delivery fields
                     let serviceArea = data["serviceArea"] as? String
                     let street = data["street"] as? String
                     let block = data["block"] as? String
                     let buildingNumber = data["buildingNumber"] as? String
 
-                    // Pickup field
                     let pickupTime = (data["pickupTime"] as? Timestamp)?.dateValue()
 
                     return DonationItem(
                         donorId: donorId,
                         id: doc.documentID,
+                        caseId: caseId,
                         foodName: foodName,
                         quantity: quantity,
                         status: status,
@@ -276,12 +258,7 @@ final class DonationTrackingViewController: UIViewController {
                     self.applyFilter(.all)
                 }
             }
-    
-
-    
-
     }
-
 
     // MARK: - Actions
     @IBAction private func allTapped(_ sender: UIButton) { applyFilter(.all) }
@@ -289,14 +266,54 @@ final class DonationTrackingViewController: UIViewController {
     @IBAction private func collectedTapped(_ sender: UIButton) { applyFilter(.collected) }
     @IBAction private func deliveredTapped(_ sender: UIButton) { applyFilter(.delivered) }
 
-    // MARK: - Navigation
-    private func openDetails(_ item: DonationItem) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "ViewDetailsViewController") as? ViewDetailsViewController else {
-            assertionFailure("Missing storyboard ID: ViewDetailsViewController")
+    // MARK: - Segue Passing (FIXED)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "ShowContactNGO" else { return }
+
+        // Destination VC (handles if embedded in nav controller)
+        let destinationVC: ContactNGOViewController? = {
+            if let nav = segue.destination as? UINavigationController {
+                return nav.topViewController as? ContactNGOViewController
+            } else {
+                return segue.destination as? ContactNGOViewController
+            }
+        }()
+
+        guard let vc = destinationVC else {
+            print("❌ Destination is not ContactNGOViewController")
             return
         }
-        vc.item = item
-        navigationController?.pushViewController(vc, animated: true)
+
+        //Find which row triggered the segue (works for button or row)
+        var indexPath: IndexPath?
+
+        // 1) sender is a cell
+        if let cell = sender as? UITableViewCell {
+            indexPath = tableView.indexPath(for: cell)
+        }
+
+        // 2) sender is a view inside a cell (button)
+        if indexPath == nil, let view = sender as? UIView {
+            let point = view.convert(CGPoint.zero, to: tableView)
+            indexPath = tableView.indexPathForRow(at: point)
+        }
+
+        // 3) fallback
+        if indexPath == nil {
+            indexPath = tableView.indexPathForSelectedRow
+        }
+
+        guard let finalIndexPath = indexPath else {
+            print("Could not find indexPath for sender:", String(describing: sender))
+            return
+        }
+
+        let item = visibleItems[finalIndexPath.row]
+        let trimmedCaseId = item.caseId.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        print("Passing caseId to ContactNGO =", "[\(trimmedCaseId)]", "row:", finalIndexPath.row)
+
+        vc.caseId = trimmedCaseId
     }
 }
 
@@ -324,11 +341,22 @@ extension DonationTrackingViewController: UITableViewDataSource, UITableViewDele
             imageURL: item.imageURL
         )
 
-        // Handle "View Details" tap from the cell
+        // View details button stays same
         cell.onViewDetailsTapped = { [weak self] in
-            self?.openDetails(item)
+            guard let self = self else { return }
+            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewDetailsViewController") as? ViewDetailsViewController else {
+                assertionFailure("Missing storyboard ID: ViewDetailsViewController")
+                return
+            }
+            vc.item = item
+            self.navigationController?.pushViewController(vc, animated: true)
         }
 
         return cell
+    }
+
+    //  If you tap the row, open the same segue correctly (sender = cell)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ShowContactNGO", sender: tableView.cellForRow(at: indexPath))
     }
 }

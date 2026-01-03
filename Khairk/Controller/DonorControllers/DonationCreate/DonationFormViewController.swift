@@ -47,7 +47,7 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
         setupExpiryDatePicker()
         setupDismissKeyboardTap()
 
-        // ✅ IMPORTANT: If caseId not passed, fetch default active case from Firestore
+        //IMPORTANT: If caseId not passed, fetch default active case from Firestore
         ensureCaseAndNgoIds()
     }
 
@@ -57,7 +57,7 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
         // 1) إذا caseId موجودة بس ngoId ناقصة -> جيبي ngoID من نفس الدوكمنت
         if let caseId = caseId, !caseId.isEmpty {
             if let ngoId = ngoId, !ngoId.isEmpty {
-                print("✅ IDs already set. caseId=\(caseId), ngoId=\(ngoId)")
+                print("IDs already set. caseId=\(caseId), ngoId=\(ngoId)")
                 return
             }
 
@@ -78,12 +78,12 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
             .getDocuments { [weak self] snap, err in
 
                 if let err = err {
-                    print("❌ fetchActiveCase error:", err)
+                    print("fetchActiveCase error:", err)
                     return
                 }
 
                 guard let doc = snap?.documents.first else {
-                    print("❌ No active case found in ngoCases")
+                    print("No active case found in ngoCases")
                     return
                 }
 
@@ -93,7 +93,7 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
                 self?.caseId = doc.documentID
                 self?.ngoId = fetchedNgoId
 
-                print("✅ Loaded active case. caseId=\(doc.documentID), ngoId=\(fetchedNgoId ?? "nil")")
+                print("Loaded active case. caseId=\(doc.documentID), ngoId=\(fetchedNgoId ?? "nil")")
             }
     }
 
@@ -104,18 +104,18 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
             .getDocument { [weak self] snap, err in
 
                 if let err = err {
-                    print("❌ Failed to fetch ngoID:", err)
+                    print("Failed to fetch ngoID:", err)
                     return
                 }
                 guard let data = snap?.data() else {
-                    print("❌ Case document not found for caseId:", caseId)
+                    print("Case document not found for caseId:", caseId)
                     return
                 }
 
                 let fetchedNgoId = data["ngoID"] as? String // IMPORTANT: same name as Firestore
                 self?.ngoId = fetchedNgoId
 
-                print("✅ Fetched ngoID from Firestore:", fetchedNgoId ?? "nil")
+                print("Fetched ngoID from Firestore:", fetchedNgoId ?? "nil")
             }
     }
 
@@ -124,14 +124,14 @@ final class DonationFormViewController: UIViewController, UITextFieldDelegate {
 
         if identifier == SegueID.confirmPickup || identifier == SegueID.confirmLocation {
 
-            // ✅ if IDs not ready yet, try load them and stop segue
+            //if IDs not ready yet, try load them and stop segue
             if caseId == nil || caseId?.isEmpty == true || ngoId == nil || ngoId?.isEmpty == true {
                 ensureCaseAndNgoIds()
                 showAlert(title: "Please wait", message: "Loading case info… try again in a second.")
                 return false
             }
 
-            // ✅ Validate form after IDs are ready
+            // Validate form after IDs are ready
             return validateForm()
         }
 

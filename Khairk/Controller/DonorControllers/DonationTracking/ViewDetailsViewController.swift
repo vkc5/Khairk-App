@@ -7,6 +7,8 @@
 
 
 import UIKit
+import FirebaseFirestore
+
 
 final class ViewDetailsViewController: UIViewController {
 
@@ -184,15 +186,48 @@ final class ViewDetailsViewController: UIViewController {
     @IBAction private func cancelTapped(_ sender: UIButton) {
         guard let item else { return }
 
-        // ✅ Block cancel after collected/delivered
-        if item.status == .collected || item.status == .delivered {
-            showAlert(title: "Not Allowed", message: "You can't cancel after it is collected or delivered.")
+        // Only allow cancel if pending
+        if item.status != .pending {
+            showAlert(title: "Not Allowed",
+                      message: "You can't cancel after it is accepted, collected, or delivered.")
             return
         }
 
-        // ✅ Allowed for pending/accepted (Firebase connection later)
-        showAlert(title: "Coming Soon", message: "Cancel (Coming Soon).")
+        // Confirm before delete
+        let ac = UIAlertController(
+            title: "Cancel Donation?",
+            message: "This will delete your donation request permanently.",
+            preferredStyle: .alert
+        )
+
+        ac.addAction(UIAlertAction(title: "No", style: .cancel))
+
+        ac.addAction(UIAlertAction(title: "Yes, Cancel", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+
+            let db = Firestore.firestore()
+
+            // item.id is the donations documentID
+            db.collection("donations").document(item.id).delete { error in
+                if let error = error {
+                    self.showAlert(title: "Error", message: "Failed to cancel donation. \(error.localizedDescription)")
+                    return
+                }
+
+                // ✅ Success message then go back
+                let ok = UIAlertController(title: "Cancelled",
+                                           message: "Your donation has been cancelled.",
+                                           preferredStyle: .alert)
+                ok.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                })
+                self.present(ok, animated: true)
+            }
+        })
+
+        present(ac, animated: true)
     }
+
 
     private func showAlert(title: String, message: String) {
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)

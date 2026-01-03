@@ -47,7 +47,7 @@ final class GroupCell: UITableViewCell {
             statusLabel.layer.cornerRadius = 10
             statusLabel.clipsToBounds = true
 
-            // padding داخل الـ pill
+            // padding 
             statusLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([statusLabel.heightAnchor.constraint(equalToConstant: 18)])
             statusLabel.setContentHuggingPriority(.required, for: .horizontal)
