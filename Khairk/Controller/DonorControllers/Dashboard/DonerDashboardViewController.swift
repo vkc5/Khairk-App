@@ -18,6 +18,11 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
 
     @IBOutlet weak var tableView: UITableView!
     private var goals: [Goal] = []
+    private var goalsListener: ListenerRegistration?
+    private var donationsListener: ListenerRegistration?
+
+    private var donations: [DonationLite] = []
+    private var raisedByGoalId: [String: Int] = [:]
 
     // Spotlight cards (two)
     @IBOutlet weak var spotlightView1: UIView!
@@ -38,7 +43,8 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
 
 
         loadGoalsForDashboard()
-        
+        startListeningDonationsForDashboard()
+
         impactRowView.layer.borderWidth = 1
         impactRowView.layer.borderColor = UIColor.systemGray4.cgColor
         impactRowView.layer.cornerRadius = 10
@@ -54,6 +60,11 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         styleSpotlight(spotlightView2)
     }
     
+    deinit {
+        goalsListener?.remove()
+        donationsListener?.remove()
+    }
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return goals.count
     }
@@ -62,18 +73,20 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         return 1
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "DashboardGoalCardCell",
             for: indexPath
         ) as! DashboardGoalCardCell
 
-        cell.configure(with: goals[indexPath.section], showDelete: false)
+        let goal = goals[indexPath.section]
+        let raised = raisedByGoalId[goal.id] ?? 0
+
+        cell.configure(with: goal, raised: raised, showDelete: false)
         cell.selectionStyle = .none
         return cell
     }
+
     
     func tableView(_ tableView: UITableView,
                    heightForHeaderInSection section: Int) -> CGFloat {
@@ -227,8 +240,8 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
     private func loadGoalsForDashboard() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
-        db.collection("users").document(uid).collection("goals")
-            .order(by: "startDate", descending: true) // ✅ always exists
+        goalsListener = db.collection("users").document(uid).collection("goals")
+            .order(by: "startDate", descending: true)
             .addSnapshotListener { [weak self] snap, error in
                 guard let self = self else { return }
                 if let error = error {
@@ -239,12 +252,14 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
                 let all = (snap?.documents ?? []).compactMap { Goal(doc: $0) }
                 self.goals = all.filter { $0.status == "active" }
 
-                print("✅ Goals loaded:", self.goals.count)   // ✅ DEBUG
+                self.recalculateRaisedForDashboard()
+
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
             }
     }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -255,5 +270,64 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
+    
+    private func startListeningDonationsForDashboard() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
 
+        donationsListener = db.collection("donations")
+            .whereField("donorID", isEqualTo: uid) // ✅ matches your Firestore screenshot
+            .addSnapshotListener { [weak self] snap, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Load donations error:", error.localizedDescription)
+                    return
+                }
+
+                self.donations = snap?.documents.compactMap { DonationLite(doc: $0) } ?? []
+                self.recalculateRaisedForDashboard()
+            }
+    }
+
+    private func recalculateRaisedForDashboard() {
+        var map: [String: Int] = [:]
+        let cal = Calendar.current
+
+        for goal in goals {
+            let start = cal.startOfDay(for: goal.startDate)
+            let end = cal.startOfDay(for: goal.endDate)
+
+            let total = donations.reduce(0) { partial, d in
+                let day = cal.startOfDay(for: d.createdAt)
+                if day >= start && day <= end {
+                    return partial + d.quantity
+                }
+                return partial
+            }
+
+            map[goal.id] = total
+        }
+
+        self.raisedByGoalId = map
+        DispatchQueue.main.async { self.tableView.reloadData() }
+    }
+
+}
+
+private struct DonationLite {
+    let quantity: Int
+    let createdAt: Date
+
+    init?(doc: QueryDocumentSnapshot) {
+        let data = doc.data()
+
+        let qInt = data["quantity"] as? Int
+        let qDouble = data["quantity"] as? Double
+        let quantity = qInt ?? Int(qDouble ?? 0)
+
+        guard let ts = data["createdAt"] as? Timestamp else { return nil }
+
+        self.quantity = quantity
+        self.createdAt = ts.dateValue()
+    }
 }

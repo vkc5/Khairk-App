@@ -39,7 +39,7 @@ class DashboardGoalCardCell: UITableViewCell {
         }.resume()
     }
     
-    func configure(with goal: Goal, showDelete: Bool) {
+    func configure(with goal: Goal, raised: Int, showDelete: Bool) {
         deleteButton.isHidden = !showDelete
         deleteButton.isUserInteractionEnabled = showDelete
 
@@ -50,12 +50,14 @@ class DashboardGoalCardCell: UITableViewCell {
         startLabel.text = "Start: \(df.string(from: goal.startDate))"
 
         targetLabel.text = "Target: \(goal.targetAmount) meals"
-        raisedLabel.text = "0"
+        raisedLabel.text = "\(raised)"
 
         let daysLeft = max(0, Calendar.current.dateComponents([.day], from: Date(), to: goal.endDate).day ?? 0)
         daysLeftLabel.text = "\(daysLeft)"
 
-        progressView.progress = 0
+        // ✅ progress from raised/target
+        let ratio = goal.targetAmount > 0 ? Float(raised) / Float(goal.targetAmount) : 0
+        progressView.progress = min(max(ratio, 0), 1)
 
         if let url = goal.imageUrl, !url.isEmpty {
             loadImage(url)
@@ -63,6 +65,7 @@ class DashboardGoalCardCell: UITableViewCell {
             goalImageView.image = UIImage(systemName: "photo")
         }
     }
+
 
 
 
