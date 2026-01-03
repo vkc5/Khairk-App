@@ -235,6 +235,9 @@
                                                                         <buttonConfiguration key="configuration" style="plain" title="Accept Donation">
                                                                             <fontDescription key="titleFontDescription" type="system" pointSize="0.0"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="AcceptDonationtapped:" destination="NPq-KQ-4wB" eventType="touchUpInside" id="XM1-cS-qnT"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

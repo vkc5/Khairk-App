@@ -229,6 +229,14 @@ class CollectorDashboardViewController: UIViewController, UITableViewDataSource,
 
         navigationController?.pushViewController(mapVC, animated: true)
     }
+    @IBAction func AcceptDonationtapped(_ sender: UIButton) {
+        openAcceptsDonations()
+    }
+    
+    func openAcceptsDonations() {
+        let vc = NGOAcceptsDonationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
