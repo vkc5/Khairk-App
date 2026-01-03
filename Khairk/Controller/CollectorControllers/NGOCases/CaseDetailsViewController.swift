@@ -8,6 +8,7 @@ final class CaseDetailsViewController: UIViewController {
     private let service = CaseService()
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
+    private var imageTask: URLSessionDataTask?
 
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -175,6 +176,18 @@ final class CaseDetailsViewController: UIViewController {
     private func render(_ item: NgoCase) {
         titleLabel.text = item.title
         descriptionLabel.text = item.details
+
+        imageTask?.cancel()
+        caseImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
+        if let urlString = item.imageURL, !urlString.isEmpty, let url = URL(string: urlString) {
+            imageTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+                guard let self = self, let data = data else { return }
+                DispatchQueue.main.async {
+                    self.caseImageView.image = UIImage(data: data)
+                }
+            }
+            imageTask?.resume()
+        }
 
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

@@ -259,6 +259,8 @@ final class NGOActivePickupCell: UITableViewCell {
     private let donorLabel = UILabel()
     private let badgeLabel = UILabel()
     private let buttonStack = UIStackView()
+    private var imageTask: URLSessionDataTask?
+    private var currentImageURL: String?
     private let markButton = UIButton(type: .system)
     private let detailsButton = UIButton(type: .system)
 
@@ -285,11 +287,33 @@ final class NGOActivePickupCell: UITableViewCell {
         titleLabel.text = foodTitle
         subtitleLabel.text = "\(donation.quantity) items"
         donorLabel.text = donation.donorName
+
+        imageTask?.cancel()
+        currentImageURL = donation.imageURL
         pickupImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
+
+        if !donation.imageURL.isEmpty, let url = URL(string: donation.imageURL) {
+            imageTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+                guard let self = self, let data = data else { return }
+                if self.currentImageURL != donation.imageURL { return }
+                DispatchQueue.main.async {
+                    self.pickupImageView.image = UIImage(data: data)
+                }
+            }
+            imageTask?.resume()
+        }
 
         let badgeText = expiryBadgeText(for: donation.expiryDate)
         badgeLabel.text = badgeText
         badgeLabel.isHidden = badgeText.isEmpty
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageTask?.cancel()
+        imageTask = nil
+        currentImageURL = nil
+        pickupImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
     }
 
     @objc private func markTapped() {

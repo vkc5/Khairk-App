@@ -7,6 +7,7 @@ final class NGOPickupDetailsViewController: UIViewController {
 
     private let service = DonationService.shared
     private var listener: ListenerRegistration?
+    private var imageTask: URLSessionDataTask?
 
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -221,6 +222,18 @@ final class NGOPickupDetailsViewController: UIViewController {
     }
 
     private func render(_ donation: Donation) {
+
+        imageTask?.cancel()
+        headerImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
+        if !donation.imageURL.isEmpty, let url = URL(string: donation.imageURL) {
+            imageTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+                guard let self = self, let data = data else { return }
+                DispatchQueue.main.async {
+                    self.headerImageView.image = UIImage(data: data)
+                }
+            }
+            imageTask?.resume()
+        }
 
         // Title
         let foodTitle: String = {
