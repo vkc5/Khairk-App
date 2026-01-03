@@ -10,6 +10,8 @@ import UserNotifications
 class Notification {
     static let shared = Notification()
     private let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
+    
     struct AppNotification {
         let id: String
         let title: String
@@ -50,6 +52,7 @@ class Notification {
         }
     }
     
+        
     func scheduleExpiryCheck(donationId: String, foodName: String, expiryDate: Date) {
         let now = Date()
         let twoDaysInSeconds: TimeInterval = 172800

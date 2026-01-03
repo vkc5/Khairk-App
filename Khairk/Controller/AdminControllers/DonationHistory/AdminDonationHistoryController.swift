@@ -171,8 +171,13 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
     }
     
     func fetchUserName(userId: String, completion: @escaping (String) -> Void) {
-        let db = Firestore.firestore()
 
+        guard !userId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            completion("Unknown User")
+            return
+        }
+
+        let db = Firestore.firestore()
         db.collection("users").document(userId).getDocument { snapshot, error in
             if let data = snapshot?.data(),
                let name = data["name"] as? String {
@@ -182,6 +187,7 @@ class AdminDonationHistoryController: UIViewController, UISearchBarDelegate, UIT
             }
         }
     }
+
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.searchText = searchText

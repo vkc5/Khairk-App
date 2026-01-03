@@ -45,58 +45,62 @@ struct Donation {
 
     // ✅ Batool initializer (dictionary)
     init?(id: String, dictionary: [String: Any]) {
-        guard
-            let foodName = dictionary["foodName"] as? String,
-            let description = dictionary["description"] as? String,
-            let donationType = dictionary["donationType"] as? String,
-            let quantity = dictionary["quantity"] as? Int,
-            let status = dictionary["status"] as? String,
-            let imageURL = dictionary["imageURL"] as? String,
-            let donorId = dictionary["donorId"] as? String,
-            let caseId = dictionary["caseId"] as? String,
-            let createdAtTimestamp = dictionary["createdAt"] as? Timestamp,
-            let expiryTimestamp = dictionary["expiryDate"] as? Timestamp
-        else {
-            return nil
-        }
+        // 🔴 REQUIRED (MINIMAL)
+            guard
+                let foodName = dictionary["foodName"] as? String,
+                let expiryTS = dictionary["expiryDate"] as? Timestamp,
+                let createdTS = dictionary["createdAt"] as? Timestamp,
+                let status = dictionary["status"] as? String
+            else {
+                print("❌ Missing required fields:", dictionary)
+                return nil
+            }
 
-        self.id = id
-        self.foodName = foodName
-        self.description = description
-        self.donationType = donationType
-        self.quantity = quantity
-        self.status = status
-        self.imageURL = imageURL
-        self.donorId = donorId
-        self.caseId = caseId
-        self.createdAt = createdAtTimestamp.dateValue()
-        self.expiryDate = expiryTimestamp.dateValue()
+            self.id = id
+            self.foodName = foodName
+            self.expiryDate = expiryTS.dateValue()
+            self.createdAt = createdTS.dateValue()
+            self.status = status
 
-        self.serviceArea = dictionary["serviceArea"] as? String
-        self.latitude = dictionary["latitude"] as? Double
-        self.longitude = dictionary["longitude"] as? Double
+            // 🟢 OPTIONAL SAFE PARSING
+            self.description = dictionary["description"] as? String ?? ""
+            self.donationType =
+                dictionary["donationType"] as? String ??
+                dictionary[" donationType"] as? String ?? "unknown"
 
-        if let pickupTimestamp = dictionary["pickupTime"] as? Timestamp {
-            self.pickupTime = pickupTimestamp.dateValue()
-        } else {
-            self.pickupTime = nil
-        }
+            self.quantity =
+                dictionary["quantity"] as? Int ??
+                Int(dictionary["quantity"] as? String ?? "") ?? 0
 
-        // Optional collector fields
-        self.ngoId = dictionary["ngoId"] as? String
-        self.pickupStatus = dictionary["pickupStatus"] as? String
+            self.imageURL = dictionary["imageURL"] as? String ?? ""
+            self.donorId = dictionary["donorId"] as? String ?? ""
+            self.caseId = dictionary["caseId"] as? String ?? ""
 
-        self.donorName = dictionary["donorName"] as? String
-        self.donorEmail = dictionary["donorEmail"] as? String
-        self.donorPhone = dictionary["donorPhone"] as? String
+            self.serviceArea = dictionary["serviceArea"] as? String
+            self.latitude = dictionary["latitude"] as? Double
+            self.longitude = dictionary["longitude"] as? Double
 
-        self.foodType = dictionary["foodType"] as? String
-        self.pickupMethod = dictionary["pickupMethod"] as? String
+            if let pickupTS = dictionary["pickupTime"] as? Timestamp {
+                self.pickupTime = pickupTS.dateValue()
+            } else {
+                self.pickupTime = nil
+            }
 
-        self.caseTitle = dictionary["caseTitle"] as? String
-        self.caseDescription = dictionary["caseDescription"] as? String
-        self.caseTarget = dictionary["caseTarget"] as? Int
-        self.caseCollected = dictionary["caseCollected"] as? Int
+            self.ngoId =
+                dictionary["ngoId"] as? String ??
+                dictionary["ngoID"] as? String
+
+            self.pickupStatus = dictionary["pickupStatus"] as? String
+
+            self.donorName = nil
+            self.donorEmail = nil
+            self.donorPhone = nil
+            self.foodType = nil
+            self.pickupMethod = nil
+            self.caseTitle = nil
+            self.caseDescription = nil
+            self.caseTarget = nil
+            self.caseCollected = nil
     }
 
     // ✅ Collector initializer (DocumentSnapshot)
