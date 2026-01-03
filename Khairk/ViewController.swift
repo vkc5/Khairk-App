@@ -9,23 +9,25 @@ import UIKit
 import FirebaseAuth
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var logoImageView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         print("Firebase current user:", Auth.auth().currentUser as Any)
-        // Do any additional setup after loading the view.
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         animateLogoBounce()
     }
-
-    func animateLogoBounce() {
-        // start smaller & invisible
+    
+    private func animateLogoBounce() {
+        // Start smaller & invisible
         logoImageView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
         logoImageView.alpha = 0.0
-
+        
         UIView.animate(
             withDuration: 0.9,
             delay: 0.1,
@@ -37,7 +39,7 @@ class ViewController: UIViewController {
                 self.logoImageView.alpha = 1.0
             },
             completion: { _ in
-                // Small extra delay if you want (optional)
+                // Navigate after animation finishes
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.goToLogin()
                 }
@@ -59,7 +61,7 @@ class ViewController: UIViewController {
                 duration: 0.4,
                 options: .transitionCrossDissolve,
                 animations: {
-                    window.rootViewController = UINavigationController(rootViewController: loginVC)
+                    window.rootViewController =  UINavigationController(rootViewController: loginVC)
                 },
                 completion: nil
             )
@@ -70,6 +72,4 @@ class ViewController: UIViewController {
         }
     }
 
-
 }
-

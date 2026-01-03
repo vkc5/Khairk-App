@@ -64,7 +64,13 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
     }
     
     func setupServiceAreaDropdown() {
-        let areas = ["Manama", "Riffa", "Muharraq", "Isa Town", "Hamad Town"]
+        let areas = [
+            "Manama","Juffair","Adliya","Seef","Sanabis","Daih","Jidhafs","Salmaniya","Hoora","Diplomatic Area",
+            "Muharraq","Hidd","Busaiteen","Galali","Amwaj Islands","Arad","Samaheej","Diyar Al Muharraq",
+            "Budaiya","Diraz","Barbar","Saar","Jasra","Hamala","Janabiyah","Aali","Bani Jamra","Karranah","Shakhura","Abu Saiba","Ma'ameer",
+            "Riffa","East Riffa","West Riffa","Isa Town","Sitra","Zallaq","Awali","Askar","Jaw","Safra","Al Areen","Durrat Al Bahrain",
+            "Hawar Islands","Reef Island","Bahrain Bay"
+        ]
 
         serviceAreaButton.setTitle("Select Service Area", for: .normal)
         selectedServiceArea = nil
@@ -368,7 +374,16 @@ class CollectorEditProfileViewController: UIViewController, UIImagePickerControl
             animated: true
         )
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
     /*
     // MARK: - Navigation
 

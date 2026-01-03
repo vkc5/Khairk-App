@@ -1,30 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17150" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qMt-wU-Wlf">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Notifications-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdminNotificationVC" id="Y6W-OH-hqX" customClass="AdminNotificationController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="bB7-0J-Pyg" customClass="AdminNo">
+                                <rect key="frame" x="0.0" y="162" width="393" height="690"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="107" id="0nW-ST-A0t" customClass="AdminNotificationTableViewCell" customModule="Khairk" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="107"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0nW-ST-A0t" id="xXM-fx-hpg">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="107"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LQb-rN-nJm">
+                                                    <rect key="frame" x="10" y="10" width="373" height="87"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wh0-B5-vWa">
+                                                            <rect key="frame" x="10" y="10" width="353" height="23"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TrK-k6-cxq">
+                                                            <rect key="frame" x="10" y="35" width="353" height="20.333333333333329"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="gOa-v7-45W">
+                                                            <rect key="frame" x="10" y="61.333333333333336" width="12" height="10.666666666666664"/>
+                                                            <color key="tintColor" systemColor="labelColor"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="12" id="gsJ-fn-wnB"/>
+                                                                <constraint firstAttribute="width" constant="12" id="oca-kY-5OX"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="December 19,2025 at 1:10:7pm" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fKW-IW-ALM">
+                                                            <rect key="frame" x="24" y="56.333333333333321" width="175.33333333333334" height="20.666666666666664"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="Wh0-B5-vWa" secondAttribute="trailing" constant="10" id="9Db-9u-xRj"/>
+                                                        <constraint firstAttribute="bottom" secondItem="fKW-IW-ALM" secondAttribute="bottom" constant="10" id="AAv-hn-Dfk"/>
+                                                        <constraint firstItem="gOa-v7-45W" firstAttribute="leading" secondItem="LQb-rN-nJm" secondAttribute="leading" constant="10" id="CDv-L8-Hps"/>
+                                                        <constraint firstItem="fKW-IW-ALM" firstAttribute="centerY" secondItem="gOa-v7-45W" secondAttribute="centerY" id="FVE-jS-Ilg"/>
+                                                        <constraint firstAttribute="trailing" secondItem="TrK-k6-cxq" secondAttribute="trailing" constant="10" id="LPu-PM-xTE"/>
+                                                        <constraint firstItem="fKW-IW-ALM" firstAttribute="leading" secondItem="gOa-v7-45W" secondAttribute="trailing" constant="2" id="MJH-TB-tfi"/>
+                                                        <constraint firstItem="gOa-v7-45W" firstAttribute="top" secondItem="TrK-k6-cxq" secondAttribute="bottom" constant="8" id="O8m-s6-3qN"/>
+                                                        <constraint firstItem="Wh0-B5-vWa" firstAttribute="leading" secondItem="LQb-rN-nJm" secondAttribute="leading" constant="10" id="Tmw-xb-ftI"/>
+                                                        <constraint firstItem="fKW-IW-ALM" firstAttribute="top" secondItem="TrK-k6-cxq" secondAttribute="bottom" constant="3.6666666666666714" id="Ypd-Od-etq"/>
+                                                        <constraint firstItem="Wh0-B5-vWa" firstAttribute="top" secondItem="LQb-rN-nJm" secondAttribute="top" constant="10" id="bev-au-ilf"/>
+                                                        <constraint firstItem="TrK-k6-cxq" firstAttribute="top" secondItem="Wh0-B5-vWa" secondAttribute="bottom" constant="2" id="jgo-vg-H3f"/>
+                                                        <constraint firstItem="TrK-k6-cxq" firstAttribute="leading" secondItem="LQb-rN-nJm" secondAttribute="leading" constant="10" id="nBh-aJ-O2P"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="LQb-rN-nJm" secondAttribute="bottom" constant="10" id="LP8-j0-iDl"/>
+                                                <constraint firstItem="LQb-rN-nJm" firstAttribute="leading" secondItem="xXM-fx-hpg" secondAttribute="leading" constant="10" id="MAD-pr-6uK"/>
+                                                <constraint firstItem="LQb-rN-nJm" firstAttribute="top" secondItem="xXM-fx-hpg" secondAttribute="top" constant="10" id="OvI-ou-W72"/>
+                                                <constraint firstAttribute="trailing" secondItem="LQb-rN-nJm" secondAttribute="trailing" constant="10" id="Poo-2g-Ige"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="bodyLabel" destination="TrK-k6-cxq" id="Mtd-hk-Hxw"/>
+                                            <outlet property="dateLabel" destination="fKW-IW-ALM" id="ZGu-qw-WxN"/>
+                                            <outlet property="notificationContainer" destination="LQb-rN-nJm" id="f7q-Vg-Rhg"/>
+                                            <outlet property="titleLabel" destination="Wh0-B5-vWa" id="VpA-4o-UOf"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="bB7-0J-Pyg" secondAttribute="trailing" id="D28-tm-5Bz"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="bB7-0J-Pyg" secondAttribute="bottom" id="FX3-Ue-Tgl"/>
+                            <constraint firstAttribute="bottom" secondItem="bB7-0J-Pyg" secondAttribute="bottom" id="bNf-Xr-hKp"/>
+                            <constraint firstItem="bB7-0J-Pyg" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="bz2-sb-Yoe"/>
+                            <constraint firstItem="bB7-0J-Pyg" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="j1R-zu-X4s"/>
+                            <constraint firstItem="bB7-0J-Pyg" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="tb4-MY-s81"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Notifications" leftItemsSupplementBackButton="YES" id="Fh5-hp-jr6">
+                        <rightBarButtonItems>
+                            <barButtonItem style="plain" id="Pa4-TT-WuI">
+                                <button key="customView" toolTip="go to notifications seting" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="MHg-nV-LiB">
+                                    <rect key="frame" x="356.33333333333331" y="12" width="20.666666666666686" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal">
+                                        <imageReference key="image" image="gearshape" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
+                                            <hierarchicalColors>
+                                                <color name="MainBrand-500"/>
+                                                <color systemColor="secondaryLabelColor"/>
+                                                <color systemColor="tertiaryLabelColor"/>
+                                            </hierarchicalColors>
+                                        </imageReference>
+                                    </state>
+                                </button>
+                                <connections>
+                                    <segue destination="iBr-wf-Cyr" kind="push" id="X2w-xa-uWO"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem style="plain" id="BdB-mB-cNs">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="F4c-Qj-cFB">
+                                    <rect key="frame" x="305.33333333333331" y="5" width="43" height="34.333333333333336"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain">
+                                        <imageReference key="image" image="trash" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
+                                            <hierarchicalColors>
+                                                <color systemColor="systemRedColor"/>
+                                                <color systemColor="secondaryLabelColor"/>
+                                                <color systemColor="tertiaryLabelColor"/>
+                                            </hierarchicalColors>
+                                        </imageReference>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="deleteAllBtn:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="OG5-Ta-kSN"/>
+                                    </connections>
+                                </button>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="list" destination="bB7-0J-Pyg" id="ama-wf-1jW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1316.793893129771" y="3.5211267605633805"/>
+        </scene>
+        <!--AdminNotificatinSettingsVC-->
+        <scene sceneID="9bu-8y-gTh">
+            <objects>
+                <viewControllerPlaceholder storyboardName="AdminProfile" referencedIdentifier="AdminNotificatinSettingsVC" id="iBr-wf-Cyr" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="xrG-If-mKj"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8VQ-Nu-YEv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1967" y="-203"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="asJ-Fe-QS7">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="qMt-wU-Wlf" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" tag="2" contentMode="scaleToFill" largeTitles="YES" id="DBK-VK-Rbj">
+                        <rect key="frame" x="0.0" y="118" width="393" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kCr-Ot-m9d">
+                        <rect key="frame" x="0.0" y="735" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="kAW-U6-WFF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CUl-S8-pZe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="391.60305343511448" y="3.5211267605633805"/>
         </scene>
     </scenes>
     <resources>
+        <image name="clock" catalog="system" width="128" height="123"/>
+        <image name="gearshape" catalog="system" width="128" height="123"/>
+        <image name="trash" catalog="system" width="117" height="128"/>
+        <namedColor name="MainBrand-500">
+            <color red="0.027450980392156862" green="0.46666666666666667" blue="0.20392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="tertiaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
