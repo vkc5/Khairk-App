@@ -50,7 +50,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
             return
         }
         
-        db.collection("notifications").whereField("userID", isEqualTo: uid).getDocuments { [weak self] querySnapshot, error in
+        db.collection("notifications").whereField("userId", isEqualTo: uid).order(by: "createdAt", descending: true).getDocuments { [weak self] querySnapshot, error in
             guard let self = self else { return }
             
             if let error = error {
@@ -229,7 +229,15 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     @objc private func refreshNotificationsData(_ sender: Any) {
         fetchNotifications()
     }
+    
+    @IBAction func goToNotificationSettings(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminProfile", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminNotificatinSettingsVC")
 
+        mapVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 
