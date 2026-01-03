@@ -232,21 +232,11 @@ final class NGODonationRequestCell: UITableViewCell {
         donorLabel.text = donation.donorName
         pickupImageView.image = UIImage(named: "ImagePicker") ?? UIImage(systemName: "photo")
 
-        let status = donation.status.lowercased()
-        let statusColor: UIColor
-        if status == "accepted" || status == "approved" {
-            statusColor = .systemGreen
-        } else if status == "rejected" {
-            statusColor = .systemRed
-        } else if status == "collected" || status == "completed" {
-            statusColor = .systemGray
-        } else {
-            statusColor = .systemOrange
-        }
-
         statusLabel.text = donation.status.capitalized
-        statusLabel.textColor = statusColor
-        statusLabel.backgroundColor = statusColor.withAlphaComponent(0.12)
+        statusLabel.textColor = donation.status == "approved" ? UIColor.systemGreen : UIColor.systemOrange
+        statusLabel.backgroundColor = (donation.status == "approved"
+            ? UIColor.systemGreen.withAlphaComponent(0.12)
+            : UIColor.systemOrange.withAlphaComponent(0.12))
     }
 
     private func setupCard() {

@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseAuth
 import FirebaseFirestore
 
 final class MyCasesViewController: UIViewController {
@@ -50,6 +51,10 @@ final class MyCasesViewController: UIViewController {
     private let emptyLabel = UILabel()
 
     private var chipButtons: [UIButton] = []
+
+    private var ngoId: String {
+        Auth.auth().currentUser?.uid ?? "MISSING_NGO_ID"
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -203,22 +208,19 @@ final class MyCasesViewController: UIViewController {
     }
 
     private func startListening() {
-        NGOContext.shared.getNgoId { [weak self] result in
+        guard ngoId != "MISSING_NGO_ID" else {
+            showAlert(title: "Not Logged In", message: "Please log in as an NGO first.")
+            return
+        }
+
+        listener = service.listenCases(ngoId: ngoId) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .failure(let err):
-                self.showAlert(title: "Error", message: err.localizedDescription)
-            case .success(let ngoId):
-                self.listener = self.service.listenCases(ngoId: ngoId) { [weak self] result in
-                    guard let self = self else { return }
-                    switch result {
-                    case .success(let items):
-                        self.cases = items
-                        self.applyFilters()
-                    case .failure(let error):
-                        self.showAlert(title: "Error", message: error.localizedDescription)
-                    }
-                }
+            case .success(let items):
+                self.cases = items
+                self.applyFilters()
+            case .failure(let error):
+                self.showAlert(title: "Error", message: error.localizedDescription)
             }
         }
     }
@@ -230,7 +232,7 @@ final class MyCasesViewController: UIViewController {
             let matchesFilter = selectedFilter.matches(progress: progress)
             let matchesQuery = query.isEmpty
                 || item.title.lowercased().contains(query)
-                || item.measurements.lowercased().contains(query)
+                || item.foodType.lowercased().contains(query)
             return matchesFilter && matchesQuery
         }
 

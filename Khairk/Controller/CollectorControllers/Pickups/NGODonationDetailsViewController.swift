@@ -267,17 +267,17 @@ final class NGODonationDetailsViewController: UIViewController {
 
         donorInfoLabel.text = donorInfo.isEmpty ? "Contact info not provided" : donorInfo
 
-        // ---- Buttons visibility ----
-        let isPending = donation.status.lowercased() == "pending"
-        approveButton.isHidden = !isPending
-        rejectButton.isHidden = !isPending
-        actionStack.isHidden = !isPending
+        // ---- Buttons visibility (keep your logic) ----
+        let decided = donation.status != "pending"
+        approveButton.isHidden = decided
+        rejectButton.isHidden = decided
+        actionStack.isHidden = decided
     }
 
 
     @objc private func approveTapped() {
         guard let donation = currentDonation else { return }
-        confirm(title: "Accept Donation", message: "Are you sure you want to accept this donation?", yesTitle: "Yes, Accept") { [weak self] in
+        confirm(title: "Approve Donation", message: "Are you sure you want to approve this donation?", yesTitle: "Yes, Approve") { [weak self] in
             guard let self = self else { return }
             NGOContext.shared.getNgoId { result in
                 switch result {
@@ -293,9 +293,9 @@ final class NGODonationDetailsViewController: UIViewController {
                         DispatchQueue.main.async {
                             switch result {
                             case .success:
-                                self.showAlert(title: "Donation Accepted", message: "The donation has been successfully accepted.")
+                                self.showAlert(title: "NGO Approved", message: "The donation has been successfully approved.")
                             case .failure(let err):
-                                self.showAlert(title: "Accept Failed", message: err.localizedDescription)
+                                self.showAlert(title: "Approve Failed", message: err.localizedDescription)
                             }
                         }
                     }
