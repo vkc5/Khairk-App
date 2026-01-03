@@ -13,7 +13,7 @@
             <objects>
                 <viewController storyboardIdentifier="My_impactViewController" id="fSg-5I-waJ" customClass="My_impactViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9xh-Lr-uAf">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background2" id="ijr-gt-VzZ">
@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-Ic-50x">
-                                <rect key="frame" x="0.0" y="-28" width="393" height="848"/>
+                                <rect key="frame" x="0.0" y="63" width="393" height="757"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="Rectangle  Meals Shared " translatesAutoresizingMaskIntoConstraints="NO" id="qdZ-ad-fci">
                                         <rect key="frame" x="29" y="24" width="350" height="144"/>
@@ -311,7 +311,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="My Impact " id="05p-vY-BkS"/>
                     <connections>
-                        <outlet property="chartStackView" destination="jSf-Va-5T3" id="rYe-02-GQu"/>
+                        <outlet property="areaChartContainer" destination="jSf-Va-5T3" id="cbs-1O-8kV"/>
                         <outlet property="familiesCountLabel" destination="kNG-te-heh" id="iaN-sa-trk"/>
                         <outlet property="foodSavedCountLabel" destination="1fj-M5-LeP" id="OZe-OZ-oov"/>
                         <outlet property="mealsCountLabel" destination="7Ld-bb-zhc" id="S7b-nk-ZRT"/>
@@ -336,7 +336,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="fSg-5I-waJ" kind="show" id="cIw-Qx-LMm"/>
+                        <segue destination="fSg-5I-waJ" kind="relationship" relationship="rootViewController" id="T2c-Q6-vPa"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qj4-WY-fbF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
