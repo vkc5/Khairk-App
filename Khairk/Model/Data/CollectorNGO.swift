@@ -9,4 +9,7 @@ struct CollectorNGO {
     let applicationStatus: String
     let email: String
     let phone: String
+    var ratingAvg: Double = 0
+    var ratingCount: Int = 0
+
 }

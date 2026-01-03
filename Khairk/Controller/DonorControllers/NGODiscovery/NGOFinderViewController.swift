@@ -139,6 +139,54 @@ final class NGOFinderViewController: UIViewController {
                 }
             }
     }
+    private func fetchStatsForShownNGOs() {
+        let ids = shownNGOs.map { $0.id }
+        guard !ids.isEmpty else { return }
+
+        // Firestore "in" max 10 → chunk
+        let chunkSize = 10
+        let chunks = stride(from: 0, to: ids.count, by: chunkSize).map {
+            Array(ids[$0..<min($0 + chunkSize, ids.count)])
+        }
+
+        for chunk in chunks {
+            db.collection("ngo_stats")
+                .whereField(FieldPath.documentID(), in: chunk)
+                .getDocuments { [weak self] snap, err in
+                    guard let self else { return }
+                    if let err {
+                        print("❌ stats error:", err.localizedDescription)
+                        return
+                    }
+
+                    let dict: [String: (Double, Int)] = Dictionary(uniqueKeysWithValues:
+                        (snap?.documents ?? []).map { doc in
+                            let d = doc.data()
+                            let avg = d["ratingAvg"] as? Double ?? 0
+                            let count = d["ratingCount"] as? Int ?? 0
+                            return (doc.documentID, (avg, count))
+                        }
+                    )
+
+                    // حدّث الداتا
+                    for i in 0..<self.shownNGOs.count {
+                        let id = self.shownNGOs[i].id
+                        if let (avg, count) = dict[id] {
+                            self.shownNGOs[i].ratingAvg = avg
+                            self.shownNGOs[i].ratingCount = count
+                        } else {
+                            self.shownNGOs[i].ratingAvg = 0
+                            self.shownNGOs[i].ratingCount = 0
+                        }
+                    }
+
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                }
+        }
+    }
+
 
     // MARK: - Filters Logic
     private func applyFilters() {
@@ -173,6 +221,8 @@ final class NGOFinderViewController: UIViewController {
 
         shownNGOs = result
         collectionView.reloadData()
+        fetchStatsForShownNGOs()
+
     }
 }
 

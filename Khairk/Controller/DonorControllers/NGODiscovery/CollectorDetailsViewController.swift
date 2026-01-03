@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseFirestore
 
 final class CollectorDetailsViewController: UIViewController {
 
@@ -12,6 +13,7 @@ final class CollectorDetailsViewController: UIViewController {
     @IBOutlet weak var donateButton: UIButton!
 
     var ngo: CollectorNGO?
+    private let db = Firestore.firestore()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +22,9 @@ final class CollectorDetailsViewController: UIViewController {
 
         styleUI()
         fillData()
+        fetchRatingStats()
     }
+
 
     private func styleUI() {
         heroImageView.layer.cornerRadius = 20
@@ -53,26 +57,14 @@ final class CollectorDetailsViewController: UIViewController {
 
         switch status {
         case "approved":
-            ratingLabel.text = "Approved NGO ⭐"
-            ratingLabel.textColor = .systemGreen
             donateButton.isHidden = false
             donateButton.isEnabled = true
 
-        case "pending":
-            ratingLabel.text = "Pending Review ⏳"
-            ratingLabel.textColor = .systemOrange
-            donateButton.isHidden = true   // ✅ لا يسمح يتبرع وهو pending
-            donateButton.isEnabled = false
-
-        case "rejected":
-            ratingLabel.text = "Rejected ✖︎"
-            ratingLabel.textColor = .systemRed
+        case "pending", "rejected":
             donateButton.isHidden = true
             donateButton.isEnabled = false
 
         default:
-            ratingLabel.text = ngo.applicationStatus.isEmpty ? "Status: —" : "Status: \(ngo.applicationStatus)"
-            ratingLabel.textColor = .secondaryLabel
             donateButton.isHidden = true
             donateButton.isEnabled = false
         }
@@ -80,6 +72,52 @@ final class CollectorDetailsViewController: UIViewController {
         let urlString = !ngo.profileImageUrl.isEmpty ? ngo.profileImageUrl : ngo.logoUrl
         loadImage(from: urlString)
     }
+
+    private func fetchRatingStats() {
+        guard let ngo = ngo else { return }
+
+        let status = ngo.applicationStatus
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        // ✅ إذا مو approved: اكتب status وخلاص
+        if status == "pending" {
+            ratingLabel.text = "Pending"
+            ratingLabel.textColor = .systemOrange
+            return
+        }
+
+        if status == "rejected" {
+            ratingLabel.text = "Rejected"
+            ratingLabel.textColor = .systemRed
+            return
+        }
+
+        // ✅ approved: جيب التقييم من Firestore
+        db.collection("ngo_stats").document(ngo.id).getDocument { [weak self] snap, err in
+            guard let self else { return }
+
+            if let err {
+                print("❌ stats error:", err.localizedDescription)
+                return
+            }
+
+            let avg = snap?.data()?["ratingAvg"] as? Double ?? 0
+            let count = snap?.data()?["ratingCount"] as? Int ?? 0
+
+            DispatchQueue.main.async {
+                if count > 0 {
+                    self.ratingLabel.text = String(format: "⭐ %.1f (%d)", avg, count)
+                    self.ratingLabel.textColor = .label
+                } else {
+                    self.ratingLabel.text = "No ratings yet"
+                    self.ratingLabel.textColor = .secondaryLabel
+                }
+            }
+        }
+    }
+
+
 
     private func loadImage(from urlString: String) {
         let clean = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -109,6 +147,8 @@ final class CollectorDetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        fetchRatingStats()
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
