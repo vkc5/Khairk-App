@@ -98,7 +98,7 @@ final class NGODonationDetailsViewController: UIViewController {
         actionStack.spacing = 12
         actionStack.distribution = .fillEqually
 
-        approveButton.setTitle("Approve", for: .normal)
+        approveButton.setTitle("Accept", for: .normal)
         approveButton.setTitleColor(.white, for: .normal)
         approveButton.backgroundColor = UIColor(named: "MainBrand-500") ?? UIColor.systemGreen
         approveButton.layer.cornerRadius = 16

@@ -11,7 +11,7 @@ final class DonationService {
     func createDonation(
         donorId: String,                 // NEW: link to users/{uid}
         caseId: String? = nil,            // NEW: link to ngoCases/{docId} (optional)
-        ngoId: String? = nil,             // NEW: link to ngos/{docId} (optional)
+        ngoId: String? = nil,             // NEW: link to NGOs by Auth UID (optional)
 
         foodName: String,
         quantity: Int,
@@ -53,7 +53,6 @@ final class DonationService {
         }
         if let ngoId = ngoId, !ngoId.isEmpty {
             donationData["ngoID"] = ngoId
-            donationData["ngoId"] = ngoId
         }
 
         // Optional pickup/delivery fields
@@ -87,7 +86,6 @@ final class DonationService {
         db.collection("donations")
             .whereField("ngoID", isEqualTo: ngoId)
             .whereField("status", isEqualTo: "pending")
-            .order(by: "createdAt", descending: true)
             .addSnapshotListener { snap, err in
                 if let err = err {
                     onChange(.failure(err))
@@ -104,8 +102,7 @@ final class DonationService {
     ) -> ListenerRegistration {
         db.collection("donations")
             .whereField("ngoID", isEqualTo: ngoId)
-            .whereField("status", in: ["accepted", "approved"])
-            .order(by: "createdAt", descending: true)
+            .whereField("status", isEqualTo: "accepted")
             .addSnapshotListener { snap, err in
                 if let err = err {
                     onChange(.failure(err))
@@ -154,7 +151,6 @@ final class DonationService {
             tx.updateData([
                 "status": "accepted",
                 "ngoID": ngoId,
-                "ngoId": ngoId,
                 "pickupStatus": "in_progress",
             ], forDocument: donationRef)
             tx.updateData(["Collected": FieldValue.increment(Int64(quantity))], forDocument: caseRef)

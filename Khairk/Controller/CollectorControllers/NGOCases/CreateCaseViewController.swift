@@ -138,22 +138,33 @@ final class CreateCaseViewController: UIViewController {
     }
 
     private func fetchNgoName(ngoId: String, completion: @escaping (Result<String, Error>) -> Void) {
-        db.collection("ngos").document(ngoId).getDocument { doc, err in
-            if let err = err {
-                completion(.failure(err))
-                return
+        db.collection("ngos")
+            .whereField("uid", isEqualTo: ngoId)
+            .limit(to: 1)
+            .getDocuments { snap, err in
+                if let err = err {
+                    completion(.failure(err))
+                    return
+                }
+                guard let doc = snap?.documents.first else {
+                    completion(.failure(NSError(
+                        domain: "CreateCaseViewController",
+                        code: 404,
+                        userInfo: [NSLocalizedDescriptionKey: "NGO not found for this user."]
+                    )))
+                    return
+                }
+                let name = doc.data()["name"] as? String ?? ""
+                if name.isEmpty {
+                    completion(.failure(NSError(
+                        domain: "CreateCaseViewController",
+                        code: 404,
+                        userInfo: [NSLocalizedDescriptionKey: "NGO name is missing."]
+                    )))
+                    return
+                }
+                completion(.success(name))
             }
-            let name = doc?.data()?["name"] as? String ?? ""
-            if name.isEmpty {
-                completion(.failure(NSError(
-                    domain: "CreateCaseViewController",
-                    code: 404,
-                    userInfo: [NSLocalizedDescriptionKey: "NGO name is missing."]
-                )))
-                return
-            }
-            completion(.success(name))
-        }
     }
 
     @objc private func saveTapped() {

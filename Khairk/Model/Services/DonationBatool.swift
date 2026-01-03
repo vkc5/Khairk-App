@@ -83,7 +83,7 @@ struct Donation {
         }
 
         // Optional collector fields
-        self.ngoId = (dictionary["ngoID"] as? String) ?? (dictionary["ngoId"] as? String)
+        self.ngoId = dictionary["ngoID"] as? String
         self.pickupStatus = dictionary["pickupStatus"] as? String
 
         self.donorName = dictionary["donorName"] as? String

@@ -28,37 +28,24 @@ final class NGOContext {
             return
         }
 
-        db.collection("ngos").document(uid).getDocument { [weak self] doc, err in
-            if let err = err {
-                completion(.failure(err))
-                return
-            }
-            if let doc = doc, doc.exists {
+        db.collection("ngos")
+            .whereField(authUidField, isEqualTo: uid)
+            .limit(to: 1)
+            .getDocuments { [weak self] snap, err in
+                if let err = err {
+                    completion(.failure(err))
+                    return
+                }
+                guard snap?.documents.first != nil else {
+                    completion(.failure(NSError(
+                        domain: "NGOContext",
+                        code: 404,
+                        userInfo: [NSLocalizedDescriptionKey: "No NGO document linked to this user. Add field uid to NGOs."]
+                    )))
+                    return
+                }
                 self?.cachedNgoId = uid
                 completion(.success(uid))
-                return
             }
-
-            self?.db.collection("ngos")
-                .whereField(self?.authUidField ?? "uid", isEqualTo: uid)
-                .limit(to: 1)
-                .getDocuments { snap, err in
-                    if let err = err {
-                        completion(.failure(err))
-                        return
-                    }
-                    guard let ngoDoc = snap?.documents.first else {
-                        completion(.failure(NSError(
-                            domain: "NGOContext",
-                            code: 404,
-                            userInfo: [NSLocalizedDescriptionKey: "No NGO document linked to this user. Add field uid to NGOs."]
-                        )))
-                        return
-                    }
-                    let ngoId = ngoDoc.documentID
-                    self?.cachedNgoId = ngoId
-                    completion(.success(ngoId))
-                }
-        }
     }
 }
