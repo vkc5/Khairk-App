@@ -83,7 +83,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="bodyLabel" destination="nDw-Ce-ug8" id="QnO-1k-ykr"/>
+                                            <outlet property="dateLabel" destination="TpA-aY-Xsv" id="LZz-Lm-B6r"/>
                                             <outlet property="notificationContainer" destination="LQb-rN-nJm" id="f7q-Vg-Rhg"/>
+                                            <outlet property="titleLabel" destination="F5N-yx-9kL" id="65M-Dm-aOc"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

@@ -459,6 +459,9 @@
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rH8-QR-Qi7">
                                                 <rect key="frame" x="280" y="0.0" width="51" height="31"/>
                                                 <color key="onTintColor" name="WidgetBackground"/>
+                                                <connections>
+                                                    <action selector="muteChanged:" destination="OAF-VW-J2L" eventType="valueChanged" id="kHp-tG-6q6"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
                                     </stackView>
@@ -474,6 +477,9 @@
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DEz-25-5tI">
                                                 <rect key="frame" x="280" y="0.0" width="51" height="31"/>
                                                 <color key="onTintColor" name="WidgetBackground"/>
+                                                <connections>
+                                                    <action selector="soundChanged:" destination="OAF-VW-J2L" eventType="valueChanged" id="qXB-cf-o4Z"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
                                     </stackView>
@@ -489,6 +495,9 @@
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="idY-dC-gfz">
                                                 <rect key="frame" x="280" y="0.0" width="51" height="31"/>
                                                 <color key="onTintColor" name="WidgetBackground"/>
+                                                <connections>
+                                                    <action selector="vibrateChanged:" destination="OAF-VW-J2L" eventType="valueChanged" id="8Yd-vy-4Nm"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
                                     </stackView>
