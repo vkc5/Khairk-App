@@ -189,19 +189,21 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         navigationController?.pushViewController(mapVC, animated: true)
     }
     @IBAction func Donate1(_ sender: UIButton) {
-        let sb = UIStoryboard(name: "DonorNGOCases", bundle: nil)
-        let profileVC = sb.instantiateViewController(withIdentifier: "FoodDonationViewController")
+        let storyboard = UIStoryboard(name: "DonorNGOCases", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "FoodDonationViewController")
 
-        // replace the placeholder root with the real profile screen
-        navigationController?.setViewControllers([profileVC], animated: false)
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
     }
     
     @IBAction func Donate2(_ sender: UIButton) {
-        let sb = UIStoryboard(name: "DonorNGOCases", bundle: nil)
-        let profileVC = sb.instantiateViewController(withIdentifier: "FoodDonationViewController")
+        let storyboard = UIStoryboard(name: "DonorNGOCases", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "FoodDonationViewController")
 
-        // replace the placeholder root with the real profile screen
-        navigationController?.setViewControllers([profileVC], animated: false)
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
     }
     
     @IBAction func ImpactTapped(_ sender: UIButton) {

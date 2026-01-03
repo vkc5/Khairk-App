@@ -1,8 +1,10 @@
 import UIKit
 import FirebaseFirestore
 
-final class AdminDashboardViewController: UIViewController {
-
+final class AdminDashboardViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
+    
+    private var topNgos: [TopNgoItem] = []
+    private var topDonors: [TopDonorItem] = []
     // MARK: - Outlets (نفس اللي عندج)
     @IBOutlet weak var UserAccount: UIView!
     @IBOutlet weak var ManageDonation: UIView!
@@ -10,13 +12,10 @@ final class AdminDashboardViewController: UIViewController {
     @IBOutlet weak var goodnessView: UIView!
     @IBOutlet weak var statsView: UIView!
 
-    @IBOutlet weak var goalCard1: UIView!
-    @IBOutlet weak var goalCard2: UIView!
+    @IBOutlet weak var impactRowView: UIView!
 
-    @IBOutlet weak var spotlightView1: UIView!
-    @IBOutlet weak var spotlightView2: UIView!
-
-    // MARK: - Firestore
+    @IBOutlet weak var topDonorsCV: UICollectionView!
+    @IBOutlet weak var topNgosCV: UICollectionView!
     private let db = Firestore.firestore()
 
     // MARK: - Config
@@ -26,191 +25,168 @@ final class AdminDashboardViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Admin Dashboard"
+        
+        setupHorizontalCV(topDonorsCV)
+        setupHorizontalCV(topNgosCV)
 
+        topDonorsCV.dataSource = self
+        topDonorsCV.delegate = self
+
+        topNgosCV.dataSource = self
+        topNgosCV.delegate = self
+
+        loadTopDonors()
+        loadTopNgos()
+        
+        impactRowView.layer.borderWidth = 1
+        impactRowView.layer.borderColor = UIColor.systemGray4.cgColor
+        impactRowView.layer.cornerRadius = 10
+        
         // TOP BOXES (ستايل)
         styleTopBox(UserAccount)
         styleTopBox(ManageDonation)
-        styleTopBox(ManageDonation)
+        styleTopBox(myDonationView)
         styleTopBox(goodnessView)
         styleTopBox(statsView)
-
-        // GOAL CARDS
-        styleGoalCard(goalCard1)
-        styleGoalCard(goalCard2)
-
-        // SPOTLIGHT
-        styleSpotlight(spotlightView1)
-        styleSpotlight(spotlightView2)
-
-        // Default texts (قبل الداتا)
-        setLabel(in: goalCard1, tag: 101, text: "Total Donations")
-        setLabel(in: goalCard1, tag: 102, text: "—")
-
-        setLabel(in: goalCard2, tag: 111, text: "Total Users")
-        setLabel(in: goalCard2, tag: 112, text: "—")
-
-        setLabel(in: spotlightView1, tag: 201, text: "Top Donor")
-        setLabel(in: spotlightView1, tag: 202, text: "Loading…")
-
-        setLabel(in: spotlightView2, tag: 211, text: "Top NGO")
-        setLabel(in: spotlightView2, tag: 212, text: "Loading…")
-
-        // Retrieve
-        loadAdminStats()
+        
+        
+    }
+    
+    private func setupHorizontalCV(_ cv: UICollectionView) {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 12
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        cv.collectionViewLayout = layout
+        cv.showsHorizontalScrollIndicator = false
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        // gradient لازم بعد ما ياخذ الحجم النهائي
-        styleSpotlight(spotlightView1)
-        styleSpotlight(spotlightView2)
-    }
-
-    // MARK: - Retrieve (Admin Dashboard)
-    private func loadAdminStats() {
-        fetchTotals()
-        fetchTopDonorAndTopNGO()
-    }
-
-    private func fetchTotals() {
-        // Total Donations
-        db.collection("donations").getDocuments { [weak self] snap, _ in
-            guard let self else { return }
-            self.setLabel(in: self.goalCard1, tag: 102, text: "\(snap?.count ?? 0)")
-        }
-
-        // Total Users
-        db.collection("users").getDocuments { [weak self] snap, _ in
-            guard let self else { return }
-            self.setLabel(in: self.goalCard2, tag: 112, text: "\(snap?.count ?? 0)")
-        }
-
-        // إذا تبين Total NGOs بدل Total Users:
-        // db.collection("ngos").getDocuments { [weak self] snap, _ in
-        //   self?.setLabel(in: self!.goalCard2, tag: 112, text: "\(snap?.count ?? 0)")
-        //   self?.setLabel(in: self!.goalCard2, tag: 111, text: "Total NGOs")
-        // }
-    }
-
-    private func fetchTopDonorAndTopNGO() {
-
+    
+    private func loadTopDonors() {
         db.collection("donations")
-            .order(by: "createdAt", descending: true)
-            .limit(to: maxDonationsToScan)
-            .getDocuments { [weak self] snap, err in
-                guard let self else { return }
-
-                if let err = err {
-                    print("❌ donations error:", err)
-                    self.setLabel(in: self.spotlightView1, tag: 202, text: "Error")
-                    self.setLabel(in: self.spotlightView2, tag: 212, text: "Error")
+            .whereField("status", isEqualTo: "accepted")
+            .getDocuments(source: .default) { [weak self] snap, error in
+                guard let self = self else { return }
+                if let error = error {
+                    print("❌ donations:", error.localizedDescription)
                     return
                 }
 
-                let docs = snap?.documents ?? []
-                if docs.isEmpty {
-                    self.setLabel(in: self.spotlightView1, tag: 202, text: "No data")
-                    self.setLabel(in: self.spotlightView2, tag: 212, text: "No data")
-                    return
+                // Parse safely using your Donation model
+                let donations = (snap?.documents ?? []).compactMap { Donation(doc: $0) }
+
+                var counts: [String: Int] = [:]
+
+                for donation in donations {
+                    let cleanId = donation.donorId.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                    if cleanId.isEmpty {
+                        print("⚠️ Donation \(donation.id) has EMPTY donorId")
+                        continue
+                    }
+
+                    counts[cleanId, default: 0] += 1
                 }
 
-                // 1) Count donations per donorId
-                var donorCount: [String: Int] = [:]
-                // 2) collect caseIds for NGO mapping
-                var caseIds: [String] = []
+                // remove any empty key (extra safety)
+                counts.removeValue(forKey: "")
 
-                for d in docs {
-                    let data = d.data()
+                let top = counts
+                    .filter { !$0.key.isEmpty }
+                    .sorted { $0.value > $1.value }
+                    .prefix(self.topLimit)
 
-                    if let donorId = data["donorId"] as? String, !donorId.isEmpty {
-                        donorCount[donorId, default: 0] += 1
-                    }
-                    if let caseId = data["caseId"] as? String, !caseId.isEmpty {
-                        caseIds.append(caseId)
+                let group = DispatchGroup()
+                var result: [TopDonorItem] = []
+
+                for (uid, count) in top {
+                    let cleanUid = uid.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !cleanUid.isEmpty else { continue }
+
+                    group.enter()
+                    self.db.collection("users").document(cleanUid).getDocument { userSnap, _ in
+                        let name = userSnap?.data()?["name"] as? String ?? "Unknown"
+                        result.append(TopDonorItem(uid: cleanUid, name: name, count: count))
+                        group.leave()
                     }
                 }
 
-                // Top Donor (single)
-                if let topDonor = donorCount.max(by: { $0.value < $1.value }) {
-                    self.fetchUserName(userId: topDonor.key) { name in
-                        self.setLabel(in: self.spotlightView1, tag: 201, text: "Top Donor")
-                        self.setLabel(in: self.spotlightView1, tag: 202, text: "\(name) • \(topDonor.value) donations")
-                    }
-                } else {
-                    self.setLabel(in: self.spotlightView1, tag: 202, text: "No donors")
-                }
-
-                // Top NGO:
-                // donations.caseId -> ngoCases(caseId).ngoID -> count by ngoID -> ngos(ngoID).name
-                self.fetchNgoIDsFromCaseIDs(caseIds: Array(Set(caseIds))) { caseToNgo in
-
-                    var ngoCount: [String: Int] = [:]
-                    for d in docs {
-                        let data = d.data()
-                        guard let caseId = data["caseId"] as? String else { continue }
-                        if let ngoID = caseToNgo[caseId], !ngoID.isEmpty {
-                            ngoCount[ngoID, default: 0] += 1
-                        }
-                    }
-
-                    guard let topNgo = ngoCount.max(by: { $0.value < $1.value }) else {
-                        self.setLabel(in: self.spotlightView2, tag: 212, text: "No NGOs")
-                        return
-                    }
-
-                    self.fetchNgoName(ngoId: topNgo.key) { ngoName in
-                        self.setLabel(in: self.spotlightView2, tag: 211, text: "Top NGO")
-                        self.setLabel(in: self.spotlightView2, tag: 212, text: "\(ngoName) • \(topNgo.value) donations")
-                    }
+                group.notify(queue: .main) {
+                    self.topDonors = result.sorted { $0.count > $1.count }
+                    self.topDonorsCV.reloadData()
                 }
             }
     }
 
-    // MARK: - Helpers (Firestore)
+    private func loadTopNgos() {
+        db.collection("ngoCases")
+            .getDocuments(source: .default) { [weak self] snap, error in
+                guard let self = self else { return }
+                if let error = error {
+                    print("❌ ngoCases:", error.localizedDescription)
+                    return
+                }
 
-    private func fetchUserName(userId: String, completion: @escaping (String) -> Void) {
-        db.collection("users").document(userId).getDocument { snap, _ in
-            let name = (snap?["name"] as? String) ?? (snap?["fullName"] as? String) ?? "Unknown"
-            completion(name)
-        }
-    }
+                let cases = (snap?.documents ?? []).compactMap { NgoCase(doc: $0) }
 
-    private func fetchNgoName(ngoId: String, completion: @escaping (String) -> Void) {
-        db.collection("ngos").document(ngoId).getDocument { snap, _ in
-            let name = (snap?["name"] as? String) ?? "Unknown NGO"
-            completion(name)
-        }
-    }
+                var counts: [String: Int] = [:]
 
-    private func fetchNgoIDsFromCaseIDs(caseIds: [String], completion: @escaping ([String: String]) -> Void) {
-        guard !caseIds.isEmpty else { completion([:]); return }
+                for c in cases {
+                    // You said ngoID is UID stored in the document field "ngoID"
+                    // But NgoCase model doesn’t include ngoID, so we read from doc directly:
+                    let d = snap?.documents.first(where: { $0.documentID == c.id })?.data() ?? [:]
+                    let ngoIdRaw = d["ngoID"] as? String ?? ""
+                    let ngoId = ngoIdRaw.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // Firestore whereIn max 10
-        let batches = caseIds.chunked(into: 10)
-        var result: [String: String] = [:]
-        let group = DispatchGroup()
+                    if ngoId.isEmpty { continue }
+                    counts[ngoId, default: 0] += 1
+                }
 
-        for batch in batches {
-            group.enter()
-            db.collection("ngoCases")
-                .whereField(FieldPath.documentID(), in: batch)
-                .getDocuments { snap, err in
-                    defer { group.leave() }
-                    if let err = err {
-                        print("❌ ngoCases error:", err)
-                        return
-                    }
-                    for doc in snap?.documents ?? [] {
-                        let data = doc.data()
-                        if let ngoID = data["ngoID"] as? String {
-                            result[doc.documentID] = ngoID
-                        }
+                counts.removeValue(forKey: "")
+
+                let top = counts
+                    .filter { !$0.key.isEmpty }
+                    .sorted { $0.value > $1.value }
+                    .prefix(self.topLimit)
+
+                let group = DispatchGroup()
+                var result: [TopNgoItem] = []
+
+                for (uid, count) in top {
+                    let cleanUid = uid.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !cleanUid.isEmpty else { continue }
+
+                    group.enter()
+                    self.db.collection("users").document(cleanUid).getDocument { userSnap, _ in
+                        let data = userSnap?.data() ?? [:]
+                        let name = data["name"] as? String ?? "NGO"
+                        let img = data["profileImageUrl"] as? String
+                        result.append(TopNgoItem(uid: cleanUid, name: name, count: count, imageURL: img))
+                        group.leave()
                     }
                 }
-        }
 
-        group.notify(queue: .main) { completion(result) }
+                group.notify(queue: .main) {
+                    self.topNgos = result.sorted { $0.count > $1.count }
+                    self.topNgosCV.reloadData()
+                }
+            }
+    }
+
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
     }
 
     // MARK: - Styling (نفس كودج)
@@ -220,16 +196,6 @@ final class AdminDashboardViewController: UIViewController {
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.black.cgColor
         view.clipsToBounds = true
-    }
-
-    func styleGoalCard(_ view: UIView) {
-        view.layer.cornerRadius = 16
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.black.cgColor
-        view.layer.masksToBounds = true
-
-        view.layoutMargins = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-        view.preservesSuperviewLayoutMargins = false
     }
 
     func styleSpotlight(_ view: UIView) {
@@ -254,19 +220,109 @@ final class AdminDashboardViewController: UIViewController {
     private func setLabel(in container: UIView, tag: Int, text: String) {
         (container.viewWithTag(tag) as? UILabel)?.text = text
     }
+    
+    @IBAction func AdminImpactTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminImpact", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminCollectorImpact")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    @IBAction func AdminImpact2Tapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "AdminImpact", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminCollectorImpact")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func UserAccountTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "AdminUserManagement", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "UserManagementVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func ManageDonationTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "AdminDonationHistory", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminDonationHistoryVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func Send(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminBroadcast", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminBroadcastViewController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    @IBAction func ProfileTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "AdminProfile", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminProfileVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView == topDonorsCV { return topDonors.count }
+        return topNgos.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        if collectionView == topDonorsCV {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopDonorCell", for: indexPath) as! TopDonorCell
+            cell.configure(name: topDonors[indexPath.item].name, count: topDonors[indexPath.item].count)
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopNgoCell", for: indexPath) as! TopNgoCell
+            cell.configure(name: topNgos[indexPath.item].name,
+                           count: topNgos[indexPath.item].count,
+                           imageURL: topNgos[indexPath.item].imageURL)
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let h = collectionView.bounds.height
+
+        if collectionView == topDonorsCV {
+            // card fits inside 120 height CV
+            return CGSize(width: 165, height: 75)
+        } else {
+            // bigger card for NGO
+            return CGSize(width: 135, height: 166)
+        }
+    }
+
+
 }
 
-// MARK: - Array chunk helper
-private extension Array {
-    func chunked(into size: Int) -> [[Element]] {
-        guard size > 0 else { return [self] }
-        var result: [[Element]] = []
-        var i = 0
-        while i < count {
-            let end = Swift.min(i + size, count)
-            result.append(Array(self[i..<end]))
-            i += size
-        }
-        return result
-    }
+struct TopDonorItem {
+    let uid: String
+    let name: String
+    let count: Int
 }
+
+struct TopNgoItem {
+    let uid: String
+    let name: String
+    let count: Int
+    let imageURL: String?
+}
+

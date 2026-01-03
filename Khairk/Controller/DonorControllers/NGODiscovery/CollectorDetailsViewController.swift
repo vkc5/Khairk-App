@@ -98,8 +98,14 @@ final class CollectorDetailsViewController: UIViewController {
 
     @IBAction func donateNowTapped(_ sender: UIButton) {
         guard let ngo else { return }
-        print("Donate Now tapped for:", ngo.name)
+        let storyboard = UIStoryboard(name: "DonorNGOCases", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "FoodDonationViewController")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true

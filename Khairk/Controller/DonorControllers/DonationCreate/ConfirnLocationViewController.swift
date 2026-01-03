@@ -8,6 +8,8 @@
 
 import UIKit
 import MapKit
+import FirebaseAuth
+
 
 final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate {
 
@@ -85,9 +87,10 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
             showAlert(title: "Error", message: "Missing confirmed coordinate.")
             return
         }
+        
         // Ensure we have a valid donor ID for linking
-        guard let uid = donorId else {
-            showAlert(title: "Error", message: "Missing user ID.")
+        guard let uid = Auth.auth().currentUser?.uid else {
+            showAlert(title: "Error", message: "Missing logged-in user.")
             return
         }
 
@@ -130,7 +133,7 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
                                     title: "Thank you for Donating!",
                                     message: "Your delivery location and image have been submitted successfully."
                                 ) {
-                                    self.navigationController?.popViewController(animated: true)
+                                    self.performSegue(withIdentifier: "toRating", sender: nil)
                                 }
 
                             case .failure(let error):
@@ -145,6 +148,19 @@ final class ConfirmLocationViewController: UIViewController, UITextFieldDelegate
             }
         }
     }
+    
+    private func goToDashboard() {
+        // If your app uses Tab Bar, go to the first tab (Dashboard)
+        if let tab = self.tabBarController {
+            tab.selectedIndex = 0
+            self.navigationController?.popToRootViewController(animated: true)
+            return
+        }
+
+        // If it's only NavigationController, go back to root (Dashboard)
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+
 
     private func validateForm() -> Bool {
 

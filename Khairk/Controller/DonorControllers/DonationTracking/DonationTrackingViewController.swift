@@ -192,34 +192,40 @@ final class DonationTrackingViewController: UIViewController {
     private func fetchDonations() {
         listener?.remove()
 
-        guard let currentUserId = Auth.auth().currentUser?.uid else {
+        guard let uid = Auth.auth().currentUser?.uid else {
             print("❌ No logged in user")
             return
         }
 
         listener = db.collection("donations")
-            .whereField("donorId", isEqualTo: currentUserId) //  الفلترة
-            .order(by: "createdAt", descending: true)
+            .whereField("donorId", isEqualTo: uid)
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Firestore error:", error)
-                    DispatchQueue.main.async {
-                        self.allItems = []
-                        self.applyFilter(self.currentFilter)
-                    }
+                    print("❌ Tracking error:", error)
                     return
                 }
 
                 let docs = snapshot?.documents ?? []
-                print("✅ my donations count =", docs.count)
+                print("✅ ALL donations count =", docs.count)
+
+                // Debug: print first doc
+                if let first = docs.first {
+                    let d = first.data()
+                    print("🔎 first doc donorId:", d["donorId"] ?? "nil",
+                          "foodName:", d["foodName"] ?? "nil")
+                }
 
                 let mapped: [DonationItem] = docs.compactMap { doc in
                     let data = doc.data()
 
+                    // ✅ donorId (required by your struct)
+                    let donorId = data["donorId"] as? String ?? ""
+
                     let foodName = (data["foodName"] as? String) ?? "Unknown"
 
+                    // quantity can be Int or Double
                     let quantity: Int = {
                         if let i = data["quantity"] as? Int { return i }
                         if let d = data["quantity"] as? Double { return Int(d) }
@@ -232,17 +238,19 @@ final class DonationTrackingViewController: UIViewController {
                     let imageURL = data["imageURL"] as? String
                     let createdAt = (data["createdAt"] as? Timestamp)?.dateValue()
 
+                    // Details fields
                     let note = data["description"] as? String ?? data["note"] as? String
                     let expiryDate = (data["expiryDate"] as? Timestamp)?.dateValue()
                     let donationType = data["donationType"] as? String
 
+                    // Delivery fields
                     let serviceArea = data["serviceArea"] as? String
                     let street = data["street"] as? String
                     let block = data["block"] as? String
                     let buildingNumber = data["buildingNumber"] as? String
 
+                    // Pickup field
                     let pickupTime = (data["pickupTime"] as? Timestamp)?.dateValue()
-                    let donorId = data["donorId"] as? String ?? ""
 
                     return DonationItem(
                         donorId: donorId,
@@ -265,9 +273,13 @@ final class DonationTrackingViewController: UIViewController {
 
                 DispatchQueue.main.async {
                     self.allItems = mapped
-                    self.applyFilter(self.currentFilter)
+                    self.applyFilter(.all)
                 }
             }
+    
+
+    
+
     }
 
 
