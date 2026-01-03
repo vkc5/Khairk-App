@@ -9,11 +9,12 @@ import UIKit
 import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
-
-
+    
+    private var didRunUnreadCheck = false
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -22,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         //for notifocation delegate
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
+        Notification.shared.requestAuthorization { _ in }
         
         //ask for permission
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
@@ -31,6 +33,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
             }
             print("Permission granted: \(granted)")
         }
+        
+        Auth.auth().addStateDidChangeListener { [weak self] _, user in
+                    guard
+                        let self = self,
+                        let user = user,
+                        !self.didRunUnreadCheck
+                    else { return }
+
+                    self.didRunUnreadCheck = true
+
+                    print("👤 User logged in:", user.uid)
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        Notification.shared.showUnreadNotificationsOnAppOpen(userId: user.uid)
+                    }
+                }
 
         return true
     }
@@ -45,7 +63,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
     func userNotificationCenter(_ center: UNUserNotificationCenter,willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         return [.banner, .sound, .badge]
     }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("🟢 App became active")
 
+        // CLEAR BADGE
+        UNUserNotificationCenter.current().setBadgeCount(0)
+
+        Notification.shared.clearBadge()
+    }
+
+    
     // MARK: -
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 

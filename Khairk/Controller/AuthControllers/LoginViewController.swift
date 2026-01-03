@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import FirebaseAuth
 class LoginViewController: UIViewController {
 
     @IBOutlet weak var forgotPasswordLabel: UILabel!
@@ -83,6 +83,24 @@ class LoginViewController: UIViewController {
     }
     
     private func goToDashboard(for role: UserRole) {
+        
+        // 1️⃣ Get current user ID safely
+            guard let userId = Auth.auth().currentUser?.uid else {
+                print("❌ No logged in user")
+                return
+            }
+
+            // 2️⃣ START donation expiry monitoring
+            DonationNotificationService.shared.monitorExpiryForUser(
+                userId: userId,
+                role: role.rawValue
+            )
+
+            // 3️⃣ SHOW unread notifications ONCE
+            Notification.shared.showUnreadNotificationsOnAppOpen(
+                userId: userId
+            )
+        
         let storyboardName: String
         let tabBarId: String
 
