@@ -80,10 +80,6 @@ Leaderboard & Ranking System
 - Developer: Noora Thabet 
 - Tester: Ali Hani Aljassas 
 
-Export as Excel 
-- Developer: Ali Aljassas 
-- Tester: Yusuf Qasimh
-
 Donation Group / Recurring Donation Schedules 
 - Developer: Maryam Sarhan 
 - Tester: Ali Aljassas
