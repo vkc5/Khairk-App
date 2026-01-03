@@ -174,6 +174,16 @@ class FoodDonationViewController: UIViewController, UITableViewDelegate, UITable
         
         present(alert, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 8   // 👈 space between rows (adjust as you like)
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let v = UIView()
+        v.backgroundColor = .clear
+        return v
+    }
 
     // MARK: - TableView DataSource & Delegate
     func numberOfSections(in tableView: UITableView) -> Int {

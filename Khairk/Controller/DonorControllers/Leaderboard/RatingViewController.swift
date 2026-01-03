@@ -158,6 +158,7 @@ final class RatingViewController: UIViewController, UITextViewDelegate {
         submitButton.alpha = 0.5
 
         saveRatingAndUpdateAvg(ngoId: ngoId, userId: userId, rating: selectedRating, comment: comment)
+        self.navigationController?.popToRootViewController(animated: true)
     }
 
     // MARK: - Firebase Save + Update Average (Transaction)

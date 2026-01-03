@@ -42,7 +42,11 @@ final class NGOFinderViewController: UIViewController {
         setupSearchBar()
         fetchCollectorsAllStatuses()
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchCollectorsAllStatuses()
+    }
     // MARK: - Setup
     private func setupCollection() {
         collectionView.dataSource = self
