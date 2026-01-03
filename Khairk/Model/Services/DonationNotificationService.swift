@@ -65,6 +65,45 @@ final class DonationNotificationService {
             }
         }
     }
+    
+    func listenDonationStatusChanges(donationsId: String) {
+        
+        db.collection("donations").document(donationsId).addSnapshotListener { snapshot, error in
+            
+            guard let snapshot = snapshot else { return }
+            let data = snapshot.data() ?? [:]
+            guard
+                let status = data["status"] as? String,
+                let foodName = data["foodName"] as? String,
+                let donorId = data["donorId"] as? String
+            else {
+                return
+            }
+            print("Donation status changed:", status)
+            switch status {
+                
+            case "approved":
+                Notification.shared.save(
+                    title: "Donation Approved ✅",
+                    body: "Your donation of \(foodName) has been approved.",
+                    userId: donorId,
+                    makeLocalNotification: true
+                )
+                
+            case "rejected":
+                Notification.shared.save(
+                    title: "Donation Rejected ❌",
+                    body: "Your donation of \(foodName) was rejected.",
+                    userId: donorId,
+                    makeLocalNotification: true
+                )
+                
+            default:
+                break
+            }
+        }
+    }
+
 
     // MARK: - Stop Monitoring
 

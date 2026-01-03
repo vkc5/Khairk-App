@@ -72,6 +72,21 @@ final class DonationService {
                 completion(.failure(error))
             } else {
                 completion(.success(ref.documentID))
+                Notification.shared.save(
+                    title: "Thank You!",
+                    body: "Your donation of \(foodName) was submitted successfully.",
+                    userId: donorId,
+                    makeLocalNotification: true
+                )
+                if let ngoId = ngoId, !ngoId.isEmpty {
+                    Notification.shared.save(
+                        title: "New Donation Available",
+                        body: "A new donation (\(foodName)) is available for \(donationType).",
+                        userId: ngoId,
+                        makeLocalNotification: false
+                    )
+                }
+                
             }
         }
     }
