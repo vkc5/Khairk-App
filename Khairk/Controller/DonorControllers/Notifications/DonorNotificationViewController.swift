@@ -1,8 +1,8 @@
 //
-//  AdminNotificationController.swift
+//  DonorNotificationViewController.swift
 //  Khairk
 //
-//  Created by BP-19-130-16 on 21/12/2025.
+//  Created by BP-36-213-17 on 04/01/2026.
 //
 
 import UIKit
@@ -10,7 +10,7 @@ import FirebaseStorage
 import FirebaseFirestore
 import FirebaseAuth
 
-class AdminNotificationController: UIViewController , UITableViewDelegate, UITableViewDataSource{
+class DonorNotificationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     let refreshControl = UIRefreshControl()
     
     @IBOutlet weak var list: UITableView!
@@ -50,7 +50,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
             return
         }
         
-        db.collection("notifications").whereField("userID", isEqualTo: uid).getDocuments { [weak self] querySnapshot, error in
+        db.collection("notifications").whereField("userId", isEqualTo: uid).order(by: "createdAt", descending: true).getDocuments { [weak self] querySnapshot, error in
             guard let self = self else { return }
             
             if let error = error {
@@ -132,7 +132,7 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let notificationData = notifications[indexPath.row]
-        let cell=tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)as! AdminNotificationTableViewCell
+        let cell=tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DonorNotificationTableViewCell
         
         cell.notificationContainer.layer.cornerRadius = 12
         cell.notificationContainer.layer.borderWidth = 1
@@ -271,12 +271,13 @@ class AdminNotificationController: UIViewController , UITableViewDelegate, UITab
     }
     
     @IBAction func goToNotificationSettings(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "AdminProfile", bundle: nil)
-        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminNotificatinSettingsVC")
+        let storyboard = UIStoryboard(name: "DonorProfile", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonorNotificatinSettingsVC")
 
         mapVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(mapVC, animated: true)
     }
+
     /*
     // MARK: - Navigation
 

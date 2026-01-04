@@ -17,7 +17,7 @@ final class AdminDashboardViewController: UIViewController, UICollectionViewData
     @IBOutlet weak var topDonorsCV: UICollectionView!
     @IBOutlet weak var topNgosCV: UICollectionView!
     private let db = Firestore.firestore()
-
+    @IBOutlet weak var NotificationsBtn: UIImageView!
     // MARK: - Config
     private let topLimit = 5
     private let maxDonationsToScan = 500
@@ -49,7 +49,9 @@ final class AdminDashboardViewController: UIViewController, UICollectionViewData
         styleTopBox(goodnessView)
         styleTopBox(statsView)
         
-        
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(goToAdminNotifications))
+        NotificationsBtn.addGestureRecognizer(tapGesture)
     }
     
     private func setupHorizontalCV(_ cv: UICollectionView) {
@@ -308,6 +310,14 @@ final class AdminDashboardViewController: UIViewController, UICollectionViewData
             // bigger card for NGO
             return CGSize(width: 135, height: 166)
         }
+    }
+    @objc func goToAdminNotifications() {
+        let storyboard = UIStoryboard(name: "AdminNotifications", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "AdminNotificationVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
     }
 
 

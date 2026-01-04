@@ -38,18 +38,187 @@ class Notification {
         }
     }
     
+    // MARK: - Request Permission
+    
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
-                print("Error requesting notification authorization: \(error)")
+                print("❌ Notification permission error: \(error)")
             }
+            print(granted ? "✅ Notification permission GRANTED" : "❌ Notification permission DENIED")
             DispatchQueue.main.async {
                 completion(granted)
             }
         }
     }
     
+    // MARK: - Check Permission Status
+    
+    func checkPermissionStatus(completion: @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            let isAuthorized = settings.authorizationStatus == .authorized
+            print("📱 Notification status: \(settings.authorizationStatus.rawValue)")
+            print("   0=notDetermined, 1=denied, 2=authorized, 3=provisional, 4=ephemeral")
+            completion(isAuthorized)
+        }
+    }
+    
+    // MARK: - Show Unread Notifications on App Open
+    
+    /// Automatically fetch and show all unread notifications when app opens
+    func showUnreadNotificationsOnAppOpen(userId: String) {
+        print("🔔 ============================================")
+        print("🔔 Checking for unread notifications")
+        print("🔔 User ID: \(userId)")
+        print("🔔 ============================================")
+        
+        // First check if we have permission
+        checkPermissionStatus { [weak self] isAuthorized in
+            guard isAuthorized else {
+                print("❌ No notification permission! Requesting now...")
+                self?.requestAuthorization { granted in
+                    if granted {
+                        self?.fetchAndShowNotifications(userId: userId)
+                    } else {
+                        print("❌ User denied notification permission")
+                    }
+                }
+                return
+            }
+            
+            print("✅ Notification permission is authorized")
+            self?.fetchAndShowNotifications(userId: userId)
+        }
+    }
+    
+    private func fetchAndShowNotifications(userId: String) {
+        db.collection("notifications")
+            .whereField("userId", isEqualTo: userId)
+            .whereField("isRead", isEqualTo: 0)
+            .order(by: "createdAt", descending: true)
+            .getDocuments { [weak self] snapshot, error in
+                if let error = error {
+                    print("❌ Error fetching notifications: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("❌ No documents found")
+                    return
+                }
+                
+                print("📬 Fetched notifications count: \(documents.count)")
+                
+                let unreadDocs = documents.filter { doc in
+                    let data = doc.data()
+                    let isRead = data["isRead"] as? Int ?? 1
+                    return isRead == 0
+                }
+                
+                print("📭 Unread notifications: \(unreadDocs.count)")
+                
+                guard !unreadDocs.isEmpty else {
+                    print("📭 No unread notifications")
+                    DispatchQueue.main.async {
+                        UNUserNotificationCenter.current().setBadgeCount(0)
+                    }
+                    return
+                }
+                
+                print("✅ Found \(unreadDocs.count) unread notification(s)")
+                print("🔔 Starting to schedule notifications...")
+
+                // Show each notification with a slight delay
+                for (index, doc) in unreadDocs.enumerated() {
+                    let data = doc.data()
+                    
+                    guard
+                        let title = data["title"] as? String,
+                        let body = data["body"] as? String
+                    else {
+                        print("⚠️ Skipping notification \(doc.documentID) - missing title or body")
+                        continue
+                    }
+                    
+                    print("📝 Notification \(index + 1): \(title)")
+                    
+                    let delay = Double(index) * 1.0 // 1 second apart
+                    
+                    self?.scheduleLocalNotificationList(
+                        title: title,
+                        body: body,
+                        delay: delay,
+                        identifier: "unread_\(doc.documentID)",
+                        notificationNumber: index + 1,
+                        totalNotifications: unreadDocs.count
+                    )
+                }
+                
+                // Update badge count
+                DispatchQueue.main.async {
+                    UNUserNotificationCenter.current().setBadgeCount(unreadDocs.count)
+                    print("🔢 Badge count set to: \(unreadDocs.count)")
+                }
+                
+                print("🔔 ============================================")
+                print("🔔 Finished scheduling \(unreadDocs.count) notifications")
+                print("🔔 ============================================")
+            }
+    }
+    
+    // MARK: - Schedule Local Notification
+    private func scheduleLocalNotificationList(
+        title: String,
+        body: String,
+        delay: TimeInterval,
+        identifier: String,
+        notificationNumber: Int,
+        totalNotifications: Int
+    ) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        content.badge = NSNumber(value: totalNotifications - notificationNumber + 1)
+        
+        // Use time interval trigger
+        let actualDelay = max(delay, 0.1) // Minimum 0.1 seconds
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: actualDelay,
+            repeats: false
+        )
+        
+        let request = UNNotificationRequest(
+            identifier: identifier,
+            content: content,
+            trigger: trigger
+        )
+        
+        print("⏰ Scheduling notification '\(title)' in \(actualDelay)s")
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("❌ Error scheduling notification: \(error.localizedDescription)")
+            } else {
+                print("✅ Successfully scheduled: \(title)")
+            }
+        }
+    }
+    
+    func markAsRead(notificationId: String) {
+        print("✓ Marking notification as read: \(notificationId)")
+        
+        db.collection("notifications").document(notificationId)
+            .updateData(["isRead": 1]) { error in
+                if let error = error {
+                    print("❌ Error marking as read: \(error.localizedDescription)")
+                } else {
+                    print("✅ Marked notification as read: \(notificationId)")
+                }
+            }
+    }
+        
     func scheduleExpiryCheck(donationId: String, foodName: String, expiryDate: Date) {
         let now = Date()
         let twoDaysInSeconds: TimeInterval = 172800
@@ -81,7 +250,6 @@ class Notification {
         content.title = "Donation Expiring Soon!"
         content.body = "The donation '\(foodName)' will expire in exactly \(timeRemainingLabel). Please take action now!"
         content.sound = .default
-        content.badge = 1
                 
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: finalNotifyDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
@@ -132,6 +300,14 @@ class Notification {
                     self.scheduleLocalNotification(title: title, body: body, delay: adminDelay)
                 }
             }
+        }
+    }
+    
+    // MARK: - Clear Badge
+    
+    func clearBadge() {
+        DispatchQueue.main.async {
+            UNUserNotificationCenter.current().setBadgeCount(0)
         }
     }
 }
