@@ -218,47 +218,72 @@ class Notification {
                 }
             }
     }
-        
+    
     func scheduleExpiryCheck(donationId: String, foodName: String, expiryDate: Date) {
-        let now = Date()
-        let twoDaysInSeconds: TimeInterval = 172800
-        let onDaysInSeconds: TimeInterval = 86400
-        let oneHourInSeconds: TimeInterval = 3600
-        let notifyDate2Days = expiryDate.addingTimeInterval(-twoDaysInSeconds)
-        let notifyDate1Days = expiryDate.addingTimeInterval(-onDaysInSeconds)
-        
-        var finalNotifyDate: Date
-        var timeRemainingLabel: String
-        
-        if notifyDate2Days > now {
-            finalNotifyDate = notifyDate2Days
-            timeRemainingLabel = "2 days"
-        } else if notifyDate1Days > now {
-            finalNotifyDate = notifyDate1Days
-            timeRemainingLabel = "1 days"
-        } else {
-            finalNotifyDate = expiryDate.addingTimeInterval(-oneHourInSeconds)
-            timeRemainingLabel = "1 hour"
-        }
-        
-        guard finalNotifyDate > now else {
-            print("Expiry for \(foodName) is too close to schedule a warning.")
-            return
-        }
-                
-        let content = UNMutableNotificationContent()
-        content.title = "Donation Expiring Soon!"
-        content.body = "The donation '\(foodName)' will expire in exactly \(timeRemainingLabel). Please take action now!"
-        content.sound = .default
-                
-        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: finalNotifyDate)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
-                
-        let request = UNNotificationRequest(identifier: "expiry_\(donationId)", content: content, trigger: trigger)
-                
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Error scheduling notification: \(error.localizedDescription)")
+
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+
+            guard settings.authorizationStatus == .authorized else {
+                print("❌ No notification permission for expiry:", foodName)
+                return
+            }
+
+            let now = Date()
+            let twoDays: TimeInterval = 172800
+            let oneDay: TimeInterval = 86400
+            let oneHour: TimeInterval = 3600
+
+            let notify2Days = expiryDate.addingTimeInterval(-twoDays)
+            let notify1Day  = expiryDate.addingTimeInterval(-oneDay)
+
+            var finalDate: Date
+            var label: String
+
+            if notify2Days > now {
+                finalDate = notify2Days
+                label = "2 days"
+            }
+            else if notify1Day > now {
+                finalDate = notify1Day
+                label = "1 day"
+            }
+            else {
+                finalDate = expiryDate.addingTimeInterval(-oneHour)
+                label = "1 hour"
+            }
+
+            guard finalDate > now else {
+                print("⚠️ Too late to schedule expiry for:", foodName)
+                return
+            }
+
+            let content = UNMutableNotificationContent()
+            content.title = "Donation Expiring Soon ⏰"
+            content.body = "Your donation '\(foodName)' expires in \(label)."
+            content.sound = .default
+
+            let triggerDate = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+                from: finalDate
+            )
+
+            let trigger = UNCalendarNotificationTrigger(
+                dateMatching: triggerDate,
+                repeats: false
+            )
+
+            let request = UNNotificationRequest(
+                identifier: "expiry_\(donationId)",
+                content: content,
+                trigger: trigger
+            )
+
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("❌ Failed scheduling expiry:", error.localizedDescription)
+                } else {
+                    print("⏰ Expiry notification SET for:", foodName, "at", finalDate)
+                }
             }
         }
     }
