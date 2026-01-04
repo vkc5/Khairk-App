@@ -42,7 +42,6 @@
 				Controller/CollectorControllers/Profile/.gitkeep,
 				Controller/DonorControllers/Dashboard/.gitkeep,
 				Controller/DonorControllers/DonationCreate/.gitkeep,
-				Controller/DonorControllers/DonationGroups/.gitkeep,
 				Controller/DonorControllers/DonationTracking/.gitkeep,
 				Controller/DonorControllers/Impact/.gitkeep,
 				Controller/DonorControllers/Leaderboard/.gitkeep,

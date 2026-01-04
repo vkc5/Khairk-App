@@ -18,12 +18,13 @@ class AdminVerificationCodeViewController: UIViewController, UITextFieldDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 20, weight: .semibold),
             .foregroundColor: UIColor.label
@@ -36,6 +37,7 @@ class AdminVerificationCodeViewController: UIViewController, UITextFieldDelegate
     func goToLogin() {
         navigationController?.popToRootViewController(animated: true)
     }
+
     /*
     // MARK: - Navigation
 

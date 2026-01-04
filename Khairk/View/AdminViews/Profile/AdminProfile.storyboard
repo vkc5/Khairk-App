@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -19,7 +19,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vla-p6-RfZ">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="128"/>
-                                <color key="backgroundColor" name="MainBrand-500"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kvw-et-GGB">
                                 <rect key="frame" x="0.0" y="98" width="393" height="662"/>
@@ -121,11 +121,15 @@
                                                             </stackView>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <gestureRecognizers/>
                                                         <constraints>
                                                             <constraint firstItem="APx-0t-1R4" firstAttribute="centerY" secondItem="Do1-65-yKs" secondAttribute="centerY" id="2pL-6Z-ZLk"/>
                                                             <constraint firstItem="APx-0t-1R4" firstAttribute="centerX" secondItem="Do1-65-yKs" secondAttribute="centerX" id="YBy-pU-5MT"/>
                                                             <constraint firstItem="APx-0t-1R4" firstAttribute="top" secondItem="Do1-65-yKs" secondAttribute="top" constant="19" id="ssx-ol-HFN"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="aWy-LP-gIA" appends="YES" id="Ao4-T6-SWV"/>
+                                                        </connections>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xeq-fj-kjx">
                                                         <rect key="frame" x="0.0" y="64" width="364" height="60"/>
@@ -136,12 +140,12 @@
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="kbo-kz-cIL">
                                                                         <rect key="frame" x="0.0" y="0.0" width="111.33333333333333" height="22"/>
                                                                         <subviews>
-                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="doc" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="LEC-rz-Eph">
-                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="18" height="21.666666666666668"/>
+                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chart.pie" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="LEC-rz-Eph">
+                                                                                <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="20.666666666666671"/>
                                                                                 <color key="tintColor" name="Neutral-Black-800"/>
                                                                             </imageView>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Activity logs   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bvT-d4-FB3">
-                                                                                <rect key="frame" x="23.999999999999993" y="0.0" width="87.333333333333314" height="22"/>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="impact            " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bvT-d4-FB3">
+                                                                                <rect key="frame" x="25.666666666666664" y="0.0" width="85.666666666666686" height="22"/>
                                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                                                 <color key="textColor" name="Neutral-Black-800"/>
                                                                                 <nil key="highlightedColor"/>
@@ -159,11 +163,15 @@
                                                             </stackView>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <gestureRecognizers/>
                                                         <constraints>
                                                             <constraint firstItem="ozN-Fd-qCL" firstAttribute="top" secondItem="xeq-fj-kjx" secondAttribute="top" constant="19" id="GFH-du-qeK"/>
                                                             <constraint firstItem="ozN-Fd-qCL" firstAttribute="centerY" secondItem="xeq-fj-kjx" secondAttribute="centerY" id="PDf-Eu-r3C"/>
                                                             <constraint firstItem="ozN-Fd-qCL" firstAttribute="centerX" secondItem="xeq-fj-kjx" secondAttribute="centerX" id="sTT-tk-ndo"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="WBy-IW-ouw" appends="YES" id="fW0-cc-chp"/>
+                                                        </connections>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IyA-i3-reG">
                                                         <rect key="frame" x="0.0" y="128" width="364" height="60"/>
@@ -304,14 +312,14 @@
                                                                 <rect key="frame" x="24" y="19" width="316" height="20.333333333333329"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="z0M-p1-TKL">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="71.333333333333329" height="20.333333333333332"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="70.666666666666671" height="20.333333333333332"/>
                                                                         <subviews>
                                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphone.and.arrow.right.outward" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="EID-kc-62d">
-                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="20" height="19.666666666666668"/>
+                                                                                <rect key="frame" x="0.0" y="0.33333333333333215" width="19.333333333333332" height="19.666666666666668"/>
                                                                                 <color key="tintColor" name="Neutral-Black-800"/>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KGh-zw-bYY">
-                                                                                <rect key="frame" x="25.000000000000004" y="0.0" width="46.333333333333343" height="20.333333333333332"/>
+                                                                                <rect key="frame" x="24.333333333333332" y="0.0" width="46.333333333333343" height="20.333333333333332"/>
                                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                                                 <color key="textColor" name="Neutral-Black-800"/>
                                                                                 <nil key="highlightedColor"/>
@@ -319,7 +327,7 @@
                                                                         </subviews>
                                                                     </stackView>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="mSe-k3-Zvl">
-                                                                        <rect key="frame" x="296.33333333333331" y="3" width="19.666666666666686" height="14.666666666666664"/>
+                                                                        <rect key="frame" x="295.66666666666663" y="3" width="20.333333333333314" height="14.666666666666664"/>
                                                                         <color key="tintColor" name="Greyscale-900"/>
                                                                     </imageView>
                                                                 </subviews>
@@ -409,13 +417,23 @@
                         <action selector="logoutTapped:" destination="9tx-FP-ejw" id="3XO-1x-BcA"/>
                     </connections>
                 </tapGestureRecognizer>
+                <tapGestureRecognizer id="aWy-LP-gIA">
+                    <connections>
+                        <action selector="Send:" destination="9tx-FP-ejw" id="3a4-KK-BM7"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="WBy-IW-ouw">
+                    <connections>
+                        <action selector="AdminImpactTapped:" destination="9tx-FP-ejw" id="KML-3g-7gI"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1066.4122137404579" y="130.98591549295776"/>
         </scene>
         <!--Notifications-->
         <scene sceneID="VMI-fV-5X2">
             <objects>
-                <viewController id="OAF-VW-J2L" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdminNotificatinSettingsVC" id="OAF-VW-J2L" customClass="AdminNotificatinSettingsViewController" customModule="Khairk" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dea-Mh-i2H">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1337,8 +1355,8 @@
         <image name="arrow.right" catalog="system" width="128" height="95"/>
         <image name="bell" catalog="system" width="125" height="128"/>
         <image name="camera.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="chart.pie" catalog="system" width="128" height="123"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
-        <image name="doc" catalog="system" width="115" height="128"/>
         <image name="exclamationmark.circle" catalog="system" width="128" height="123"/>
         <image name="iphone.and.arrow.right.outward" catalog="system" width="125" height="128"/>
         <image name="paperplane" catalog="system" width="128" height="119"/>

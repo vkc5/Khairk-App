@@ -38,31 +38,28 @@ class GoalCardCellTableViewCell: UITableViewCell {
 
     }
 
-    func configure(goal: Goal) {
-            // Title like your design
-            titleLabel.text = "Donate \(goal.targetAmount) meals"
-            startLabel.text = "Start: \(formatDate(goal.startDate))"
+    func configure(goal: Goal, raised: Int) {
 
-            // Target bottom left
-            targetValueLabel.text = "\(goal.targetAmount) meals"
+        titleLabel.text = "Donate \(goal.targetAmount) meals"
+        startLabel.text = "Start: \(formatDate(goal.startDate))"
+        targetValueLabel.text = "\(goal.targetAmount) meals"
 
-            // You don't store raised yet -> 0 for now
-            raisedNumberLabel.text = "\(goal.raised)"
+        raisedNumberLabel.text = "\(raised)"
 
-            // Days left
-            let daysLeft = max(0, daysBetween(Date(), goal.endDate))
-            daysLeftNumberLabel.text = "\(daysLeft)"
+        let daysLeft = max(0, daysBetween(Date(), goal.endDate))
+        daysLeftNumberLabel.text = "\(daysLeft)"
 
-            // Progress (0 now)
-            progressView.progress = 0
+        // ✅ Progress = raised / target
+        let ratio = goal.targetAmount > 0 ? Float(raised) / Float(goal.targetAmount) : 0
+        progressView.progress = min(max(ratio, 0), 1) // clamp 0..1
 
-            // Image (if exists)
-            if let urlString = goal.imageUrl, let url = URL(string: urlString) {
-                loadImage(url: url)
-            } else {
-                goalImageView.image = UIImage(named: "goal_placeholder") ?? UIImage(systemName: "photo")
-            }
+        if let urlString = goal.imageUrl, let url = URL(string: urlString) {
+            loadImage(url: url)
+        } else {
+            goalImageView.image = UIImage(named: "goal_placeholder") ?? UIImage(systemName: "photo")
         }
+    }
+
 
         @IBAction func deleteTapped(_ sender: UIButton) {
             onDeleteTapped?()
