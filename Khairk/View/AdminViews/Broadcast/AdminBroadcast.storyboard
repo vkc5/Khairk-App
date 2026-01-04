@@ -44,8 +44,11 @@
                                                 <color key="textColor" name="MainBrand-500"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="2" translatesAutoresizingMaskIntoConstraints="NO" id="h96-aU-J3Y">
+                                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="h96-aU-J3Y">
                                                 <rect key="frame" x="0.0" y="104.33333333333331" width="353" height="43"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="43" id="PfE-kT-xb7"/>
+                                                </constraints>
                                             </datePicker>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message Details " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zs9-0R-094">
                                                 <rect key="frame" x="0.0" y="157.33333333333331" width="353" height="21.666666666666657"/>

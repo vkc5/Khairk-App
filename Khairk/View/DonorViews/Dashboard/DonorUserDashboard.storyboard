@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wLO-jt-h7b">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wLO-jt-h7b">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -32,7 +32,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" name="MainBrand-500"/>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bell" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="n2n-Vs-IAU">
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bell" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="n2n-Vs-IAU">
                                         <rect key="frame" x="363" y="63.666666666666664" width="29" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -485,6 +485,7 @@ Khairk</string>
                     <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" id="7c5-ji-4yJ"/>
                     <navigationItem key="navigationItem" id="csC-ST-Y4w"/>
                     <connections>
+                        <outlet property="NotificationsBtn" destination="n2n-Vs-IAU" id="zY5-Rh-Sjn"/>
                         <outlet property="donorHubView" destination="d5a-tq-5G5" id="m9z-C7-gLV"/>
                         <outlet property="goodnessView" destination="Phf-fR-oNU" id="fV4-Os-kO2"/>
                         <outlet property="impactRowView" destination="CAI-1p-Vig" id="cMo-sh-m0W"/>
@@ -563,7 +564,7 @@ Khairk</string>
                 <navigationController id="sGq-Mr-pRQ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" image="house.circle" catalog="system" id="oNs-Ck-xX8"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wr1-uc-gAU">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -580,7 +581,7 @@ Khairk</string>
                 <navigationController id="7Sg-Qx-m3y" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Donation" image="fork.knife.circle" catalog="system" id="m3f-iv-HFf"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="zLj-cB-Bki">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -597,7 +598,7 @@ Khairk</string>
                 <navigationController id="eYE-cM-j81" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="NGO Finder" image="building.2" catalog="system" id="jm5-iI-cER"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="R6g-SN-Qpz">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -614,7 +615,7 @@ Khairk</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uVR-F6-42s" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" selectedImage="person.crop.circle" id="Vbc-EW-62y"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="k0A-aN-ecU">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>

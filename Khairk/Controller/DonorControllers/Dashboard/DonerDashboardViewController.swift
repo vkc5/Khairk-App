@@ -21,9 +21,9 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
     private var goalsListener: ListenerRegistration?
     private var donationsListener: ListenerRegistration?
 
+    @IBOutlet var NotificationsBtn: UIImageView!
     private var donations: [DonationLite] = []
     private var raisedByGoalId: [String: Int] = [:]
-
     // Spotlight cards (two)
     @IBOutlet weak var spotlightView1: UIView!
     @IBOutlet weak var spotlightView2: UIView!
@@ -58,6 +58,10 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
         // SPOTLIGHT (gradient added after layout)
         styleSpotlight(spotlightView1)
         styleSpotlight(spotlightView2)
+        
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(goToNotifications))
+        NotificationsBtn.addGestureRecognizer(tapGesture)
     }
     
     deinit {
@@ -288,6 +292,16 @@ class DonerDashboardViewController: UIViewController, UITableViewDataSource, UIT
                 self.recalculateRaisedForDashboard()
             }
     }
+    
+    @objc func goToNotifications() {
+        let storyboard = UIStoryboard(name: "DonorNotifications", bundle: nil)
+        let mapVC = storyboard.instantiateViewController(withIdentifier: "DonorNotificationsVC")
+
+        mapVC.hidesBottomBarWhenPushed = true   // 🔴 hides tab bar
+
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+
 
     private func recalculateRaisedForDashboard() {
         var map: [String: Int] = [:]

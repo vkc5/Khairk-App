@@ -118,10 +118,10 @@
                                             </hierarchicalColors>
                                         </imageReference>
                                     </state>
+                                    <connections>
+                                        <action selector="goToNotificationSettings:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="AtF-ej-kJK"/>
+                                    </connections>
                                 </button>
-                                <connections>
-                                    <segue destination="iBr-wf-Cyr" kind="push" id="X2w-xa-uWO"/>
-                                </connections>
                             </barButtonItem>
                             <barButtonItem style="plain" id="BdB-mB-cNs">
                                 <button key="customView" opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="F4c-Qj-cFB">
@@ -151,16 +151,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1316.793893129771" y="3.5211267605633805"/>
-        </scene>
-        <!--AdminNotificatinSettingsVC-->
-        <scene sceneID="9bu-8y-gTh">
-            <objects>
-                <viewControllerPlaceholder storyboardName="AdminProfile" referencedIdentifier="AdminNotificatinSettingsVC" id="iBr-wf-Cyr" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="xrG-If-mKj"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8VQ-Nu-YEv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1967" y="-203"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="asJ-Fe-QS7">

@@ -1,13 +1,13 @@
 //
-//  AdminNotificatinSettingsViewController.swift
+//  DonorNotificatinSettingsViewController.swift
 //  Khairk
 //
-//  Created by BP-36-213-17 on 02/01/2026.
+//  Created by BP-36-213-17 on 04/01/2026.
 //
 
 import UIKit
 
-class AdminNotificatinSettingsViewController: UIViewController {
+class DonorNotificatinSettingsViewController: UIViewController {
 
     @IBOutlet weak var muteNotifaction: UISwitch!
     @IBOutlet weak var sound: UISwitch!
